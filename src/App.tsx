@@ -21,7 +21,7 @@ import { AmbientParallaxBackdrop } from './components/AmbientParallaxBackdrop';
 /**
  * Chordly — Production-Quality Single Page Marketing Website
  * Independent YouTube Music Player for Android, Wear OS, and the Web.
- * Built by Callmerev. Licensed under GPL-3.0.
+ * Developed by Callmerev. Licensed under GPL-3.0.
  */
 export default function App() {
   return (

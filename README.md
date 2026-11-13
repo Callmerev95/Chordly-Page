@@ -122,4 +122,4 @@ Chordly is free software licensed under the GNU General Public License v3.0. See
 
 ## Disclaimer
 
-Chordly is an independent open-source project and is not affiliated with, sponsored by, or endorsed by Google LLC or YouTube. YouTube Music and related marks belong to their respective owners.
+Chordly is an independent open-source project and is not affiliated with, sponsored by, or endorsed by Google LLC, YouTube, Apple Inc., or Spotify. YouTube Music and related marks belong to their respective owners.

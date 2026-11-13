@@ -27,7 +27,7 @@ export const OpenSourceSection: React.FC = () => {
             </h2>
 
             <p className="text-base sm:text-lg text-zinc-300 leading-relaxed">
-              Chordly is free software licensed under GNU General Public License v3.0. Built entirely by Callmerev, the code is open for review, fork, and contribution. No user data is collected, sold, or shared with third parties.
+              Chordly is free software licensed under GNU General Public License v3.0. Developed entirely by Callmerev, the code is open for review, fork, and contribution. No user data is collected, sold, or shared with third parties.
             </p>
 
             {/* CTAs */}

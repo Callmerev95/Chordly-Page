@@ -17,7 +17,7 @@ export const Footer: React.FC = () => {
               Independent YouTube Music player for Android, Wear OS, and the web. Open source under GPL-3.0.
             </p>
             <div className="text-xs text-zinc-400 flex items-center gap-1.5 pt-0.5">
-              <span>Built with ❤️ by</span>
+              <span>Developed with ❤️ by</span>
               <a
                 href="https://www.callmerev.my.id/"
                 target="_blank"
@@ -152,11 +152,11 @@ export const Footer: React.FC = () => {
         {/* Bottom Bar: Consistent left alignment on mobile, split left/right on sm+ */}
         <div className="pt-6 sm:pt-8 border-t border-white/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2.5 sm:gap-4 text-xs text-left">
           <p className="text-zinc-400">
-            © 2026 Chordly. Built by Callmerev.
+            © 2026 Chordly. Developed by Callmerev.
           </p>
 
           <p className="text-zinc-400 text-left sm:text-right max-w-xl text-[11px] leading-relaxed">
-            Chordly is an independent open-source project and is not affiliated with, sponsored by, or endorsed by Google LLC or YouTube.
+            Chordly is an independent open-source project and is not affiliated with, sponsored by, or endorsed by Google LLC, YouTube, Apple Inc., or Spotify.
           </p>
         </div>
 
