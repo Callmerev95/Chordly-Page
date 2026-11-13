@@ -1,0 +1,5 @@
+{
+  "name": "Chordly — Independent YouTube Music Player",
+  "description": "Chordly is an independent YouTube Music player featuring Bit-Perfect USB DAC audio, 12 synced lyrics providers, romanization, and multi-platform support across Android, Wear OS, and the web.",
+  "requestFramePermissions": []
+}
