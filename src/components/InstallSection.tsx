@@ -72,7 +72,7 @@ export const InstallSection: React.FC = () => {
             {/* Actions: Primary Download APK Button */}
             <div className="pt-8 space-y-3 relative z-10">
               <a
-                href="https://github.com/Callmerev95/Chordly-release/releases/latest"
+                href="https://github.com/Callmerev95/Chordly-release/releases/download/v1.9.4/app-prod-universal-release.apk"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="btn-primary w-full py-3.5 px-4 text-center shadow-lg flex items-center justify-center gap-2 group"

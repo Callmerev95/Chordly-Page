@@ -91,7 +91,7 @@ export const FinalCtaSection: React.FC = () => {
             {/* 2 CTA Buttons */}
             <div className="flex flex-col sm:flex-row flex-wrap items-center justify-center gap-3 sm:gap-4 pt-4">
               <a
-                href="https://github.com/Callmerev95/Chordly-release/releases/latest"
+                href="https://github.com/Callmerev95/Chordly-release/releases/download/v1.9.4/app-prod-universal-release.apk"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="btn-primary w-full sm:w-auto text-sm sm:text-base py-3 sm:py-3.5 px-6 sm:px-8 whitespace-nowrap justify-center"
