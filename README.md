@@ -1,4 +1,5 @@
-# Chordly
+<img width="2172" height="724" alt="Chordly_logo" src="https://github.com/user-attachments/assets/55fe8a76-db33-43da-b608-f75c81417f39" />
+
 
 **Feel every lyric. Enjoy every note.**
 
