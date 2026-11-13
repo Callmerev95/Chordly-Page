@@ -1,11 +1,18 @@
-<img width="2172" height="724" alt="Chordly_logo" src="https://github.com/user-attachments/assets/55fe8a76-db33-43da-b608-f75c81417f39" />
 
 
-**Feel every lyric. Enjoy every note.**
+<img width="2172" height="724" alt="Chordly_logo" src="https://github.com/user-attachments/assets/53d6b21a-f5e0-40ac-ab7e-cd7807c1943c" />
+
+
+<br/>
+<br/>
+
+## Feel every lyric. Enjoy every note.
 
 Chordly is an independent YouTube Music player for Android, Wear OS, and the web. This repository contains the official marketing and download site at https://chordly.my.id — not the player application itself.
 
 The site presents the product, its features, platform support, screenshots, and download links. The player, Android app, and browser extension live in the main Chordly repository.
+
+
 
 ## About this site
 
