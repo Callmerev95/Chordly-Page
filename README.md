@@ -6,12 +6,24 @@
 <br/>
 <br/>
 
+<Div align=center>
+<br/>
+
+[![Version](https://img.shields.io/github/v/release/Callmerev95/Chordly-release?style=for-the-badge&color=FF2D55&label=version)](https://github.com/Callmerev95/Chordly-release/releases/latest)
+[![Downloads](https://img.shields.io/github/downloads/Callmerev95/Chordly-release/total?style=for-the-badge&color=FF6B35&label=downloads)](https://github.com/Callmerev95/Chordly-release/releases)
+[![Android](https://img.shields.io/badge/Android-Stable-3DDC84?style=for-the-badge&logo=android&logoColor=white)](#-platform-status)
+[![Stars](https://img.shields.io/github/stars/Callmerev95/Chordly-Page?style=for-the-badge&color=FFD60A&label=stars)](https://github.com/Callmerev95/Chordly-Page/stargazers)
+[![License](https://img.shields.io/github/license/Callmerev95/Chordly-Page?style=for-the-badge&color=7B5CFF&label=license)](LICENSE)
+
+<br/>
+</Div>
+
+
 ## Feel every lyric. Enjoy every note.
 
 Chordly is an independent YouTube Music player for Android, Wear OS, and the web. This repository contains the official marketing and download site at https://chordly.my.id — not the player application itself.
 
 The site presents the product, its features, platform support, screenshots, and download links. The player, Android app, and browser extension live in the main Chordly repository.
-
 
 
 ## About this site
