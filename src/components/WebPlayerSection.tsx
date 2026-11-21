@@ -11,7 +11,7 @@ export const WebPlayerSection: React.FC = () => {
     {
       id: 'recent' as const,
       label: 'Recently Played & Lyrics',
-      url: 'https://chordly.callmerev.my.id/library/recent',
+      url: 'https://web-player.chordly.my.id/library/recent',
       src: '/assets/aistudio/assets-web-recent-lyrics.webp',
       caption: 'Tracklist history with real-time synchronized lyrics sidebar (In Bloom · Neck Deep)',
       icon: Music2,
@@ -19,7 +19,7 @@ export const WebPlayerSection: React.FC = () => {
     {
       id: 'explore' as const,
       label: 'Moods & Moments',
-      url: 'https://chordly.callmerev.my.id/explore',
+      url: 'https://web-player.chordly.my.id/explore',
       src: '/assets/aistudio/assets-web-moods-moments.webp',
       caption: 'Dynamic mood radio stations: Hits Cafe, Commute, Lofi Loft, Gaming, Musik Pesta Indonesia',
       icon: Compass,
@@ -27,7 +27,7 @@ export const WebPlayerSection: React.FC = () => {
     {
       id: 'player' as const,
       label: 'Full Screen Player',
-      url: 'https://chordly.callmerev.my.id/now-playing',
+      url: 'https://web-player.chordly.my.id/now-playing',
       src: '/assets/aistudio/assets-web-full-player.webp',
       caption: 'Distraction-free ambient canvas with album color extraction (Die For You Remix · Starboy)',
       icon: Layers,
@@ -35,7 +35,7 @@ export const WebPlayerSection: React.FC = () => {
     {
       id: 'extension' as const,
       label: 'Extension Bridge',
-      url: 'https://chordly.callmerev.my.id/home',
+      url: 'https://web-player.chordly.my.id/home',
       src: '/assets/aistudio/assets-web-extension-bridge.webp',
       caption: 'Direct browser extension bridge for YouTube Music streaming, Discord Rich Presence & Spotify sign-in',
       icon: Radio,
@@ -72,7 +72,7 @@ export const WebPlayerSection: React.FC = () => {
             {/* CTA Button */}
             <div className="pt-2 flex justify-center">
               <a
-                href="https://chordly.callmerev.my.id"
+                href="https://web-player.chordly.my.id"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="btn-primary max-w-full px-5 sm:px-7 text-sm sm:text-[0.95rem]"

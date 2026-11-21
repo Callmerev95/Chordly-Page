@@ -125,7 +125,7 @@ export const PlatformsSection: React.FC = () => {
 
               <div>
                 <a
-                  href="https://chordly.callmerev.my.id"
+                  href="https://web-player.chordly.my.id"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 text-sm font-semibold text-[#FF9A62] group-hover:text-white transition-colors"

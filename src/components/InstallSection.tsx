@@ -200,7 +200,7 @@ export const InstallSection: React.FC = () => {
 
             <div className="pt-8">
               <a
-                href="https://chordly.callmerev.my.id"
+                href="https://web-player.chordly.my.id"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="btn-secondary w-full py-3.5 text-center"

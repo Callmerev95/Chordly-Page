@@ -147,7 +147,7 @@ export const HeroSection: React.FC = () => {
               </a>
 
               <a
-                href="https://chordly.callmerev.my.id"
+                href="https://web-player.chordly.my.id"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="btn-secondary w-full sm:w-auto px-6 py-3 whitespace-nowrap"

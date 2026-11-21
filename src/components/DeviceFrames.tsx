@@ -208,7 +208,7 @@ export const BrowserFrame: React.FC<BrowserFrameProps> = ({
   src,
   alt = 'Chordly Web Player in Chrome',
   className = '',
-  url = 'https://chordly.callmerev.my.id',
+  url = 'https://web-player.chordly.my.id',
 }) => {
   const [imageError, setImageError] = useState(false);
 

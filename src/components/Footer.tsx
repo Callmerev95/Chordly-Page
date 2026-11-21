@@ -45,7 +45,7 @@ export const Footer: React.FC = () => {
               </li>
               <li>
                 <a
-                  href="https://chordly.callmerev.my.id"
+                  href="https://web-player.chordly.my.id"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-1 min-h-[36px] sm:min-h-0 py-1 sm:py-0 hover:text-white transition-colors"
@@ -99,7 +99,7 @@ export const Footer: React.FC = () => {
               </li>
               <li>
                 <a
-                  href="https://chordly.callmerev.my.id"
+                  href="https://web-player.chordly.my.id"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center min-h-[36px] sm:min-h-0 py-1 sm:py-0 hover:text-white transition-colors"

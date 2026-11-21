@@ -110,7 +110,7 @@ No server runtime, database, or cloud secret is required for this landing page.
 
 ## Related links
 
-- Web player: https://chordly.callmerev.my.id
+- Web player: https://web-player.chordly.my.id
 - Main application: https://github.com/Callmerev95/Chordly
 - Android releases: https://github.com/Callmerev95/Chordly-release/releases
 - Issue tracker: https://github.com/Callmerev95/Chordly/issues

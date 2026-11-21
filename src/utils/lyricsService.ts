@@ -220,7 +220,7 @@ export async function fetchIlysbFromLrclib(
     const response = await fetch(url, {
       signal,
       headers: {
-        'Lrclib-Client': 'Chordly-Landing/1.0 (https://chordly.callmerev.my.id)',
+        'Lrclib-Client': 'Chordly-Landing/1.0 (https://web-player.chordly.my.id)',
       },
     });
 

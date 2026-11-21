@@ -101,7 +101,7 @@ export const FinalCtaSection: React.FC = () => {
               </a>
 
               <a
-                href="https://chordly.callmerev.my.id"
+                href="https://web-player.chordly.my.id"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="btn-secondary w-full sm:w-auto text-sm sm:text-base py-3 sm:py-3.5 px-6 sm:px-8 whitespace-nowrap justify-center"
