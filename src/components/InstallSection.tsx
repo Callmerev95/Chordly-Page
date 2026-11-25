@@ -1,6 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { Download, ExternalLink, Smartphone, Watch, Tv, Globe, ArrowRight } from 'lucide-react';
 import { ScrollReveal, StaggerGroup, StaggerItem } from './MotionPrimitives';
+import {
+  fetchReleases,
+  findAndroidApk,
+  findTvApk,
+  findWearApk,
+  formatMegabytes,
+} from '../utils/releases';
 
 interface AssetMeta {
   sizeLabel: string;
@@ -30,85 +37,42 @@ const DEFAULT_RELEASE_META: ReleaseInstallMeta = {
   },
 };
 
-const RELEASES_API_URL = 'https://api.github.com/repos/Callmerev95/Chordly-release/releases?per_page=10';
-
-function formatMegabytes(bytes: number): string {
-  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
-}
-
 export const InstallSection: React.FC = () => {
   const [releaseMeta, setReleaseMeta] = useState<ReleaseInstallMeta>(DEFAULT_RELEASE_META);
 
   useEffect(() => {
     const controller = new AbortController();
+    let active = true;
 
-    async function loadLatestReleaseAssets() {
-      try {
-        const response = await fetch(RELEASES_API_URL, {
-          signal: controller.signal,
-          headers: { Accept: 'application/vnd.github+json' },
-        });
-        if (!response.ok) return;
-
-        const releases: unknown = await response.json();
-        if (!Array.isArray(releases)) return;
-
-        const latest = releases.find(
-          (item): item is { tag_name: string; draft?: boolean; prerelease?: boolean; assets?: unknown[] } =>
-            Boolean(
-              item &&
-                typeof item === 'object' &&
-                !(item as { draft?: unknown }).draft &&
-                !(item as { prerelease?: unknown }).prerelease &&
-                typeof (item as { tag_name?: unknown }).tag_name === 'string' &&
-                (item as { tag_name: string }).tag_name.trim()
-            )
-        );
-        if (!latest) return;
-
-        const rawTag = latest.tag_name.trim();
-        const version = rawTag.startsWith('v') || rawTag.startsWith('V') ? rawTag : `v${rawTag}`;
-        const assets = Array.isArray(latest.assets)
-          ? latest.assets.filter(
-              (a): a is { name: string; size: number; browser_download_url: string } =>
-                Boolean(
-                  a &&
-                    typeof a === 'object' &&
-                    typeof (a as { name?: unknown }).name === 'string' &&
-                    typeof (a as { size?: unknown }).size === 'number' &&
-                    Number.isFinite((a as { size: number }).size) &&
-                    typeof (a as { browser_download_url?: unknown }).browser_download_url === 'string'
-                )
-            )
-          : [];
-
-        const androidAsset =
-          assets.find((a) => /^app-.*universal.*\.apk$/i.test(a.name)) ||
-          assets.find((a) => /^app-.*\.apk$/i.test(a.name));
-        const wearAsset = assets.find((a) => /wear.*\.apk$/i.test(a.name));
-        const tvAsset =
-          assets.find((a) => /^tv-.*universal.*\.apk$/i.test(a.name)) ||
-          assets.find((a) => /^tv-.*\.apk$/i.test(a.name) || /android-?tv.*\.apk$/i.test(a.name));
+    fetchReleases(controller.signal)
+      .then((releases) => {
+        if (!active || releases.length === 0) return;
+        const latest = releases[0];
+        const androidAsset = findAndroidApk(latest.assets);
+        const wearAsset = findWearApk(latest.assets);
+        const tvAsset = findTvApk(latest.assets);
 
         setReleaseMeta((prev) => ({
-          version,
+          version: latest.tag,
           android: androidAsset
-            ? { sizeLabel: formatMegabytes(androidAsset.size), url: androidAsset.browser_download_url }
+            ? { sizeLabel: formatMegabytes(androidAsset.size), url: androidAsset.downloadUrl }
             : prev.android,
           wear: wearAsset
-            ? { sizeLabel: formatMegabytes(wearAsset.size), url: wearAsset.browser_download_url }
+            ? { sizeLabel: formatMegabytes(wearAsset.size), url: wearAsset.downloadUrl }
             : prev.wear,
           tv: tvAsset
-            ? { sizeLabel: formatMegabytes(tvAsset.size), url: tvAsset.browser_download_url }
+            ? { sizeLabel: formatMegabytes(tvAsset.size), url: tvAsset.downloadUrl }
             : prev.tv,
         }));
-      } catch {
+      })
+      .catch(() => {
         // Retain fallback metadata if offline or rate-limited
-      }
-    }
+      });
 
-    loadLatestReleaseAssets();
-    return () => controller.abort();
+    return () => {
+      active = false;
+      controller.abort();
+    };
   }, []);
   return (
     <section id="install" className="scroll-mt-20 py-20 sm:py-24 bg-[#070708] border-b border-white/[0.08]">

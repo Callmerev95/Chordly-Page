@@ -59,9 +59,19 @@ export const FEATURE_CATEGORIES: FeatureCategory[] = [
         detail: 'Search, browse and play anything available on YouTube Music.',
       },
       {
+        id: 'radio-tab',
+        label: 'Radio tab',
+        detail: 'A dedicated Radio tab for endless, station-style listening.',
+      },
+      {
         id: 'hires-lossless',
         label: 'Hi-Res lossless audio',
         detail: 'FLAC/ALAC from a configured module source, with YouTube Music as fallback.',
+      },
+      {
+        id: 'premium-audio',
+        label: 'Premium audio stream',
+        detail: 'YouTube Premium audio at ~256 kbps when your account allows it.',
       },
       {
         id: 'gapless-crossfade',
@@ -118,6 +128,11 @@ export const FEATURE_CATEGORIES: FeatureCategory[] = [
         detail: 'Sign in with your Google account for personalized content.',
       },
       {
+        id: 'drive-backup',
+        label: 'Google Drive backup',
+        detail: 'Back up your library and sync Replay across devices.',
+      },
+      {
         id: 'spotify-integration',
         label: 'Spotify integration',
         detail: 'Connect your account to play your playlists and Liked Songs.',
@@ -161,9 +176,19 @@ export const FEATURE_CATEGORIES: FeatureCategory[] = [
         detail: 'Motion artwork on the now-playing screen.',
       },
       {
+        id: 'replay-highlights',
+        label: 'Replay Year & Best Part',
+        detail: 'Yearly Replay recaps and Best Part listening highlights.',
+      },
+      {
         id: 'word-synced-lyrics',
         label: 'Word-synced lyrics',
         detail: 'Word/syllable-level highlighting from multiple sources.',
+      },
+      {
+        id: 'lyrics-share-credits',
+        label: 'Lyrics share & song credits',
+        detail: 'Share animated lyrics and view full song credits.',
       },
       {
         id: 'lyrics-providers',
@@ -212,7 +237,17 @@ export const FEATURE_CATEGORIES: FeatureCategory[] = [
       {
         id: 'sleep-timer',
         label: 'Sleep timer',
-        detail: 'Fixed presets or "stop after this track".',
+        detail: 'Fixed presets or "stop after this track", with a gentle audio fade-out.',
+      },
+      {
+        id: 'quick-settings-tile',
+        label: 'Quick Settings tile',
+        detail: 'Control playback straight from the notification shade.',
+      },
+      {
+        id: 'queue-multiselect',
+        label: 'Queue multi-select & undo',
+        detail: 'Swipe to remove, undo, and multi-select items in the queue.',
       },
       {
         id: 'system-equalizer',

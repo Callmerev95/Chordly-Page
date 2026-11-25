@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Github, Scale, Bug, ExternalLink } from 'lucide-react';
 import { ScrollReveal, StaggerGroup, StaggerItem } from './MotionPrimitives';
+import { fetchReleases, latestReleaseTag, sumDownloadCounts } from '../utils/releases';
 
-const BASELINE_DOWNLOADS = 45;
+const BASELINE_DOWNLOADS = 27;
 const BASELINE_RELEASE = 'v1.9.5';
-const RELEASES_API_URL = 'https://api.github.com/repos/Callmerev95/Chordly-release/releases?per_page=100';
 
 export const OpenSourceSection: React.FC = () => {
   const [totalDownloads, setTotalDownloads] = useState<number>(BASELINE_DOWNLOADS);
@@ -12,68 +12,23 @@ export const OpenSourceSection: React.FC = () => {
 
   useEffect(() => {
     const controller = new AbortController();
+    let active = true;
 
-    async function loadReleaseStats() {
-      try {
-        const response = await fetch(RELEASES_API_URL, {
-          signal: controller.signal,
-          headers: { Accept: 'application/vnd.github+json' },
-        });
-        if (!response.ok) return;
-
-        const releases: unknown = await response.json();
-        if (!Array.isArray(releases)) return;
-
-        let latestTag = '';
-        let sum = 0;
-
-        for (const release of releases) {
-          if (!release || typeof release !== 'object') continue;
-          const r = release as {
-            tag_name?: unknown;
-            draft?: unknown;
-            prerelease?: unknown;
-            assets?: unknown;
-          };
-
-          if (
-            !latestTag &&
-            !r.draft &&
-            !r.prerelease &&
-            typeof r.tag_name === 'string' &&
-            r.tag_name.trim()
-          ) {
-            const rawTag = r.tag_name.trim();
-            latestTag = rawTag.startsWith('v') || rawTag.startsWith('V') ? rawTag : `v${rawTag}`;
-          }
-
-          if (!Array.isArray(r.assets)) continue;
-          for (const asset of r.assets) {
-            if (
-              asset &&
-              typeof asset === 'object' &&
-              typeof (asset as { download_count?: unknown }).download_count === 'number' &&
-              Number.isFinite((asset as { download_count: number }).download_count)
-            ) {
-              sum += (asset as { download_count: number }).download_count;
-            }
-          }
-        }
-
-        if (latestTag) {
-          setCurrentRelease(latestTag);
-        }
-
-        if (sum >= BASELINE_DOWNLOADS) {
-          setTotalDownloads(sum);
-        }
-      } catch {
+    fetchReleases(controller.signal)
+      .then((releases) => {
+        if (!active || releases.length === 0) return;
+        const tag = latestReleaseTag(releases);
+        if (tag) setCurrentRelease(tag);
+        setTotalDownloads(sumDownloadCounts(releases));
+      })
+      .catch(() => {
         // Keep baseline fallbacks when offline or rate-limited
-      }
-    }
+      });
 
-    loadReleaseStats();
-    return () => controller.abort();
+    return () => {
+      active = false;
+      controller.abort();
+    };
   }, []);
 
   const stats = [

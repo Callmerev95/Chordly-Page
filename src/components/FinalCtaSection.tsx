@@ -22,13 +22,13 @@ export const FinalCtaSection: React.FC = () => {
 
             <div className="flex flex-col sm:flex-row flex-wrap items-center justify-center gap-3 pt-2">
               <a
-                href="https://github.com/Callmerev95/Chordly-release/releases/download/v1.9.4/app-prod-universal-release.apk"
+                href="https://github.com/Callmerev95/Chordly-release/releases/latest/download/app-prod-universal-release.apk"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="btn-primary w-full sm:w-auto px-6 py-3"
               >
                 <Download className="w-4 h-4 shrink-0" />
-                <span>Download APK (v1.9.4)</span>
+                <span>Download APK</span>
               </a>
 
               <a

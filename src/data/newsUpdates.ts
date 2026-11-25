@@ -1,98 +1,73 @@
-export type NewsCategory = 'release' | 'announcement';
+import type { NewsEntry } from '../utils/releases';
 
-export interface NewsUpdate {
-  id: string;
-  category: NewsCategory;
-  categoryLabel: string;
-  dateLabel: string;
-  versionTag?: string;
-  platformScope: string;
-  title: string;
-  summary: string;
-  highlights: string[];
-}
+export type { NewsCategory, NewsEntry as NewsUpdate } from '../utils/releases';
 
 /**
- * Placeholder editorial feed for /news.
- * Replace or extend these entries as new Chordly builds and milestones ship.
+ * Static fallback feed for /news, baked into the prerendered HTML for SEO and
+ * offline use. The page replaces this at runtime with live GitHub releases from
+ * the public Chordly-release repository, so new changelogs appear automatically.
  */
-export const NEWS_UPDATES: NewsUpdate[] = [
+export const NEWS_UPDATES: NewsEntry[] = [
   {
-    id: 'release-v1-9-5-sample',
+    id: 'release-v1-9-5',
     category: 'release',
     categoryLabel: 'Release',
     dateLabel: 'November 25, 2026',
     versionTag: 'v1.9.5',
-    platformScope: 'Android · Wear OS',
-    title: 'Sample release notes: USB DAC clock stabilization and lyrics timing refinements.',
+    platformScope: 'Android · Wear OS · Android TV',
+    title: 'Chordly v1.9.5',
     summary:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. This placeholder release entry outlines hypothetical audio routing fixes, reduced seek latency on external DACs, and smoother syllable-synced lyric transitions.',
+      'Chordly v1.9.5 delivers a broad feature wave — Replay Year and Best Part, Google Drive backup with cross-device Replay sync, a dedicated Radio tab, higher-quality YouTube Premium audio, richer queue and playlist management, and a lighter on-demand Automix model — together with polish to scrolling, glass performance, and player theming.',
     highlights: [
-      'Refined exclusive USB Audio Class 2.0 handshake to prevent sample-rate drops across 96 kHz and 192 kHz tracks.',
-      'Improved line-by-line romanization alignment across LRCLIB, Musixmatch, and KuGou fallback providers.',
-      'Reduced cold-start queue hydration overhead when syncing recently played playlists with Wear OS.',
+      'Replay & Best Part: Replay Year and Best Part highlights.',
+      'Google Drive backup: back up your library and sync Replay across devices.',
+      'Radio tab: a dedicated Radio tab for endless listening.',
+      'Audio quality: YouTube Premium ~256 kbps audio, plus an option to keep liked songs downloaded.',
+      'Automix: on-demand separation model for a smaller APK, with artwork transitions and on-demand loading.',
+      'Lyrics & credits: animated lyrics share, YouTube Music timed lyrics, and song credits.',
+      'Player: Apple Music–style player button animations, theme translucency, and ambient tint.',
+      'Queue management: swipe to remove, undo, and multi-select in the queue.',
+      'Quick Settings tile: control playback straight from the notification shade.',
+      'Sleep timer: audio gently fades out before stopping.',
     ],
+    url: 'https://github.com/Callmerev95/Chordly-release/releases/tag/v1.9.5',
   },
   {
-    id: 'announcement-web-player-bridge',
-    category: 'announcement',
-    categoryLabel: 'Announcement',
-    dateLabel: 'November 14, 2026',
-    platformScope: 'Web Player',
-    title: 'Sample announcement: Web Player extension bridge and cross-device playback roadmap.',
-    summary:
-      'Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. This temporary announcement summarizes upcoming browser extension bridge updates and faster queue handoffs between desktop and mobile sessions.',
-    highlights: [
-      'Streamlined pairing flow for Chromium and Firefox bridges on web-player.chordly.my.id.',
-      'Added lightweight session recovery for Listen Together rooms following temporary network drops.',
-      'Planned preview of keyboard-first media shortcuts and compact mini-player controls in upcoming builds.',
-    ],
-  },
-  {
-    id: 'release-v1-9-4-sample',
+    id: 'release-v1-9-4',
     category: 'release',
     categoryLabel: 'Release',
-    dateLabel: 'October 28, 2026',
+    dateLabel: 'November 10, 2026',
     versionTag: 'v1.9.4',
-    platformScope: 'Android 8.0+ · Wear OS',
-    title: 'Sample release notes: 7-band equalizer presets, Wear OS speaker playback, and frosted UI.',
+    platformScope: 'Android',
+    title: 'Chordly v1.9.4',
     summary:
-      'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris. Placeholder notes highlighting hardware audio controls, lightweight watch streaming, and adaptive now-playing artwork rendering.',
+      'Chordly v1.9.4 brings new customization options, audio playback enhancements, interface refinements, and overall performance improvements. It also resolves community addon warnings, and introduces background downloads for app updates.',
     highlights: [
-      'Introduced per-output 7-band parametric EQ profiles saved automatically per wired or Bluetooth device.',
-      'Trimmed the standalone Wear OS companion package to ~4.5 MB with direct watch speaker fallback.',
-      'Polished frosted blur surfaces and low-power OLED dark rendering during extended lyrics sessions.',
+      'Content Preferences: hide Recents, Videos, Top Picks, and Moods from Home, plus square music video thumbnails.',
+      'Automix Overview: preview transition waveform, BPM, key, and beat markers from the song actions menu.',
+      'Player Themes: choose Default, Simple, or Legacy player themes with adaptive blend effects.',
+      'Full-Screen Artwork: full-screen album and playlist covers with toggleable blend effects.',
+      'Performance Glass Mode: optimized blur rendering with reduced GPU/CPU overhead.',
+      'Bit-Perfect Improvements: DAC idle-release with suspend/resume and dropout prevention.',
+      'Background Update Downloads: APK downloads run via native DownloadManager with notifications.',
     ],
+    url: 'https://github.com/Callmerev95/Chordly-release/releases/tag/v1.9.4',
   },
   {
-    id: 'announcement-lyrics-providers',
-    category: 'announcement',
-    categoryLabel: 'Announcement',
-    dateLabel: 'October 09, 2026',
-    platformScope: 'All Platforms',
-    title: 'Sample announcement: Expanding synced lyrics coverage across twelve independent providers.',
-    summary:
-      'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore. Dummy update detailing provider fallback ordering, manual millisecond offset tuning, and multilingual script detection.',
-    highlights: [
-      'Unified caching layer prioritizes word-level and syllable-timed lyric tracks before plain-text fallbacks.',
-      'Exposed manual +/- millisecond sync offsets stored locally per track for live recording mismatches.',
-      'Documented open-source provider interfaces in the public repository for community contributors.',
-    ],
-  },
-  {
-    id: 'release-v1-9-0-sample',
+    id: 'release-v1-9-3',
     category: 'release',
     categoryLabel: 'Release',
-    dateLabel: 'September 18, 2026',
-    versionTag: 'v1.9.0',
+    dateLabel: 'November 10, 2026',
+    versionTag: 'v1.9.3',
     platformScope: 'Android',
-    title: 'Sample release notes: Direct USB DAC passthrough and local Replay metrics milestone.',
+    title: 'Chordly v1.9.3',
     summary:
-      'Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt. Early milestone placeholder covering lossless local FLAC playback, encrypted Google Drive backup, and on-device Replay summaries.',
+      'Chordly v1.9.3 is a hotfix release that resolves community addon warnings, fixes leftover branding text across all languages, introduces background downloads for app updates, and migrates the in-app updater to a dedicated public releases repository.',
     highlights: [
-      'Added direct PCM passthrough bypassing Android system resamplers on supported external DAC dongles.',
-      'Added optional private app-folder backup export and local JSON archive portability.',
-      'Launched privacy-preserving on-device Replay listening breakdowns with zero external analytics.',
+      'Community Addon Fix: disabled false-positive "Outdated addon" warnings for community plugins.',
+      'Background Update Downloads: APK downloads via native DownloadManager with system notifications.',
+      'Public Release Updater: in-app updater fetches updates from the public Chordly-release repository.',
     ],
+    url: 'https://github.com/Callmerev95/Chordly-release/releases/tag/v1.9.3',
   },
 ];

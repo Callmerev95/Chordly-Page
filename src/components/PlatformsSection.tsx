@@ -31,7 +31,7 @@ export const PlatformsSection: React.FC = () => {
                     <Smartphone className="w-4 h-4 text-[#ff2d55]" />
                     <span>Android</span>
                   </span>
-                  <span>v1.9.4 · Primary</span>
+                  <span>v1.9.5 · Primary</span>
                 </div>
 
                 <h3 className="font-serif italic text-[28px] text-white leading-[1.15]">
@@ -46,7 +46,7 @@ export const PlatformsSection: React.FC = () => {
                     href="#install"
                     className="inline-flex items-center gap-1.5 font-mono text-[12px] uppercase tracking-[0.08em] text-[#ff2d55] hover:underline underline-offset-4"
                   >
-                    <span>Download universal APK (197 MB)</span>
+                    <span>Download universal APK (164.5 MB)</span>
                     <ArrowRight className="w-3.5 h-3.5" />
                   </a>
                 </div>

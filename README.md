@@ -35,18 +35,19 @@ The landing page is a single-page React application built with Vite and Tailwind
 - A feature grid covering playback, connectivity, experience, and controls.
 - Deep dives into synced lyrics, Bit-Perfect audio, and the web player.
 - Device mockups using real application screenshots.
+- A news feed that pulls release notes and changelogs automatically from the GitHub `Chordly-release` repository.
 - Install guidance, open-source information, and a product FAQ.
 - Links to the web player, GitHub repository, releases, and issue tracker.
 
 ## Chordly at a glance
 
-- 24 features across 4 categories.
+- 31 features across 4 categories.
 - 12 synced lyrics providers, including LRCLIB, Musixmatch, Genius, and KuGou.
 - Word- and syllable-synced lyrics with romanization and bilingual translations.
-- Android stable release: v1.9.4.
-- Wear OS companion app for remote control and watch playback.
+- Android stable release: v1.9.5.
+- Wear OS companion app and Android TV build ship from the same release.
 - Web player available in modern browsers with the Chordly extension.
-- Desktop and Android TV clients are in development.
+- Desktop client is in development.
 - Bit-Perfect USB DAC output up to 24-bit / 192 kHz.
 - 7-band equalizer, FLAC fallback, Automix, and Listen Together.
 - Dynamic album-color theming and animated album canvases.
@@ -85,7 +86,7 @@ The development server runs at `http://localhost:3000`.
 | `npm run test` | Run the audio engine and feature catalog tests. |
 | `npm run clean` | Remove the production build output. |
 
-Tests use Node's built-in test runner through `tsx`. They cover the audio engine helpers and the feature catalog data.
+Tests use Node's built-in test runner through `tsx`. They cover the audio engine helpers, the feature catalog data, and the GitHub release/news parsing helpers.
 
 ## Project structure
 

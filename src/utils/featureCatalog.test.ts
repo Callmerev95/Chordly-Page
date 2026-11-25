@@ -8,18 +8,18 @@ import {
   getTotalFeatureCount,
 } from './featureCatalog.ts';
 
-test('FEATURE_CATEGORIES defines all 4 categories with 24 total features', () => {
+test('FEATURE_CATEGORIES defines all 4 categories with 31 total features', () => {
   assert.equal(FEATURE_CATEGORIES.length, 4);
   assert.deepEqual(
     FEATURE_CATEGORIES.map((c) => c.id),
     ['playback', 'connectivity', 'experience', 'controls']
   );
 
-  assert.equal(FEATURE_CATEGORIES[0].items.length, 8);
-  assert.equal(FEATURE_CATEGORIES[1].items.length, 5);
-  assert.equal(FEATURE_CATEGORIES[2].items.length, 5);
-  assert.equal(FEATURE_CATEGORIES[3].items.length, 6);
-  assert.equal(getTotalFeatureCount(FEATURE_CATEGORIES), 24);
+  assert.equal(FEATURE_CATEGORIES[0].items.length, 10);
+  assert.equal(FEATURE_CATEGORIES[1].items.length, 6);
+  assert.equal(FEATURE_CATEGORIES[2].items.length, 7);
+  assert.equal(FEATURE_CATEGORIES[3].items.length, 8);
+  assert.equal(getTotalFeatureCount(FEATURE_CATEGORIES), 31);
 });
 
 test('filterFeatureCategories filters accurately by category id and all', () => {

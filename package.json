@@ -24,7 +24,7 @@
     "preview": "vite preview",
     "clean": "rm -rf dist",
     "lint": "tsc --noEmit",
-    "test": "tsx --test src/utils/audioEngine.test.ts src/utils/featureCatalog.test.ts"
+    "test": "tsx --test src/utils/audioEngine.test.ts src/utils/featureCatalog.test.ts src/utils/releases.test.ts"
   },
   "dependencies": {
     "clsx": "^2.1.1",

@@ -1,11 +1,20 @@
-import React, { useState } from 'react';
-import { NEWS_UPDATES, type NewsCategory } from '../data/newsUpdates';
+import React, { useEffect, useState } from 'react';
+import { ExternalLink } from 'lucide-react';
+import { NEWS_UPDATES } from '../data/newsUpdates';
+import {
+  fetchReleases,
+  latestReleaseTag,
+  mapReleasesToNews,
+  type NewsCategory,
+  type NewsEntry,
+} from '../utils/releases';
 
 interface NewsPageProps {
   onNavigate?: (to: string, e?: React.MouseEvent<HTMLAnchorElement>) => void;
 }
 
 type FilterOption = 'all' | NewsCategory;
+type FeedSource = 'loading' | 'live' | 'fallback';
 
 const FILTER_TABS: Array<{ id: FilterOption; label: string }> = [
   { id: 'all', label: 'All' },
@@ -13,13 +22,51 @@ const FILTER_TABS: Array<{ id: FilterOption; label: string }> = [
   { id: 'announcement', label: 'Announcements' },
 ];
 
+const FALLBACK_RELEASE =
+  NEWS_UPDATES.find((entry) => entry.versionTag)?.versionTag ?? 'v1.9.5';
+
+const SOURCE_LABEL: Record<FeedSource, string> = {
+  loading: 'Loading latest releases…',
+  live: 'Updated live from GitHub Releases',
+  fallback: 'Showing cached release notes',
+};
+
 export const NewsPage: React.FC<NewsPageProps> = () => {
   const [selectedCategory, setSelectedCategory] = useState<FilterOption>('all');
+  const [entries, setEntries] = useState<NewsEntry[]>(NEWS_UPDATES);
+  const [currentRelease, setCurrentRelease] = useState<string>(FALLBACK_RELEASE);
+  const [source, setSource] = useState<FeedSource>('loading');
+
+  useEffect(() => {
+    const controller = new AbortController();
+    let active = true;
+
+    fetchReleases(controller.signal)
+      .then((releases) => {
+        if (!active) return;
+        const mapped = mapReleasesToNews(releases);
+        if (mapped.length > 0) {
+          setEntries(mapped);
+          setCurrentRelease(latestReleaseTag(releases) || FALLBACK_RELEASE);
+          setSource('live');
+        } else {
+          setSource('fallback');
+        }
+      })
+      .catch(() => {
+        if (active) setSource('fallback');
+      });
+
+    return () => {
+      active = false;
+      controller.abort();
+    };
+  }, []);
 
   const filteredUpdates =
     selectedCategory === 'all'
-      ? NEWS_UPDATES
-      : NEWS_UPDATES.filter((item) => item.category === selectedCategory);
+      ? entries
+      : entries.filter((item) => item.category === selectedCategory);
 
   return (
     <div className="flex-1 bg-[#070708]">
@@ -38,7 +85,7 @@ export const NewsPage: React.FC<NewsPageProps> = () => {
             </p>
 
             <div className="mt-6 flex flex-wrap items-center gap-x-3 gap-y-2 font-mono text-[12px] text-white/45">
-              <span className="tabular-nums text-white/85">Current release: v1.9.5</span>
+              <span className="tabular-nums text-white/85">Current release: {currentRelease}</span>
             </div>
           </div>
         </div>
@@ -74,10 +121,13 @@ export const NewsPage: React.FC<NewsPageProps> = () => {
               })}
             </div>
 
-            <p className="font-mono text-[12px] text-white/45 tabular-nums">
-              Showing {filteredUpdates.length}{' '}
-              {filteredUpdates.length === 1 ? 'update' : 'updates'}
-            </p>
+            <div className="text-right">
+              <p className="font-mono text-[12px] text-white/45 tabular-nums">
+                Showing {filteredUpdates.length}{' '}
+                {filteredUpdates.length === 1 ? 'update' : 'updates'}
+              </p>
+              <p className="font-mono text-[10.5px] text-white/30">{SOURCE_LABEL[source]}</p>
+            </div>
           </div>
 
           {/* Chronological Article List */}
@@ -88,8 +138,12 @@ export const NewsPage: React.FC<NewsPageProps> = () => {
                   <span className="uppercase tracking-[0.16em] text-[#ff2d55]">
                     {entry.categoryLabel}
                   </span>
-                  <span aria-hidden="true">·</span>
-                  <span className="tabular-nums text-white/65">{entry.dateLabel}</span>
+                  {entry.dateLabel && (
+                    <>
+                      <span aria-hidden="true">·</span>
+                      <span className="tabular-nums text-white/65">{entry.dateLabel}</span>
+                    </>
+                  )}
                   {entry.versionTag && (
                     <>
                       <span aria-hidden="true">·</span>
@@ -104,15 +158,31 @@ export const NewsPage: React.FC<NewsPageProps> = () => {
                   {entry.title}
                 </h2>
 
-                <p className="max-w-[740px] text-[15.5px] leading-[1.68] text-white/65">
-                  {entry.summary}
-                </p>
+                {entry.summary && (
+                  <p className="max-w-[740px] text-[15.5px] leading-[1.68] text-white/65">
+                    {entry.summary}
+                  </p>
+                )}
 
-                <ul className="list-disc space-y-2 pl-5 pt-1 text-[15px] leading-[1.65] text-white/80 marker:text-[#ff2d55]/75">
-                  {entry.highlights.map((bullet) => (
-                    <li key={bullet}>{bullet}</li>
-                  ))}
-                </ul>
+                {entry.highlights.length > 0 && (
+                  <ul className="list-disc space-y-2 pl-5 pt-1 text-[15px] leading-[1.65] text-white/80 marker:text-[#ff2d55]/75">
+                    {entry.highlights.map((bullet) => (
+                      <li key={bullet}>{bullet}</li>
+                    ))}
+                  </ul>
+                )}
+
+                {entry.url && (
+                  <a
+                    href={entry.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 font-mono text-[11px] uppercase tracking-[0.1em] text-[#ff2d55] hover:underline underline-offset-4"
+                  >
+                    {entry.versionTag ? 'View release on GitHub' : 'View on GitHub'}
+                    <ExternalLink className="w-3 h-3" />
+                  </a>
+                )}
               </article>
             ))}
           </div>
