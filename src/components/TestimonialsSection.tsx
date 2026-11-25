@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { ArrowRight, Github, MessageSquareQuote } from 'lucide-react';
 import { ScrollReveal } from './MotionPrimitives';
 import { TestimonialCoverflow } from './ui/testimonial-coverflow';
@@ -6,13 +6,35 @@ import {
   TESTIMONIALS,
   TESTIMONIAL_FORM_URL,
   TESTIMONIAL_ISSUE_URL,
+  type Testimonial,
 } from '../data/testimonials';
+import { fetchPublishedTestimonials, mergeTestimonials } from '../utils/testimonialsFeed';
 
 export const TestimonialsSection: React.FC = () => {
+  const [items, setItems] = useState<Testimonial[]>(TESTIMONIALS);
+
+  useEffect(() => {
+    const controller = new AbortController();
+    let active = true;
+
+    fetchPublishedTestimonials(controller.signal)
+      .then((live) => {
+        if (active) setItems(mergeTestimonials(TESTIMONIALS, live));
+      })
+      .catch(() => {
+        // Keep curated items when GitHub is unreachable or rate-limited.
+      });
+
+    return () => {
+      active = false;
+      controller.abort();
+    };
+  }, []);
+
   const formUrl = TESTIMONIAL_FORM_URL.trim();
   const primaryUrl = formUrl || TESTIMONIAL_ISSUE_URL;
   const primaryLabel = formUrl ? 'Share your story' : 'Share on GitHub';
-  const hasTestimonials = TESTIMONIALS.length > 0;
+  const hasTestimonials = items.length > 0;
 
   return (
     <section
@@ -64,7 +86,7 @@ export const TestimonialsSection: React.FC = () => {
           <ScrollReveal delay={0.06} className="lg:col-span-7">
             {hasTestimonials ? (
               <TestimonialCoverflow
-                items={TESTIMONIALS}
+                items={items}
                 title="Community Feedback"
                 defaultIndex={0}
               />

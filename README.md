@@ -105,13 +105,16 @@ vite.config.ts  Vite and Tailwind configuration
 
 ## Testimonials
 
-Listener stories are curated, not auto-scraped, so every quote is real and submitted with consent.
+Listener stories are real and submitted with consent. The section fetches GitHub issues labelled `published` at runtime, so approved reviews appear without code changes.
 
-- Submit in the browser via the Tally form (no account required): https://tally.so/r/Gelv5k
-- Or open a GitHub issue using the `testimonial` issue template.
-- A maintainer reviews each submission, applies the `published` label when approved, then curates the entry into `src/data/testimonials.ts` with an optional `profileUrl` (attribution) and `sourceUrl` (proof), setting `verified: true` when a verifiable source exists.
+How a submission becomes published:
 
-While the list is empty the section shows an honest call-to-action instead of placeholder quotes.
+1. Submit via the Tally form (no account required) or a GitHub issue using the `testimonial` template.
+2. Tally responses are mirrored to a Google Sheet and turned into GitHub issues by the Apps Script bridge (`scripts/tally-to-github-bridge.gs`); GitHub submissions land as issues directly.
+3. A maintainer reviews each issue for consent and quality, then adds the `published` label.
+4. The site fetches `published` issues live and merges them with the static fallback in `src/data/testimonials.ts`, showing `verified: true` with a source link.
+
+Setup and security notes: see [docs/testimonials-pipeline.md](docs/testimonials-pipeline.md).
 
 ## Deployment
 
