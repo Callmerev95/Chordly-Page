@@ -1,60 +1,18 @@
 import React from 'react';
-import { MessageSquareQuote } from 'lucide-react';
+import { ArrowRight, Github, MessageSquareQuote } from 'lucide-react';
 import { ScrollReveal } from './MotionPrimitives';
+import { TestimonialCoverflow } from './ui/testimonial-coverflow';
 import {
-  TestimonialCoverflow,
-  type Testimonial,
-} from './ui/testimonial-coverflow';
-
-const CHORDLY_TESTIMONIALS: Testimonial[] = [
-  {
-    id: 'dac-audiophile',
-    quote:
-      'Bit-Perfect USB DAC mode stopped Android from resampling my lossless tracks to 48 kHz. My external dongle locks straight onto native 24-bit / 192 kHz sample rates.',
-    name: 'Rafi Pratama',
-    role: 'USB DAC Listener · Android 14',
-    initials: 'RP',
-    company: '24-bit / 192 kHz',
-  },
-  {
-    id: 'synced-lyrics',
-    quote:
-      'Twelve lyric providers plus instant Romaji and bilingual toggles beneath every line turned late-night listening into effortless sing-alongs—even obscure B-sides sync cleanly.',
-    name: 'Hana Sato',
-    role: 'J-Pop & Indie Listener · Android',
-    initials: 'HS',
-    company: '12 Lyric Sources',
-  },
-  {
-    id: 'wear-os',
-    quote:
-      'At roughly 4.5 MB on my watch, Chordly lets me leave my phone in my locker and skip tracks or stream straight from the wrist speaker during runs.',
-    name: 'Daniel Lindqvist',
-    role: 'Runner & Commuter · Wear OS 4',
-    initials: 'DL',
-    company: 'Wear Companion',
-  },
-  {
-    id: 'web-bridge',
-    quote:
-      'The extension bridge gives me my full YouTube Music library, mood radios, and live Discord Rich Presence on desktop without bloated wrappers or playback drops.',
-    name: 'Nadia Wijaya',
-    role: 'Software Engineer · Web Player',
-    initials: 'NW',
-    company: 'Extension Bridge',
-  },
-  {
-    id: 'open-source',
-    quote:
-      'We replaced three separate music and lyric utilities with one GPL-3.0 app. Zero trackers, Haze frosted-glass UI driven by album art, and Automix transitions that hold a beat.',
-    name: 'Mateo Alvarez',
-    role: 'Open-Source Contributor · Android',
-    initials: 'MA',
-    company: 'GPL-3.0',
-  },
-];
+  TESTIMONIALS,
+  TESTIMONIAL_FORM_URL,
+  TESTIMONIAL_ISSUE_URL,
+} from '../data/testimonials';
 
 export const TestimonialsSection: React.FC = () => {
+  const formUrl = TESTIMONIAL_FORM_URL.trim();
+  const primaryUrl = formUrl || TESTIMONIAL_ISSUE_URL;
+  const primaryLabel = formUrl ? 'Share your story' : 'Share on GitHub';
+  const hasTestimonials = TESTIMONIALS.length > 0;
 
   return (
     <section
@@ -77,15 +35,61 @@ export const TestimonialsSection: React.FC = () => {
             <p className="text-[17px] leading-[1.6] text-white/55">
               Real setups from people using Chordly every day for bit-perfect USB audio, multilingual synced lyrics, and lightweight Wear OS playback.
             </p>
+
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-3 pt-1">
+              <a
+                href={primaryUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-primary"
+              >
+                <span>{primaryLabel}</span>
+                <ArrowRight className="w-4 h-4" />
+              </a>
+              {formUrl && (
+                <a
+                  href={TESTIMONIAL_ISSUE_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 font-mono text-[11px] uppercase tracking-[0.08em] text-white/50 hover:text-white transition-colors"
+                >
+                  <Github className="w-3.5 h-3.5" />
+                  <span>Prefer GitHub?</span>
+                </a>
+              )}
+            </div>
           </ScrollReveal>
 
-          {/* Right Column: Interactive 3D Testimonial Coverflow */}
+          {/* Right Column: Published coverflow, or an honest intake empty-state */}
           <ScrollReveal delay={0.06} className="lg:col-span-7">
-            <TestimonialCoverflow
-              items={CHORDLY_TESTIMONIALS}
-              title="Community Feedback"
-              defaultIndex={1}
-            />
+            {hasTestimonials ? (
+              <TestimonialCoverflow
+                items={TESTIMONIALS}
+                title="Community Feedback"
+                defaultIndex={0}
+              />
+            ) : (
+              <div className="rounded-[28px] v29-glass-frame p-8 sm:p-12 text-center">
+                <div className="mx-auto grid size-12 place-items-center rounded-full bg-white/[0.06] border border-white/10 text-[#ff2d55]">
+                  <MessageSquareQuote className="w-5 h-5" />
+                </div>
+                <h3 className="mt-5 font-serif italic text-[26px] text-white">
+                  No listener stories yet.
+                </h3>
+                <p className="mt-3 mx-auto max-w-[420px] text-[15px] leading-[1.6] text-white/55">
+                  Be the first. Share how you use Chordly and it may be featured here with attribution.
+                </p>
+                <a
+                  href={primaryUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn-primary mt-7 inline-flex"
+                >
+                  <span>{primaryLabel}</span>
+                  <ArrowRight className="w-4 h-4" />
+                </a>
+              </div>
+            )}
           </ScrollReveal>
         </div>
       </div>

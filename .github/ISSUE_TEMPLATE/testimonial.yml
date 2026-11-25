@@ -1,0 +1,51 @@
+name: Share your Chordly story
+description: Submit a testimonial to be featured on chordly.my.id
+title: "[Testimonial] "
+labels: ["testimonial"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for sharing your Chordly experience. Reviews are read manually before being featured, and only content you consent to display publicly will be used.
+  - type: input
+    id: display_name
+    attributes:
+      label: Display name / handle
+      description: How you would like to be credited on the site.
+      placeholder: e.g. @yourhandle
+    validations:
+      required: true
+  - type: dropdown
+    id: platform
+    attributes:
+      label: Platform
+      options:
+        - Android
+        - Wear OS
+        - Android TV
+        - Web Player
+    validations:
+      required: true
+  - type: textarea
+    id: review
+    attributes:
+      label: Your review
+      description: Keep it to roughly 500 characters or less.
+      placeholder: What do you like about Chordly?
+    validations:
+      required: true
+  - type: input
+    id: profile_link
+    attributes:
+      label: Profile link (optional)
+      description: Public profile such as Instagram, TikTok, X, GitHub, or a website. Shown as attribution if featured.
+      placeholder: https://instagram.com/yourhandle
+    validations:
+      required: false
+  - type: checkboxes
+    id: consent
+    attributes:
+      label: Consent
+      options:
+        - label: I agree to have this review featured on chordly.my.id with attribution.
+          required: true

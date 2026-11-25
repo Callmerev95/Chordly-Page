@@ -10,18 +10,11 @@ import {
   useTransform,
   type MotionValue,
 } from 'motion/react';
-import { ChevronLeft, ChevronRight, Quote } from 'lucide-react';
+import { BadgeCheck, ChevronLeft, ChevronRight, ExternalLink, Quote } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import type { Testimonial } from '../../data/testimonials';
 
-export interface Testimonial {
-  id: string;
-  quote: string;
-  name: string;
-  role: string;
-  initials?: string;
-  avatarUrl?: string;
-  company?: string;
-}
+export type { Testimonial };
 
 export interface TestimonialCoverflowProps {
   items: Testimonial[];
@@ -132,17 +125,30 @@ function Card({ item, i, pos, w, reduce, active }: CardProps) {
             )}
           </motion.span>
           <span className="min-w-0 text-sm">
-            <span className="block font-semibold text-white truncate">
-              {item.name}
+            <span className="flex items-center gap-1 font-semibold text-white">
+              <span className="truncate">{item.name}</span>
+              {item.verified && (
+                <BadgeCheck
+                  className="size-3.5 shrink-0 text-[#ff2d55]"
+                  role="img"
+                  aria-label="Verified"
+                />
+              )}
             </span>
             <span className="block text-[12px] text-white/45 truncate">
               {item.role}
             </span>
           </span>
-          {item.company && (
-            <span className="ml-auto font-mono text-[11px] text-white/60 whitespace-nowrap shrink-0">
-              {item.company}
-            </span>
+          {(item.sourceUrl || item.profileUrl) && (
+            <a
+              href={item.sourceUrl ?? item.profileUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="ml-auto inline-flex items-center gap-1 whitespace-nowrap shrink-0 font-mono text-[11px] text-[#ff2d55] hover:underline underline-offset-4"
+            >
+              {item.sourceUrl ? 'Source' : 'Profile'}
+              <ExternalLink className="size-3" aria-hidden="true" />
+            </a>
           )}
         </figcaption>
       </figure>

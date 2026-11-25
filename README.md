@@ -103,6 +103,16 @@ index.html      Document metadata and font loading
 vite.config.ts  Vite and Tailwind configuration
 ```
 
+## Testimonials
+
+Listener stories are curated, not auto-scraped, so every quote is real and submitted with consent.
+
+- Submit in the browser via the Tally form (no account required): https://tally.so/r/Gelv5k
+- Or open a GitHub issue using the `testimonial` issue template.
+- A maintainer reviews each submission, applies the `published` label when approved, then curates the entry into `src/data/testimonials.ts` with an optional `profileUrl` (attribution) and `sourceUrl` (proof), setting `verified: true` when a verifiable source exists.
+
+While the list is empty the section shows an honest call-to-action instead of placeholder quotes.
+
 ## Deployment
 
 The production build is a static site served at https://chordly.my.id. Run `npm run build` and deploy the `dist/` directory to any static host, such as Vercel, Netlify, Cloudflare Pages, or GitHub Pages.
