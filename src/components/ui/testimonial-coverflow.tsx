@@ -81,6 +81,7 @@ function Card({ item, i, pos, w, reduce, active }: CardProps) {
         zIndex: zi,
         filter: blur,
         transformStyle: 'preserve-3d',
+        pointerEvents: active ? 'auto' : 'none',
       }}
     >
       <figure
@@ -144,6 +145,8 @@ function Card({ item, i, pos, w, reduce, active }: CardProps) {
               href={item.sourceUrl ?? item.profileUrl}
               target="_blank"
               rel="noopener noreferrer"
+              onPointerDown={(e) => e.stopPropagation()}
+              onClick={(e) => e.stopPropagation()}
               className="ml-auto inline-flex items-center gap-1 whitespace-nowrap shrink-0 font-mono text-[11px] text-[#ff2d55] hover:underline underline-offset-4"
             >
               {item.sourceUrl ? 'Source' : 'Profile'}
