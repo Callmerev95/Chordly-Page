@@ -2,7 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { ChordlyLogo } from './ChordlyLogo';
 import { Menu, X } from 'lucide-react';
 
-export const Navbar: React.FC = () => {
+interface NavbarProps {
+  onNavigate?: (to: string, e?: React.MouseEvent<HTMLAnchorElement>) => void;
+  currentPath?: string;
+}
+
+export const Navbar: React.FC<NavbarProps> = ({ onNavigate, currentPath = '/' }) => {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -35,7 +40,8 @@ export const Navbar: React.FC = () => {
           {/* Zone 1: Newsreader Italic Logo */}
           <div className="justify-self-start">
             <a
-              href="#"
+              href="/"
+              onClick={(e) => onNavigate?.('/', e)}
               className="inline-flex items-center focus:outline-none focus-visible:ring-2 focus-visible:ring-[#ff2d55] rounded-full p-1 -m-1 shrink-0"
               aria-label="Chordly Home"
             >
@@ -51,8 +57,11 @@ export const Navbar: React.FC = () => {
             {navLinks.map((link) => (
               <a
                 key={link.label}
-                href={link.href}
-                className="font-mono text-[11px] uppercase tracking-[0.12em] text-white/45 hover:text-white transition-colors duration-200 whitespace-nowrap shrink-0"
+                href={`/${link.href}`}
+                onClick={(e) => onNavigate?.(`/${link.href}`, e)}
+                className={`font-mono text-[11px] uppercase tracking-[0.12em] transition-colors duration-200 whitespace-nowrap shrink-0 ${
+                  currentPath === '/' ? 'text-white/45 hover:text-white' : 'text-white/55 hover:text-white'
+                }`}
               >
                 {link.label}
               </a>
@@ -62,7 +71,8 @@ export const Navbar: React.FC = () => {
           {/* Zone 3: Single White Pill Primary Action */}
           <div className="hidden lg:flex items-center justify-self-end shrink-0">
             <a
-              href="#install"
+              href="/#install"
+              onClick={(e) => onNavigate?.('/#install', e)}
               className="btn-primary px-5 py-2.5 text-[12px]"
             >
               Download v1.9.4
@@ -91,8 +101,11 @@ export const Navbar: React.FC = () => {
             {navLinks.map((link) => (
               <a
                 key={link.label}
-                href={link.href}
-                onClick={() => setMobileMenuOpen(false)}
+                href={`/${link.href}`}
+                onClick={(e) => {
+                  setMobileMenuOpen(false);
+                  onNavigate?.(`/${link.href}`, e);
+                }}
                 className="py-2 font-mono text-xs uppercase tracking-[0.12em] text-white/70 hover:text-white transition-colors flex items-center"
               >
                 <span>{link.label}</span>
@@ -102,8 +115,11 @@ export const Navbar: React.FC = () => {
 
           <div className="pt-3 border-t border-white/[0.08]">
             <a
-              href="#install"
-              onClick={() => setMobileMenuOpen(false)}
+              href="/#install"
+              onClick={(e) => {
+                setMobileMenuOpen(false);
+                onNavigate?.('/#install', e);
+              }}
               className="btn-primary w-full py-2.5 text-center"
             >
               Download Universal APK (v1.9.4)

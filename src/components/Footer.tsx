@@ -2,7 +2,11 @@ import React from 'react';
 import { ChordlyLogo } from './ChordlyLogo';
 import { Github, ExternalLink } from 'lucide-react';
 
-export const Footer: React.FC = () => {
+interface FooterProps {
+  onNavigate?: (to: string, e?: React.MouseEvent<HTMLAnchorElement>) => void;
+}
+
+export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
   return (
     <footer className="relative z-10 bg-[#070708] pt-14 pb-10 text-[14px] text-white/50 select-none">
       <div className="max-w-7xl mx-auto px-[4vw] sm:px-6 lg:px-8">
@@ -21,12 +25,20 @@ export const Footer: React.FC = () => {
             <h4 className="font-mono uppercase tracking-[0.12em] text-white text-[11px]">Platforms</h4>
             <ul className="space-y-1.5 text-[13px]">
               <li>
-                <a href="#install" className="hover:text-white transition-colors">
+                <a
+                  href="/#install"
+                  onClick={(e) => onNavigate?.('/#install', e)}
+                  className="hover:text-white transition-colors"
+                >
                   Android APK
                 </a>
               </li>
               <li>
-                <a href="#wear-os" className="hover:text-white transition-colors">
+                <a
+                  href="/#wear-os"
+                  onClick={(e) => onNavigate?.('/#wear-os', e)}
+                  className="hover:text-white transition-colors"
+                >
                   Wear OS
                 </a>
               </li>
@@ -99,6 +111,24 @@ export const Footer: React.FC = () => {
           <div className="col-span-2 md:col-span-1 lg:col-span-2 space-y-2.5">
             <h4 className="font-mono uppercase tracking-[0.12em] text-white text-[11px]">Legal &amp; About</h4>
             <ul className="grid grid-cols-2 gap-x-6 gap-y-1.5 md:block md:space-y-1.5 text-[13px]">
+              <li>
+                <a
+                  href="/privacy"
+                  onClick={(e) => onNavigate?.('/privacy', e)}
+                  className="hover:text-white transition-colors"
+                >
+                  Privacy Policy
+                </a>
+              </li>
+              <li>
+                <a
+                  href="/terms"
+                  onClick={(e) => onNavigate?.('/terms', e)}
+                  className="hover:text-white transition-colors"
+                >
+                  Terms of Service
+                </a>
+              </li>
               <li>
                 <a
                   href="https://www.gnu.org/licenses/gpl-3.0.en.html"
