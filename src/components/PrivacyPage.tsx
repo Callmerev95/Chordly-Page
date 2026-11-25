@@ -283,6 +283,13 @@ export const PrivacyPage: React.FC<PrivacyPageProps> = ({ onNavigate }) => {
                 <strong className="font-semibold text-white">Inline Lyrics Translation:</strong> when translation is toggled beneath active lyrics, lyric text is dispatched to the configured translation provider only for that track.
               </li>
               <li>
+                <strong className="font-semibold text-white">Google Drive Backup (optional):</strong> only if you connect a Google account, a single backup archive is written to a hidden app-data folder in your own Drive, as described in{' '}
+                <a href="#backups" className="text-[#ff2d55] hover:underline underline-offset-4">
+                  Section 6
+                </a>
+                .
+              </li>
+              <li>
                 <strong className="font-semibold text-white">Google Cast &amp; Wear OS Companion:</strong> casting delegates media retrieval directly to your Cast receiver, while the ~4.5 MB Wear OS companion synchronizes playback control or direct wrist-speaker streaming alongside your paired phone.
               </li>
             </ul>
@@ -339,6 +346,41 @@ export const PrivacyPage: React.FC<PrivacyPageProps> = ({ onNavigate }) => {
             </p>
             <p>
               Where Android OS device backup is enabled in your system settings, Android may preserve general app preferences under your Google account settings, excluding encrypted credential stores and cached tokens.
+            </p>
+            <h3 className="font-sans font-semibold text-[17px] text-white pt-2">
+              Optional Google Drive Backup
+            </h3>
+            <p>
+              Enabling cloud backup is entirely optional. When you connect a Google account in Settings, Chordly requests the single scope{' '}
+              <code className="font-mono text-[13px] text-white/80">https://www.googleapis.com/auth/drive.appdata</code>
+              . That scope grants access only to a hidden application-data folder inside your own Drive; Chordly cannot read, list, modify, or delete any other file stored in your Drive.
+            </p>
+            <p>
+              The archive itself is a compressed JSON file containing playlists, equalizer presets, interface preferences, and listening statistics. It never contains authentication cookies, tokens, or API keys. The file is uploaded directly from your device to that app-data folder and downloaded back only when you start a restore. Your Google data is not routed through, and is not stored on, any server operated by the Maintainer.
+            </p>
+            <p>
+              You can revoke access at any time by disconnecting the account in Settings, deleting the backup from within the app, or removing Chordly under{' '}
+              <a
+                href="https://myaccount.google.com/permissions"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-[#ff2d55] hover:underline underline-offset-4"
+              >
+                Google Account permissions
+              </a>
+              . Removing access does not erase a file already saved in your Drive; use the in-app delete action or Google Drive&apos;s own controls for that.
+            </p>
+            <p>
+              Chordly&apos;s use and transfer of information received from Google APIs adheres to the{' '}
+              <a
+                href="https://developers.google.com/terms/api-services-user-data-policy"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-[#ff2d55] hover:underline underline-offset-4"
+              >
+                Google API Services User Data Policy
+              </a>
+              , including the Limited Use requirements.
             </p>
           </section>
 

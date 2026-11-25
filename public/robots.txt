@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://chordly.my.id/sitemap.xml
+Sitemap: https://www.chordly.my.id/sitemap.xml
