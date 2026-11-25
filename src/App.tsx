@@ -18,12 +18,14 @@ import { FaqSection } from './components/FaqSection';
 import { FinalCtaSection } from './components/FinalCtaSection';
 import { TermsPage } from './components/TermsPage';
 import { PrivacyPage } from './components/PrivacyPage';
+import { NotFoundPage } from './components/NotFoundPage';
 import { Footer } from './components/Footer';
 import { AmbientParallaxBackdrop } from './components/AmbientParallaxBackdrop';
 
 function normalizePathname(pathname: string): string {
   const trimmed = pathname.replace(/\/+$/, '');
-  return trimmed || '/';
+  if (!trimmed || trimmed === '/index.html') return '/';
+  return trimmed;
 }
 
 /**
@@ -35,8 +37,10 @@ export default function App() {
     normalizePathname(window.location.pathname)
   );
 
+  const isHomePage = currentPath === '/';
   const isTermsPage = currentPath === '/terms';
   const isPrivacyPage = currentPath === '/privacy';
+  const isNotFoundPage = !isHomePage && !isTermsPage && !isPrivacyPage;
 
   useEffect(() => {
     const handlePopState = () => {
@@ -51,10 +55,12 @@ export default function App() {
       document.title = 'Terms of Service — Chordly';
     } else if (isPrivacyPage) {
       document.title = 'Privacy Policy — Chordly';
+    } else if (isNotFoundPage) {
+      document.title = '404 — Page Not Found · Chordly';
     } else {
       document.title = 'Chordly — Independent YouTube Music Player with Synced Lyrics';
     }
-  }, [isTermsPage, isPrivacyPage]);
+  }, [isTermsPage, isPrivacyPage, isNotFoundPage]);
 
   useEffect(() => {
     if (window.location.hash) {
@@ -111,6 +117,8 @@ export default function App() {
             <TermsPage onNavigate={navigate} />
           ) : isPrivacyPage ? (
             <PrivacyPage onNavigate={navigate} />
+          ) : isNotFoundPage ? (
+            <NotFoundPage path={currentPath} onNavigate={navigate} />
           ) : (
             <>
               <HeroSection />
