@@ -1,13 +1,22 @@
 import React, { useEffect, useState } from 'react';
-import { 
-  Play, Pause, SkipForward, SkipBack, Volume2, 
-  Music, Mic2, Disc3, Wifi, Battery, Sparkles, Lock
+import {
+  Play,
+  Pause,
+  SkipForward,
+  SkipBack,
+  Volume2,
+  Music,
+  Mic2,
+  Disc3,
+  Wifi,
+  Battery,
+  Lock,
 } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
 import { AUDIO_EASE } from './MotionPrimitives';
 
 /* =========================================================================
-   1. Phone Mockup Frame (Android)
+   1. Phone Mockup Frame (Android — Variation 29 Obsidian Glass Shell)
    ========================================================================= */
 
 interface PhoneFrameProps {
@@ -42,31 +51,32 @@ export const PhoneFrame: React.FC<PhoneFrameProps> = ({
   const showImage = Boolean(src && !imageError);
 
   return (
-    <div className={`relative mx-auto max-w-[320px] sm:max-w-[340px] w-full select-none ${className}`}>
-      {/* Outer Phone Shell */}
-      <div className="relative rounded-[42px] p-[10px] bg-gradient-to-b from-[#2A2633] via-[#15131C] to-[#0A090F] shadow-[0_25px_70px_-15px_rgba(0,0,0,0.85),0_0_40px_-10px_rgba(255,45,85,0.25)] border border-white/10">
-        
-        {/* Subtle hardware side buttons */}
-        <div className="absolute -left-[3px] top-28 w-[3px] h-10 bg-[#353040] rounded-l" />
-        <div className="absolute -left-[3px] top-42 w-[3px] h-10 bg-[#353040] rounded-l" />
-        <div className="absolute -right-[3px] top-32 w-[3px] h-14 bg-[#353040] rounded-r" />
+    <div className={`relative mx-auto max-w-[300px] sm:max-w-[320px] w-full select-none ${className}`}>
+      <div className="relative rounded-[28px] p-[8px] bg-[#0e0e11] border border-white/[0.14] shadow-[0_24px_60px_rgba(0,0,0,0.65)]">
+        {/* Hardware side keys */}
+        <div className="absolute -left-[2px] top-24 w-[2px] h-9 bg-white/20" />
+        <div className="absolute -left-[2px] top-36 w-[2px] h-9 bg-white/20" />
+        <div className="absolute -right-[2px] top-28 w-[2px] h-12 bg-white/20" />
 
         {/* Screen Bezel */}
-        <div className={`relative overflow-hidden rounded-[34px] bg-[#09080E] border border-white/5 flex flex-col ${showImage ? screenClassName : 'aspect-[9/19.5]'}`}>
-          
-          {/* Screen Content: Either full-bleed real image asset or rich rendered mockup */}
+        <div
+          className={`relative overflow-hidden rounded-[20px] bg-[#070708] border border-white/[0.08] flex flex-col ${
+            showImage ? screenClassName : 'aspect-[9/19.5]'
+          }`}
+        >
           {showImage ? (
-            <div className="relative flex-1 min-h-0 overflow-hidden w-full bg-[#09080E]">
+            <div className="relative flex-1 min-h-0 overflow-hidden w-full bg-[#070708]">
               <AnimatePresence mode="wait">
                 <motion.img
                   key={src}
                   src={src}
                   alt={alt}
+                  referrerPolicy="no-referrer"
                   onError={() => setImageError(true)}
-                  initial={{ opacity: 0, scale: 0.985 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 1.01 }}
-                  transition={{ duration: 0.2, ease: AUDIO_EASE }}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.18, ease: AUDIO_EASE }}
                   className={imgClassName || 'block w-full h-auto'}
                   loading="lazy"
                 />
@@ -74,119 +84,100 @@ export const PhoneFrame: React.FC<PhoneFrameProps> = ({
             </div>
           ) : (
             <>
-              {/* Top Status Bar & Camera Punch */}
-              <div className="relative z-30 flex items-center justify-between px-6 pt-3 pb-1 text-[11px] text-zinc-400 font-medium">
+              <div className="relative z-30 flex items-center justify-between px-5 pt-3 pb-1 text-[11px] text-white/60 font-mono">
                 <span>09:41</span>
-                {/* Center camera pill */}
-                <div className="w-16 h-4 bg-black rounded-full flex items-center justify-center">
-                  <div className="w-2.5 h-2.5 bg-[#121118] rounded-full border border-white/10" />
+                <div className="w-14 h-3.5 bg-white/[0.06] rounded-full flex items-center justify-center">
+                  <div className="w-2 h-2 bg-white/20 rounded-full" />
                 </div>
                 <div className="flex items-center gap-1.5">
-                  <Wifi className="w-3 h-3 text-zinc-400" />
-                  <Battery className="w-3.5 h-3.5 text-zinc-400" />
+                  <Wifi className="w-3 h-3 text-white/60" />
+                  <Battery className="w-3.5 h-3.5 text-white/60" />
                 </div>
               </div>
 
-              <div className="relative flex-1 w-full h-full flex flex-col justify-between p-5 bg-gradient-to-b from-[#180E1E] via-[#0E0C16] to-[#07060A] text-white">
-                {/* Header */}
-                <div className="flex items-center justify-between pt-1">
-                  <span className="text-[11px] font-semibold tracking-wider uppercase text-zinc-400">
+              <div className="relative flex-1 w-full h-full flex flex-col justify-between p-5 bg-[#070708] text-white">
+                <div className="flex items-center justify-between pt-1 border-b border-white/[0.08] pb-2">
+                  <span className="font-mono text-[10px] tracking-wider uppercase text-white/50">
                     {variant === 'lyrics' ? 'Synced Lyrics' : 'Bit-Perfect DAC'}
                   </span>
-                  <span className="px-2 py-0.5 rounded-full bg-[#FF2D55]/20 text-[#FF2D55] text-[10px] font-bold border border-[#FF2D55]/30">
+                  <span className="px-2 py-0.5 rounded-full bg-white/[0.05] border border-white/10 text-[#ff2d55] text-[10px] font-mono">
                     24-BIT / 192 kHz
                   </span>
                 </div>
 
-                {/* Centered Content depending on variant */}
                 {variant === 'lyrics' ? (
                   <div className="space-y-4 py-4 my-auto">
-                    <div className="text-zinc-500 text-sm font-medium transition-all">
-                      I'm tryna put you in the worst mood, ah
+                    <div className="text-white/35 text-sm">
+                      I&apos;m tryna put you in the worst mood, ah
                     </div>
-                    <div className="text-zinc-500 text-sm font-medium">
+                    <div className="text-white/55 text-sm">
                       P1 cleaner than your church shoes, ah
                     </div>
-                    {/* Active Synced Lyric with glowing gradient text */}
-                    <div className="p-3.5 rounded-2xl bg-white/[0.06] border border-white/10 shadow-[0_4px_20px_rgba(255,45,85,0.2)]">
-                      <p className="text-base font-bold text-white leading-snug">
-                        Look what you've done, I'm a motherfuckin' starboy
+                    <div className="p-3 bg-white/[0.04] border border-white/15 rounded-2xl">
+                      <p className="text-sm font-semibold text-white leading-snug">
+                        Look what you&apos;ve done, I&apos;m a motherfuckin&apos; starboy
                       </p>
-                      <p className="text-xs text-[#FF6B8A] font-medium mt-1">
-                        [Romaji / Syllable synced]
+                      <p className="text-xs text-[#ff2d55] font-mono mt-1">
+                        Romaji / Syllable synced
                       </p>
                     </div>
-                    <div className="text-zinc-400 text-sm font-medium">
+                    <div className="text-white/55 text-sm">
                       Every day a nigga try to test me, ah
-                    </div>
-                    <div className="text-zinc-500 text-sm font-medium">
-                      Every day a shit that you can't see, ah
                     </div>
                   </div>
                 ) : (
                   <div className="my-auto space-y-4">
-                    {/* Album Cover & DAC routing graphic */}
-                    <div className="relative mx-auto w-36 h-36 rounded-2xl overflow-hidden shadow-2xl border border-white/10 bg-gradient-to-tr from-[#FF2D55] to-[#7C5CFF] flex items-center justify-center">
-                      <Disc3 className="w-16 h-16 text-white/90 animate-spin" style={{ animationDuration: '10s' }} />
-                      <div className="absolute inset-0 bg-black/20" />
+                    <div className="relative mx-auto w-32 h-32 rounded-2xl overflow-hidden border border-white/10 bg-white/[0.04] flex items-center justify-center">
+                      <Disc3 className="w-14 h-14 text-white/80" />
                     </div>
                     <div className="text-center">
-                      <h4 className="font-bold text-base text-white">{trackTitle}</h4>
-                      <p className="text-xs text-zinc-400">{artistName}</p>
+                      <h4 className="font-serif italic text-lg text-white">{trackTitle}</h4>
+                      <p className="text-xs text-white/50">{artistName}</p>
                     </div>
-                    <div className="p-2.5 rounded-xl bg-white/[0.04] border border-white/10 text-center">
-                      <p className="text-[10px] uppercase font-bold text-[#4ADE80] tracking-wider flex items-center justify-center gap-1">
-                        <span className="w-1.5 h-1.5 rounded-full bg-[#4ADE80] animate-pulse" />
-                        Direct USB DAC Mode Active
+                    <div className="p-2.5 rounded-2xl bg-white/[0.04] border border-white/10 text-center">
+                      <p className="font-mono text-[10px] uppercase text-[#ff2d55] tracking-wider">
+                        Direct USB DAC Active
                       </p>
-                      <p className="text-[11px] text-zinc-400 mt-0.5">Hardware Flinger Bypassed · Lossless</p>
+                      <p className="text-[11px] text-white/50 mt-0.5">
+                        Hardware Flinger Bypassed
+                      </p>
                     </div>
                   </div>
                 )}
 
-                {/* Bottom Player Controls */}
-                <div className="space-y-3 pt-2">
-                  {/* Progress Bar */}
+                <div className="space-y-3 pt-2 border-t border-white/[0.08]">
                   <div className="space-y-1">
                     <div className="h-1 w-full bg-white/10 rounded-full overflow-hidden">
-                      <div className="h-full bg-gradient-to-r from-[#FF2D55] to-[#FF9A62] w-[62%] rounded-full" />
+                      <div className="h-full bg-[#ff2d55] w-[62%]" />
                     </div>
-                    <div className="flex justify-between text-[10px] text-zinc-500 font-mono">
+                    <div className="flex justify-between text-[10px] text-white/50 font-mono tabular-nums">
                       <span>2:18</span>
                       <span>3:50</span>
                     </div>
                   </div>
-
-                  {/* Buttons */}
                   <div className="flex items-center justify-between px-2 pb-1">
-                    <Mic2 className="w-4 h-4 text-[#FF2D55]" />
+                    <Mic2 className="w-4 h-4 text-[#ff2d55]" />
                     <div className="flex items-center gap-5">
-                      <SkipBack className="w-5 h-5 text-zinc-300" />
-                      <div className="w-10 h-10 rounded-full bg-white text-black flex items-center justify-center shadow-lg">
-                        <Pause className="w-5 h-5 fill-current" />
+                      <SkipBack className="w-4 h-4 text-white/50" />
+                      <div className="w-9 h-9 rounded-full bg-white text-[#070708] flex items-center justify-center">
+                        <Pause className="w-4 h-4 fill-current" />
                       </div>
-                      <SkipForward className="w-5 h-5 text-zinc-300" />
+                      <SkipForward className="w-4 h-4 text-white/50" />
                     </div>
-                    <Volume2 className="w-4 h-4 text-zinc-400" />
+                    <Volume2 className="w-4 h-4 text-white/50" />
                   </div>
                 </div>
-
-              </div>
-
-              {/* Bottom gesture pill */}
-              <div className="relative z-30 pb-2 flex justify-center">
-                <div className="w-28 h-1 bg-white/30 rounded-full" />
               </div>
             </>
           )}
         </div>
       </div>
 
-      {/* Floating Badge if specified */}
       {badge && (
-        <div className="absolute -top-3 right-4 z-40 px-3.5 py-1 rounded-full bg-[#FF2D55] text-white text-xs font-bold shadow-lg border border-white/20 flex items-center gap-1.5">
-          <Sparkles className="w-3.5 h-3.5" />
-          {badge}
+        <div className="mt-2.5 text-center">
+          <span className="inline-block px-3 py-1 rounded-full bg-white/[0.04] border border-white/10 text-white font-mono text-[11px]">
+            {badge}
+          </span>
         </div>
       )}
     </div>
@@ -194,7 +185,7 @@ export const PhoneFrame: React.FC<PhoneFrameProps> = ({
 };
 
 /* =========================================================================
-   2. Browser Mockup Frame (Web Player)
+   2. Browser Mockup Frame (Web Player — Variation 29 Frosted Window)
    ========================================================================= */
 
 interface BrowserFrameProps {
@@ -217,115 +208,102 @@ export const BrowserFrame: React.FC<BrowserFrameProps> = ({
   }, [src]);
 
   return (
-    <div className={`@container relative rounded-2xl overflow-hidden border border-white/10 bg-[#0E0C12] shadow-[0_30px_90px_-20px_rgba(0,0,0,0.9)] ${className}`}>
-      {/* Browser Chrome Header */}
-      <div className="flex items-center justify-between gap-2.5 sm:gap-3 px-3 sm:px-4 py-2.5 sm:py-3 bg-[#15131C] border-b border-white/10 select-none min-w-0">
-        {/* macOS Traffic Lights */}
-        <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
-          <div className="w-3 h-3 rounded-full bg-[#FF5F56] border border-[#E0443E] shrink-0" />
-          <div className="w-3 h-3 rounded-full bg-[#FFBD2E] border border-[#DEA123] shrink-0" />
-          <div className="w-3 h-3 rounded-full bg-[#27C93F] border border-[#1AAB29] shrink-0" />
+    <div
+      className={`@container relative rounded-[20px] overflow-hidden border border-white/[0.12] bg-[#070708] shadow-[0_24px_70px_rgba(0,0,0,0.6)] ${className}`}
+    >
+      {/* Glass Browser Header */}
+      <div className="flex items-center justify-between gap-2.5 sm:gap-3 px-3.5 sm:px-4 py-2.5 bg-white/[0.03] border-b border-white/[0.08] select-none min-w-0">
+        <div className="flex items-center gap-1.5 shrink-0" aria-hidden="true">
+          <div className="w-2.5 h-2.5 rounded-full bg-white/20" />
+          <div className="w-2.5 h-2.5 rounded-full bg-white/20" />
+          <div className="w-2.5 h-2.5 rounded-full bg-white/20" />
         </div>
 
-        {/* Address Bar */}
-        <div className="flex items-center justify-center gap-1.5 sm:gap-2 px-3 py-1 sm:py-1.5 rounded-full bg-[#07060A] border border-white/10 text-[11px] sm:text-xs text-zinc-300 flex-1 min-w-0 max-w-sm mx-auto font-mono overflow-hidden">
-          <Lock className="w-3 h-3 text-[#4ADE80] shrink-0" />
+        <div className="flex items-center justify-center gap-1.5 sm:gap-2 px-3 py-1 rounded-full bg-[#070708] border border-white/10 text-[11px] sm:text-xs text-white/70 flex-1 min-w-0 max-w-md mx-auto font-mono overflow-hidden">
+          <Lock className="w-3 h-3 text-[#ff2d55] shrink-0" />
           <span className="truncate min-w-0">{url}</span>
         </div>
 
-        {/* Browser Extension Indicator */}
-        <div className="hidden @[460px]:flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/[0.06] border border-white/10 text-[11px] text-zinc-400 shrink-0 whitespace-nowrap">
-          <span className="w-1.5 h-1.5 rounded-full bg-[#4ADE80] shrink-0" />
-          <span>Extension Active</span>
+        <div className="hidden @[460px]:flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/[0.04] border border-white/10 font-mono text-[10px] uppercase tracking-wider text-white/60 shrink-0 whitespace-nowrap">
+          <span className="w-1.5 h-1.5 rounded-full bg-[#ff2d55]" />
+          <span>Bridge Ready</span>
         </div>
       </div>
 
-      {/* Screen Area */}
       {src && !imageError ? (
-        <div className="relative w-full overflow-hidden bg-black">
+        <div className="relative w-full overflow-hidden bg-[#070708]">
           <AnimatePresence mode="wait">
             <motion.img
               key={src}
               src={src}
               alt={alt}
+              referrerPolicy="no-referrer"
               onError={() => setImageError(true)}
-              initial={{ opacity: 0, y: 6, scale: 0.99 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: -4, scale: 0.99 }}
-              transition={{ duration: 0.22, ease: AUDIO_EASE }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.18, ease: AUDIO_EASE }}
               className="block w-full h-auto"
               loading="lazy"
             />
           </AnimatePresence>
         </div>
       ) : (
-        <div className="relative aspect-[16/9] w-full overflow-hidden bg-[#07060A] flex flex-col text-white">
-          {/* Main Web Player Workspace */}
+        <div className="relative aspect-[16/9] w-full overflow-hidden bg-[#070708] flex flex-col text-white">
           <div className="flex-1 flex overflow-hidden">
-            {/* Left Nav Column */}
-            <div className="w-44 border-r border-white/10 p-4 space-y-4 hidden md:block bg-[#0B0910]">
-              <div className="flex items-center gap-2 text-white font-bold text-sm">
-                <div className="w-5 h-5 rounded-md bg-[#FF2D55] flex items-center justify-center text-[10px]">C</div>
-                <span>Chordly Web</span>
+            <div className="w-44 border-r border-white/[0.08] p-4 space-y-3 hidden md:block bg-white/[0.02]">
+              <div className="flex items-center gap-2 text-white font-serif italic text-base">
+                <span>Chordly.</span>
               </div>
               <div className="space-y-1 text-xs">
-                <div className="p-2 rounded-lg bg-white/10 text-white font-medium">Home</div>
-                <div className="p-2 rounded-lg text-zinc-400 hover:text-white">Explore</div>
-                <div className="p-2 rounded-lg text-zinc-400 hover:text-white">Library</div>
-                <div className="p-2 rounded-lg text-zinc-400 hover:text-white">Liked Songs</div>
+                <div className="p-2 rounded-lg bg-white/[0.06] text-white font-medium">Home</div>
+                <div className="p-2 rounded-lg text-white/50">Explore</div>
+                <div className="p-2 rounded-lg text-white/50">Library</div>
+                <div className="p-2 rounded-lg text-white/50">Liked Songs</div>
               </div>
             </div>
 
-            {/* Center Player / Grid */}
-            <div className="flex-1 p-6 flex flex-col justify-between overflow-hidden bg-gradient-to-br from-[#1A0E22]/50 via-[#07060A] to-[#07060A]">
+            <div className="flex-1 p-6 flex flex-col justify-between overflow-hidden bg-[#070708]">
               <div>
-                <span className="text-[11px] font-bold text-[#FF2D55] uppercase tracking-wider">
+                <span className="font-mono text-[10px] text-[#ff2d55] uppercase tracking-wider">
                   Live in Browser · Extension Connected
                 </span>
-                <h3 className="text-xl sm:text-2xl font-bold text-white mt-1">
+                <h3 className="font-serif text-xl sm:text-2xl text-white mt-1">
                   Full YouTube Music Library
                 </h3>
-                <p className="text-xs text-zinc-400 mt-1 max-w-md">
-                  Seamless streaming with your playlists, automix radio, and synced lyrics rendered in pure HTML5.
+                <p className="text-xs text-white/50 mt-1 max-w-md">
+                  Seamless streaming with your playlists, automix radio, and synced lyrics.
                 </p>
               </div>
 
-              {/* Mini cards preview */}
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 my-4">
                 {['Quick Picks', 'Chill Beats', 'Synthwave Night', 'Top 50 Global'].map((title, i) => (
-                  <div key={i} className="p-3 rounded-xl bg-white/[0.04] border border-white/5 space-y-2">
-                    <div className="w-full aspect-square rounded-lg bg-gradient-to-tr from-white/10 to-[#FF2D55]/20 flex items-center justify-center">
+                  <div key={i} className="space-y-1.5">
+                    <div className="w-full aspect-square rounded-xl bg-white/[0.04] border border-white/[0.08] flex items-center justify-center">
                       <Music className="w-5 h-5 text-white/50" />
                     </div>
                     <p className="text-xs font-semibold text-white truncate">{title}</p>
-                    <p className="text-[10px] text-zinc-500">Auto Mix</p>
+                    <p className="text-[10px] font-mono text-white/40">Auto Mix</p>
                   </div>
                 ))}
               </div>
 
-              {/* Bottom Playback bar inside web player */}
-              <div className="p-3 rounded-xl bg-[#14121A] border border-white/10 flex items-center justify-between">
+              <div className="p-3 rounded-xl bg-white/[0.03] border border-white/10 flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-md bg-[#FF2D55] flex items-center justify-center font-bold text-xs">
-                    ★
+                  <div className="w-9 h-9 rounded-lg bg-white/[0.06] flex items-center justify-center font-serif italic text-sm text-[#ff2d55]">
+                    C
                   </div>
                   <div>
-                    <p className="text-xs font-bold text-white">Reminder</p>
-                    <p className="text-[10px] text-zinc-400">The Weeknd · Starboy</p>
+                    <p className="text-xs font-semibold text-white">Reminder</p>
+                    <p className="text-[10px] text-white/50">The Weeknd · Starboy</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
-                  <SkipBack className="w-4 h-4 text-zinc-400" />
-                  <div className="w-7 h-7 rounded-full bg-white text-black flex items-center justify-center">
+                  <SkipBack className="w-4 h-4 text-white/50" />
+                  <div className="w-7 h-7 rounded-full bg-white text-[#070708] flex items-center justify-center">
                     <Play className="w-3.5 h-3.5 fill-current ml-0.5" />
                   </div>
-                  <SkipForward className="w-4 h-4 text-zinc-400" />
-                </div>
-                <div className="hidden sm:flex items-center gap-2 text-zinc-400">
-                  <Volume2 className="w-4 h-4" />
-                  <div className="w-16 h-1 bg-white/20 rounded-full">
-                    <div className="w-3/4 h-full bg-white rounded-full" />
-                  </div>
+                  <SkipForward className="w-4 h-4 text-white/50" />
                 </div>
               </div>
             </div>
@@ -337,7 +315,7 @@ export const BrowserFrame: React.FC<BrowserFrameProps> = ({
 };
 
 /* =========================================================================
-   3. Watch Mockup Frame (Wear OS)
+   3. Watch Mockup Frame (Wear OS — Variation 29 Obsidian Shell)
    ========================================================================= */
 
 interface WatchFrameProps {
@@ -347,6 +325,7 @@ interface WatchFrameProps {
   screenType?: 'playback' | 'queue';
   title?: string;
   artist?: string;
+  inverted?: boolean;
 }
 
 export const WatchFrame: React.FC<WatchFrameProps> = ({
@@ -361,81 +340,71 @@ export const WatchFrame: React.FC<WatchFrameProps> = ({
 
   return (
     <div className={`relative inline-block select-none ${className}`}>
-      {/* Outer Watch Case */}
-      <div className="relative w-48 h-48 sm:w-56 sm:h-56 rounded-full p-2.5 bg-gradient-to-b from-[#2E2A36] via-[#1B1922] to-[#111016] shadow-[0_20px_50px_-10px_rgba(0,0,0,0.9),0_0_25px_rgba(255,45,85,0.2)] border border-white/10">
-        
-        {/* Digital Crown on the right side */}
-        <div className="absolute -right-2 top-1/2 -translate-y-1/2 w-3 h-8 bg-[#3E384A] rounded-r-md border border-white/10 shadow-md" />
-        {/* Secondary button */}
-        <div className="absolute -right-1 top-1/3 -translate-y-1/2 w-2 h-5 bg-[#2B2735] rounded-r-sm border border-white/5" />
+      <div className="relative w-48 h-48 sm:w-52 sm:h-52 rounded-full p-2.5 bg-[#0e0e11] border border-white/[0.14] shadow-[0_24px_60px_rgba(0,0,0,0.65)]">
+        <div className="absolute -right-2 top-1/2 -translate-y-1/2 w-2.5 h-7 bg-white/15 rounded-r-[4px] border border-white/10" />
+        <div className="absolute -right-1 top-1/3 -translate-y-1/2 w-1.5 h-4 bg-white/15 rounded-r-[4px]" />
 
-        {/* Watch Face Screen */}
-        <div className="relative w-full h-full rounded-full overflow-hidden bg-black border border-white/10 flex flex-col items-center justify-between p-4 text-center">
-          
+        <div className="relative w-full h-full rounded-full overflow-hidden bg-[#070708] border border-white/10 flex flex-col items-center justify-between p-4 text-center">
           {src && !imageError ? (
             <img
               src={src}
               alt={alt}
+              referrerPolicy="no-referrer"
               onError={() => setImageError(true)}
               className="w-full h-full object-cover rounded-full"
               loading="lazy"
             />
           ) : screenType === 'playback' ? (
-            <div className="relative w-full h-full rounded-full flex flex-col items-center justify-between py-2 text-white bg-gradient-to-b from-[#1C0F22] via-[#0D0B12] to-black">
-              {/* Watch Time & Battery */}
-              <div className="text-[10px] text-zinc-400 font-mono tracking-wider pt-1 flex items-center gap-1.5">
+            <div className="relative w-full h-full rounded-full flex flex-col items-center justify-between py-2 text-white bg-[#070708]">
+              <div className="text-[10px] text-white/50 font-mono tabular-nums pt-1 flex items-center gap-1.5">
                 <span>10:09</span>
-                <span className="w-1 h-1 rounded-full bg-[#FF2D55]" />
-                <span className="text-[#4ADE80]">98%</span>
+                <span aria-hidden="true">·</span>
+                <span className="text-[#ff2d55]">98%</span>
               </div>
 
-              {/* Track Info */}
               <div className="px-2">
-                <p className="text-xs font-bold text-white leading-tight truncate max-w-[120px]">
+                <p className="font-serif italic text-sm text-white leading-tight truncate max-w-[120px]">
                   {title}
                 </p>
-                <p className="text-[10px] text-[#FF6B8A] truncate max-w-[110px] mt-0.5">
+                <p className="text-[10px] text-white/50 truncate max-w-[110px] mt-0.5">
                   {artist}
                 </p>
               </div>
 
-              {/* Controls */}
               <div className="flex items-center justify-center gap-3">
-                <SkipBack className="w-3.5 h-3.5 text-zinc-400" />
-                <div className="w-8 h-8 rounded-full bg-[#FF2D55] text-white flex items-center justify-center shadow-lg">
+                <SkipBack className="w-3.5 h-3.5 text-white/50" />
+                <div className="w-8 h-8 rounded-full bg-white text-[#070708] flex items-center justify-center">
                   <Play className="w-3.5 h-3.5 fill-current ml-0.5" />
                 </div>
-                <SkipForward className="w-3.5 h-3.5 text-zinc-400" />
+                <SkipForward className="w-3.5 h-3.5 text-white/50" />
               </div>
 
-              {/* Speaker / Device indicator */}
-              <div className="text-[9px] font-semibold text-zinc-400 pb-1 flex items-center gap-1">
-                <Volume2 className="w-2.5 h-2.5 text-[#FF2D55]" />
+              <div className="font-mono text-[9px] uppercase tracking-wider text-white/50 pb-1 flex items-center gap-1">
+                <Volume2 className="w-2.5 h-2.5 text-[#ff2d55]" />
                 <span>Watch Speaker</span>
               </div>
             </div>
           ) : (
-            <div className="relative w-full h-full rounded-full flex flex-col justify-between py-3 px-2 text-white bg-[#0A0910]">
-              <div className="text-[10px] text-[#FF2D55] font-bold uppercase tracking-wider">
+            <div className="relative w-full h-full rounded-full flex flex-col justify-between py-3 px-2 text-white bg-[#070708]">
+              <div className="font-mono text-[10px] text-[#ff2d55] font-medium uppercase tracking-wider">
                 Up Next
               </div>
               <div className="space-y-1 text-left px-2">
-                <div className="p-1 rounded bg-white/10 text-[10px] font-semibold truncate">
+                <div className="p-1.5 rounded-lg bg-white/[0.06] text-[10px] font-medium truncate">
                   1. Reminder
                 </div>
-                <div className="p-1 rounded text-[10px] text-zinc-400 truncate">
+                <div className="p-1 text-[10px] text-white/50 truncate">
                   2. I Feel It Coming
                 </div>
-                <div className="p-1 rounded text-[10px] text-zinc-400 truncate">
+                <div className="p-1 text-[10px] text-white/50 truncate">
                   3. False Alarm
                 </div>
               </div>
-              <div className="text-[9px] text-zinc-500 font-mono">
+              <div className="text-[9px] text-white/40 font-mono">
                 Scroll Crown
               </div>
             </div>
           )}
-
         </div>
       </div>
     </div>

@@ -11,27 +11,26 @@ export const OpenSourceSection: React.FC = () => {
   ];
 
   return (
-    <section id="open-source" className="py-16 sm:py-24 md:py-32 relative overflow-hidden">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-12 lg:gap-16 items-center">
-          
-          {/* Left Column (7 cols): Editorial Statement */}
+    <section id="open-source" className="py-20 sm:py-24 bg-[#070708] border-b border-white/[0.08]">
+      <div className="max-w-7xl mx-auto px-[4vw] sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
+          {/* Left Column */}
           <ScrollReveal className="lg:col-span-7 space-y-6">
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/[0.05] border border-white/10 text-xs font-semibold text-[#FF2D55] uppercase tracking-wider">
-              <Scale className="w-3.5 h-3.5" />
-              <span>Free & Open Source</span>
+            <div className="inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.2em] text-white/45">
+              <Scale className="w-3.5 h-3.5 text-[#ff2d55]" />
+              <span>Free &amp; Open Source</span>
             </div>
 
-            <h2 className="text-2xl sm:text-4xl md:text-5xl font-bold text-white tracking-tight leading-tight text-balance">
-              No telemetry. No tracking. Pure GPL-3.0.
+            <h2 className="font-serif font-normal text-[36px] sm:text-[46px] text-white tracking-[-0.03em] leading-[1.06] text-balance">
+              No telemetry. No tracking. <span className="italic">Pure GPL-3.0.</span>
             </h2>
 
-            <p className="text-base sm:text-lg text-zinc-300 leading-relaxed">
+            <p className="text-[17px] leading-[1.6] text-white/55">
               Chordly is free software licensed under GNU General Public License v3.0. Developed entirely by Callmerev, the code is open for review, fork, and contribution. No user data is collected, sold, or shared with third parties.
             </p>
 
             {/* CTAs */}
-            <div className="flex flex-wrap items-center gap-3 pt-2">
+            <div className="flex flex-wrap items-center gap-3 pt-1">
               <a
                 href="https://github.com/Callmerev95/Chordly"
                 target="_blank"
@@ -49,7 +48,7 @@ export const OpenSourceSection: React.FC = () => {
                 rel="noopener noreferrer"
                 className="btn-secondary"
               >
-                <Bug className="w-4 h-4 text-zinc-400" />
+                <Bug className="w-4 h-4 text-white/60" />
                 <span>Report an Issue</span>
               </a>
 
@@ -59,33 +58,30 @@ export const OpenSourceSection: React.FC = () => {
                 rel="noopener noreferrer"
                 className="btn-secondary"
               >
-                <History className="w-4 h-4 text-zinc-400" />
+                <History className="w-4 h-4 text-white/60" />
                 <span>Changelog</span>
               </a>
             </div>
           </ScrollReveal>
 
-          {/* Right Column (5 cols): 2x2 Stats Grid */}
-          <StaggerGroup className="lg:col-span-5 grid grid-cols-2 gap-3 sm:gap-4">
+          {/* Right Column: 2x2 Frosted Stats Grid */}
+          <StaggerGroup className="lg:col-span-5 grid grid-cols-2 gap-4">
             {stats.map((stat, idx) => (
               <StaggerItem key={idx} className="flex">
-                <div
-                  className="w-full p-4 sm:p-6 rounded-[20px] sm:rounded-[24px] liquid-glass border border-white/10 flex flex-col justify-center space-y-1 hover:border-[#FF2D55]/30 transition-colors"
-                >
-                  <span className="text-xl sm:text-3xl font-bold text-white tracking-tight">
+                <div className="w-full p-6 rounded-[24px] v29-glass-card hover:border-white/25 transition-colors flex flex-col justify-center space-y-1.5">
+                  <span className="font-serif italic text-[28px] sm:text-[34px] text-white leading-none tracking-tight tabular-nums">
                     {stat.value}
                   </span>
-                  <span className="text-[11px] sm:text-xs font-semibold uppercase tracking-wider text-[#FF6B8A]">
+                  <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-[#ff2d55]">
                     {stat.label}
                   </span>
-                  <span className="text-[11px] text-zinc-400">
+                  <span className="text-[12px] text-white/45">
                     {stat.sub}
                   </span>
                 </div>
               </StaggerItem>
             ))}
           </StaggerGroup>
-
         </div>
       </div>
     </section>

@@ -25,75 +25,57 @@ export const ListenTogetherSection: React.FC = () => {
   ];
 
   return (
-    <section id="together" className="py-14 sm:py-20 md:py-28 relative overflow-hidden">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
-        {/* Compact Band with border and glow */}
-        <div className="rounded-[24px] sm:rounded-[32px] p-5 sm:p-10 lg:p-12 liquid-glass-elevated relative overflow-hidden border border-white/10">
-          
-          {/* Subtle Ambient Radial */}
-          <div className="absolute -top-20 -left-20 w-80 h-80 bg-[#FF2D55]/15 rounded-full blur-3xl pointer-events-none" />
-          <div className="absolute -bottom-20 -right-20 w-80 h-80 bg-[#7C5CFF]/15 rounded-full blur-3xl pointer-events-none" />
+    <section id="together" className="py-20 sm:py-24 bg-[#070708] border-b border-white/[0.08]">
+      <div className="max-w-7xl mx-auto px-[4vw] sm:px-6 lg:px-8">
+        <div className="p-7 sm:p-10 lg:p-12 rounded-[32px] v29-glass-frame">
+          <ScrollReveal className="relative z-10 max-w-2xl space-y-4">
+            <div className="flex flex-wrap items-center gap-3 font-mono text-[11px] uppercase tracking-[0.16em] text-white/45">
+              <span className="inline-flex items-center gap-2">
+                <Users className="w-3.5 h-3.5 text-[#ff2d55]" />
+                <span>Social Listening</span>
+              </span>
+              <span aria-hidden="true">·</span>
+              <span className="font-mono text-white bg-white/[0.06] border border-white/10 px-2.5 py-0.5 rounded-full">
+                ROOM: CHD247
+              </span>
+            </div>
 
-          <div className="max-w-4xl mx-auto text-center space-y-6 relative z-10">
-            
-            <ScrollReveal className="space-y-5 sm:space-y-6">
-              {/* Tag & Decorative Glass Code Chip */}
-              <div className="flex flex-wrap items-center justify-center gap-2.5 sm:gap-3">
-                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/[0.05] border border-white/10 text-xs font-semibold text-[#FF2D55] uppercase tracking-wider">
-                  <Users className="w-3.5 h-3.5" />
-                  <span>Social Listening</span>
-                </div>
+            <h2 className="font-serif font-normal text-[36px] sm:text-[46px] text-white tracking-[-0.03em] leading-[1.06] text-balance">
+              Listen together, <span className="italic">miles apart.</span>
+            </h2>
 
-                {/* Decorative Glass Code Chip with ping dot */}
-                <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-white/[0.08] border border-[#FF2D55]/40 text-xs font-mono text-white shadow-[0_0_15px_rgba(255,45,85,0.3)]">
-                  <span className="relative flex h-2 w-2">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#FF2D55] opacity-75" />
-                    <span className="relative inline-flex rounded-full h-2 w-2 bg-[#FF2D55]" />
-                  </span>
-                  <span className="font-bold tracking-widest text-[#FF6B8A]">ROOM:</span>
-                  <span className="font-bold tracking-wider">CHD247</span>
-                </div>
-              </div>
+            <p className="text-[17px] leading-[1.6] text-white/55">
+              Generate a room code in seconds. Your friends join from Android or web, and playback syncs across every device with sub-second accuracy.
+            </p>
+          </ScrollReveal>
 
-              {/* H2 */}
-              <h2 className="text-2xl sm:text-4xl md:text-5xl font-bold text-white tracking-tight text-balance">
-                Listen together, miles apart.
-              </h2>
-
-              {/* Body */}
-              <p className="text-base sm:text-lg text-zinc-300 max-w-2xl mx-auto">
-                Generate a room code in seconds. Your friends join from Android or web, and playback syncs across every device with sub-second accuracy.
-              </p>
-            </ScrollReveal>
-
-            {/* 3 Steps Grid */}
-            <StaggerGroup className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 pt-4 sm:pt-8 text-left">
-              {steps.map((step) => {
-                const Icon = step.icon;
-                return (
-                  <StaggerItem key={step.num} className="flex">
-                    <div 
-                      className="w-full p-6 rounded-2xl bg-white/[0.03] border border-white/10 relative overflow-hidden group hover:border-[#FF2D55]/40 transition-colors"
-                    >
-                      <div className="flex items-center justify-between mb-4">
-                        <div className="w-10 h-10 rounded-xl bg-[#FF2D55]/15 border border-[#FF2D55]/25 flex items-center justify-center text-[#FF2D55]">
-                          <Icon className="w-5 h-5" />
-                        </div>
-                        <span className="font-mono text-xs font-bold text-zinc-500">{step.num}</span>
+          {/* 3 Steps Grid */}
+          <StaggerGroup className="relative z-10 grid grid-cols-1 md:grid-cols-3 border-t border-white/[0.08] mt-10">
+            {steps.map((step, idx) => {
+              const Icon = step.icon;
+              return (
+                <StaggerItem key={step.num} className="flex">
+                  <div
+                    className={`w-full py-7 ${
+                      idx < 2 ? 'md:border-r md:border-white/[0.08] md:pr-8' : ''
+                    } ${idx > 0 ? 'border-t md:border-t-0 border-white/[0.08] md:pl-8' : ''}`}
+                  >
+                    <div className="flex items-center justify-between mb-4">
+                      <div className="w-9 h-9 rounded-full bg-white/[0.05] border border-white/10 flex items-center justify-center text-[#ff2d55]">
+                        <Icon className="w-4 h-4" />
                       </div>
-                      <h3 className="text-lg font-bold text-white mb-1.5">{step.title}</h3>
-                      <p className="text-sm text-zinc-400 leading-relaxed">{step.desc}</p>
+                      <span className="font-mono text-[11px] text-white/40 tabular-nums">
+                        {step.num}
+                      </span>
                     </div>
-                  </StaggerItem>
-                );
-              })}
-            </StaggerGroup>
-
-          </div>
-
+                    <h3 className="font-serif italic text-[22px] text-white mb-1.5">{step.title}</h3>
+                    <p className="text-[14px] text-white/50 leading-[1.55]">{step.desc}</p>
+                  </div>
+                </StaggerItem>
+              );
+            })}
+          </StaggerGroup>
         </div>
-
       </div>
     </section>
   );

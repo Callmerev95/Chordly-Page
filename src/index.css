@@ -3,43 +3,67 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-  --color-chordly-bg: #07060A;
-  --color-chordly-elevated: #0E0C12;
-  --color-chordly-surface: rgba(255, 255, 255, 0.045);
-  --color-chordly-surface-strong: rgba(255, 255, 255, 0.08);
-  --color-chordly-border: rgba(255, 255, 255, 0.10);
-  --color-chordly-text: #F6F3F5;
-  --color-chordly-muted: #A7A1AB;
-  --color-chordly-accent: #FF2D55;
-  --color-chordly-accent-soft: #FF6B8A;
-  --color-chordly-warm: #FF9A62;
-  --color-chordly-violet: #7C5CFF;
-  --color-chordly-success: #4ADE80;
+  /* Variation 29 Color System */
+  --color-obsidian: #070708;
+  --color-graphite: #141417;
+  --color-mid-gray: #52525b;
+  --color-fog: #a1a1aa;
+  --color-silver: rgba(255, 255, 255, 0.14);
+  --color-bone: #f2f2f2;
+  --color-white: #ffffff;
+  --color-crimson: #ff2d55;
 
-  --font-sans: 'DM Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  /* Chordly Semantic Aliases */
+  --color-chordly-bg: #070708;
+  --color-chordly-elevated: rgba(255, 255, 255, 0.03);
+  --color-chordly-surface: rgba(255, 255, 255, 0.04);
+  --color-chordly-border: rgba(255, 255, 255, 0.08);
+  --color-chordly-text: #ffffff;
+  --color-chordly-muted: rgba(255, 255, 255, 0.55);
+  --color-chordly-accent: #ff2d55;
+
+  /* Typography — Inter, Newsreader, JetBrains Mono */
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-serif: 'Newsreader', Georgia, Cambria, 'Times New Roman', serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+  /* Shadcn Semantic Color Tokens mapped to Variation 29 */
+  --color-background: #070708;
+  --color-foreground: #ffffff;
+  --color-card: rgba(255, 255, 255, 0.03);
+  --color-card-foreground: #ffffff;
+  --color-primary: #ff2d55;
+  --color-primary-foreground: #ffffff;
+  --color-muted: rgba(255, 255, 255, 0.06);
+  --color-muted-foreground: rgba(255, 255, 255, 0.55);
+  --color-border: rgba(255, 255, 255, 0.12);
+  --color-ring: #ff2d55;
 }
 
 :root {
   color-scheme: dark;
-  --bg: #07060A;
-  --bg-elevated: #0E0C12;
-  --surface: rgba(255, 255, 255, 0.045);
-  --surface-strong: rgba(255, 255, 255, 0.08);
-  --border: rgba(255, 255, 255, 0.10);
-  --text: #F6F3F5;
-  --muted: #A7A1AB;
-  --accent: #FF2D55;
-  --accent-soft: #FF6B8A;
-  --warm: #FF9A62;
-  --violet: #7C5CFF;
-  --success: #4ADE80;
-  --font-sans: 'DM Sans', system-ui, -apple-system, sans-serif;
+  --bg: #070708;
+  --ink: #ffffff;
+  --accent: #ff2d55;
+  --ink-faint: rgba(255, 255, 255, 0.08);
+  --glass-bg: rgba(255, 255, 255, 0.03);
+  --glass-border: rgba(255, 255, 255, 0.12);
+  --background: #070708;
+  --foreground: #ffffff;
+  --card: rgba(255, 255, 255, 0.03);
+  --card-foreground: #ffffff;
+  --primary: #ff2d55;
+  --primary-foreground: #ffffff;
+  --muted: rgba(255, 255, 255, 0.06);
+  --muted-foreground: rgba(255, 255, 255, 0.55);
+  --border: rgba(255, 255, 255, 0.12);
+  --ring: #ff2d55;
 }
 
 html {
   scroll-behavior: smooth;
   background-color: var(--bg);
-  color: var(--text);
+  color: var(--ink);
   font-family: var(--font-sans);
 }
 
@@ -47,23 +71,23 @@ body {
   margin: 0;
   padding: 0;
   background-color: var(--bg);
-  color: var(--text);
+  color: var(--ink);
   overflow-x: hidden;
-  font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
+  font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 /* Accessibility Focus Ring */
 :focus-visible {
-  outline: 2px solid #FF2D55 !important;
+  outline: 2px solid #ff2d55 !important;
   outline-offset: 2px !important;
 }
 
 /* Selection */
 ::selection {
-  background: var(--accent);
-  color: #FFFFFF;
+  background: #ff2d55;
+  color: #ffffff;
 }
 
 /* Custom Scrollbar */
@@ -72,82 +96,64 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: #07060A;
+  background: #070708;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #232029;
+  background: rgba(255, 255, 255, 0.14);
   border-radius: 999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #FF2D55;
+  background: #ff2d55;
 }
 
-/* Liquid Glass Utilities */
-.liquid-glass {
-  background: rgba(255, 255, 255, 0.045);
-  backdrop-filter: blur(24px) saturate(140%);
-  -webkit-backdrop-filter: blur(24px) saturate(140%);
+/* Variation 29 Frosted Glass Frame */
+.v29-glass-frame {
+  position: relative;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(40px);
+  -webkit-backdrop-filter: blur(40px);
+  box-shadow: inset 0 0 80px rgba(255, 255, 255, 0.02), 0 40px 100px rgba(0, 0, 0, 0.5);
+}
+
+.v29-glass-frame::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), transparent 40%);
+  pointer-events: none;
+}
+
+.v29-glass-card {
+  background: rgba(255, 255, 255, 0.03);
   border: 1px solid rgba(255, 255, 255, 0.10);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
 }
 
-.liquid-glass-elevated {
-  background: rgba(255, 255, 255, 0.07);
-  backdrop-filter: blur(32px) saturate(150%);
-  -webkit-backdrop-filter: blur(32px) saturate(150%);
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12), 0 20px 40px -15px rgba(0, 0, 0, 0.6);
-}
-
-.liquid-glass-hover {
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.liquid-glass-hover:hover {
-  background: rgba(255, 255, 255, 0.075);
-  border-color: rgba(255, 255, 255, 0.20);
-  transform: translateY(-2px);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 16px 36px -12px rgba(255, 45, 85, 0.18);
-}
-
-/* Mesh Radial Glows */
-.mesh-radial-hero {
-  background:
-    radial-gradient(ellipse 65% 50% at 50% -10%, rgba(255, 45, 85, 0.22) 0%, transparent 70%),
-    radial-gradient(ellipse 45% 40% at 85% 20%, rgba(124, 92, 255, 0.18) 0%, transparent 60%),
-    radial-gradient(ellipse 40% 35% at 15% 40%, rgba(255, 154, 98, 0.12) 0%, transparent 60%);
-}
-
-.mesh-radial-cta {
-  background:
-    radial-gradient(ellipse 80% 60% at 50% 50%, rgba(255, 45, 85, 0.16) 0%, transparent 70%),
-    radial-gradient(ellipse 50% 50% at 20% 30%, rgba(255, 154, 98, 0.14) 0%, transparent 60%),
-    radial-gradient(ellipse 50% 50% at 80% 70%, rgba(124, 92, 255, 0.16) 0%, transparent 60%);
-}
-
-/* Buttons */
+/* Buttons — Variation 29 Pill System */
 .btn-primary {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  padding: 0.75rem 1.75rem;
+  padding: 0.65rem 1.5rem;
   font-weight: 600;
-  font-size: 0.95rem;
+  font-size: 0.8125rem;
+  line-height: 1.25;
   border-radius: 9999px;
-  background-color: #FF2D55;
-  color: #FFFFFF;
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-  box-shadow: 0 4px 20px -2px rgba(255, 45, 85, 0.45);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  background-color: #ffffff;
+  color: #070708;
+  transition: background-color 0.2s cubic-bezier(0.16, 1, 0.3, 1), transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease;
+  white-space: nowrap;
 }
 
 .btn-primary:hover {
-  background-color: #FF476C;
+  background-color: rgba(255, 255, 255, 0.9);
   transform: translateY(-1px);
-  box-shadow: 0 8px 28px 0 rgba(255, 45, 85, 0.55);
 }
 
 .btn-primary:active {
@@ -159,23 +165,28 @@ body {
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  padding: 0.75rem 1.75rem;
+  padding: 0.65rem 1.5rem;
   font-weight: 500;
-  font-size: 0.95rem;
+  font-size: 0.8125rem;
+  line-height: 1.25;
   border-radius: 9999px;
-  background: rgba(255, 255, 255, 0.05);
-  color: #F6F3F5;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  background-color: rgba(255, 255, 255, 0.04);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  transition: background-color 0.2s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s cubic-bezier(0.16, 1, 0.3, 1), transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  white-space: nowrap;
 }
 
 .btn-secondary:hover {
-  background: rgba(255, 255, 255, 0.10);
-  border-color: rgba(255, 255, 255, 0.25);
-  color: #FFFFFF;
+  background-color: rgba(255, 255, 255, 0.09);
+  border-color: rgba(255, 255, 255, 0.28);
   transform: translateY(-1px);
+}
+
+.btn-secondary:active {
+  transform: translateY(0);
 }
 
 /* Proof Strip Infinite Marquee */
@@ -203,4 +214,3 @@ body {
     animation-play-state: paused;
   }
 }
-

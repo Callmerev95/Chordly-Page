@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { PlayCircle, Link2, Palette, Sliders } from 'lucide-react';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
-import { AUDIO_EASE, PILL_SPRING, ScrollReveal, VIEWPORT_CONFIG } from './MotionPrimitives';
+import { AUDIO_EASE, ScrollReveal, VIEWPORT_CONFIG } from './MotionPrimitives';
 import {
   FEATURE_CATEGORIES,
   FEATURE_FILTERS,
@@ -26,21 +26,21 @@ export const FeatureBento: React.FC = () => {
   const totalFeatures = getTotalFeatureCount(FEATURE_CATEGORIES);
 
   return (
-    <section id="features" className="scroll-mt-14 sm:scroll-mt-16 py-16 sm:py-24 md:py-32 relative">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="features" className="scroll-mt-20 py-20 sm:py-24 bg-[#070708] border-b border-white/[0.08]">
+      <div className="max-w-7xl mx-auto px-[4vw] sm:px-6 lg:px-8">
         {/* Section Header */}
-        <ScrollReveal className="text-center max-w-3xl mx-auto mb-10 sm:mb-12 space-y-4">
-          <div className="flex items-center justify-center gap-2 text-xs sm:text-sm font-medium text-zinc-400 tabular-nums">
-            <span className="text-[#FF2D55] font-semibold">Capabilities</span>
+        <ScrollReveal className="max-w-3xl mb-12 sm:mb-14 space-y-4">
+          <div className="flex flex-wrap items-center gap-2 font-mono text-[11px] uppercase tracking-[0.2em] text-white/45 tabular-nums">
+            <span className="text-[#ff2d55]">Capabilities</span>
             <span aria-hidden="true">·</span>
             <span>4 Core Pillars</span>
             <span aria-hidden="true">·</span>
             <span>{totalFeatures} Features</span>
           </div>
-          <h2 className="text-2xl sm:text-4xl md:text-5xl font-bold text-white tracking-tight text-balance">
-            Built for people who actually listen.
+          <h2 className="font-serif font-normal text-[36px] sm:text-[48px] text-white tracking-[-0.03em] leading-[1.05] text-balance">
+            Built for people who <span className="italic">actually listen.</span>
           </h2>
-          <p className="text-base sm:text-lg text-zinc-300 text-balance">
+          <p className="text-[17px] leading-[1.6] text-white/50 text-balance">
             From Bit-Perfect USB DAC output and pluggable lossless sources to Haze frosted-glass UI and 12 synced lyrics providers.
           </p>
 
@@ -48,7 +48,7 @@ export const FeatureBento: React.FC = () => {
           <div
             role="tablist"
             aria-label="Filter feature categories"
-            className="flex flex-wrap items-center justify-center gap-1.5 sm:gap-2 pt-3"
+            className="flex flex-wrap items-center gap-2 pt-3"
           >
             {FEATURE_FILTERS.map((tab) => {
               const isActive = filter === tab.id;
@@ -59,28 +59,21 @@ export const FeatureBento: React.FC = () => {
                   role="tab"
                   aria-selected={isActive}
                   onClick={() => setFilter(tab.id)}
-                  className={`relative px-3.5 py-2 rounded-xl text-xs font-semibold transition-colors duration-200 border whitespace-nowrap shrink-0 min-h-[40px] ${
+                  className={`px-4 py-2 rounded-full font-mono text-[11px] uppercase tracking-[0.08em] transition-colors duration-150 whitespace-nowrap shrink-0 border ${
                     isActive
-                      ? 'text-black font-bold border-transparent'
-                      : 'bg-white/[0.045] text-zinc-300 hover:text-white hover:bg-white/[0.08] border-white/10'
+                      ? 'bg-white text-[#070708] border-white font-semibold'
+                      : 'bg-white/[0.03] text-white/55 border-white/[0.12] hover:text-white hover:border-white/25'
                   }`}
                 >
-                  {isActive && (
-                    <motion.span
-                      layoutId="bento-filter-pill"
-                      transition={PILL_SPRING}
-                      className="absolute inset-0 rounded-xl bg-white shadow-lg"
-                    />
-                  )}
-                  <span className="relative z-10">{tab.label}</span>
+                  {tab.label}
                 </button>
               );
             })}
           </div>
         </ScrollReveal>
 
-        {/* 12-Column Asymmetric Category Bento */}
-        <motion.div layout className="grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-6">
+        {/* 12-Column Asymmetric Category Grid */}
+        <motion.div layout className="grid grid-cols-1 lg:grid-cols-12 gap-5">
           <AnimatePresence mode="popLayout">
             {visibleCategories.map((category, idx) => {
               const Icon = CATEGORY_ICONS[category.id];
@@ -92,36 +85,29 @@ export const FeatureBento: React.FC = () => {
                 <motion.article
                   key={category.id}
                   layout
-                  initial={prefersReducedMotion ? false : { opacity: 0, y: 18, scale: 0.985 }}
-                  whileInView={prefersReducedMotion ? undefined : { opacity: 1, y: 0, scale: 1 }}
-                  exit={prefersReducedMotion ? undefined : { opacity: 0, scale: 0.97 }}
+                  initial={prefersReducedMotion ? false : { opacity: 0, y: 12 }}
+                  whileInView={prefersReducedMotion ? undefined : { opacity: 1, y: 0 }}
+                  exit={prefersReducedMotion ? undefined : { opacity: 0 }}
                   viewport={VIEWPORT_CONFIG}
                   transition={{
-                    duration: 0.4,
-                    delay: idx * 0.05,
+                    duration: 0.25,
+                    delay: idx * 0.03,
                     ease: AUDIO_EASE,
-                    layout: { duration: 0.28, ease: AUDIO_EASE },
+                    layout: { duration: 0.22, ease: AUDIO_EASE },
                   }}
                   className={`${gridSpanClass} flex`}
                 >
-                  <div className="w-full rounded-2xl sm:rounded-[28px] p-5 sm:p-7 liquid-glass border border-white/10 hover:border-white/20 transition-colors flex flex-col gap-5">
+                  <div className="w-full p-6 sm:p-7 rounded-[24px] v29-glass-card hover:border-white/25 transition-colors flex flex-col gap-5">
                     {/* Card Header */}
                     <div className="flex items-start gap-3.5 pb-4 border-b border-white/[0.08]">
-                      <div
-                        className="w-10 h-10 rounded-xl flex items-center justify-center border shrink-0 mt-0.5"
-                        style={{
-                          backgroundColor: `${category.accent}1A`,
-                          borderColor: `${category.accent}38`,
-                          color: category.accent,
-                        }}
-                      >
-                        <Icon className="w-5 h-5" />
+                      <div className="w-9 h-9 rounded-full bg-white/[0.05] border border-white/10 flex items-center justify-center text-[#ff2d55] shrink-0 mt-0.5">
+                        <Icon className="w-4 h-4" />
                       </div>
                       <div className="min-w-0">
-                        <h3 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
+                        <h3 className="font-serif italic text-[24px] sm:text-[26px] font-normal text-white tracking-[-0.02em] leading-[1.15]">
                           {category.title}
                         </h3>
-                        <p className="text-xs sm:text-sm text-zinc-400 mt-1 leading-relaxed max-w-xl">
+                        <p className="text-[14px] text-white/50 mt-1.5 leading-[1.55] max-w-xl">
                           {category.subtitle}
                         </p>
                       </div>
@@ -131,8 +117,8 @@ export const FeatureBento: React.FC = () => {
                     <ul
                       className={
                         isWideCard
-                          ? 'grid grid-cols-1 md:grid-cols-2 gap-x-7 gap-y-4'
-                          : 'divide-y divide-white/[0.06]'
+                          ? 'grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4'
+                          : 'divide-y divide-white/[0.08]'
                       }
                     >
                       {category.items.map((item) => (
@@ -140,18 +126,18 @@ export const FeatureBento: React.FC = () => {
                           key={item.id}
                           className={
                             isWideCard
-                              ? 'pb-3.5 border-b border-white/[0.06] last:border-b-0 md:[&:nth-last-child(-n+2)]:border-b-0 md:[&:nth-last-child(-n+2)]:pb-0'
+                              ? 'pb-3 border-b border-white/[0.08] last:border-b-0 md:[&:nth-last-child(-n+2)]:border-b-0 md:[&:nth-last-child(-n+2)]:pb-0'
                               : 'py-3 first:pt-0 last:pb-0'
                           }
                         >
                           <div className="min-w-0 space-y-0.5">
-                            <div className="text-sm font-semibold text-white">
+                            <div className="text-[14px] font-semibold text-white">
                               {item.label}
                             </div>
-                            <p className="text-xs sm:text-[13px] text-zinc-300 leading-relaxed">
+                            <p className="text-[13px] text-white/45 leading-[1.55]">
                               {item.detail}
                               {item.credit ? (
-                                <span className="text-zinc-400"> ({item.credit})</span>
+                                <span className="text-white/70"> ({item.credit})</span>
                               ) : null}
                             </p>
                           </div>

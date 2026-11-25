@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ChordlyLogo } from './ChordlyLogo';
-import { Download, ExternalLink, Menu, X, Github } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 
 export const Navbar: React.FC = () => {
   const [scrolled, setScrolled] = useState(false);
@@ -18,122 +18,95 @@ export const Navbar: React.FC = () => {
     { label: 'Platforms', href: '#platforms' },
     { label: 'Features', href: '#features' },
     { label: 'Lyrics', href: '#lyrics' },
-    { label: 'Web Player', href: '#web-player' },
+    { label: 'Audio', href: '#audio' },
     { label: 'FAQ', href: '#faq' },
   ];
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-[padding,background-color,box-shadow] duration-300 ${
+      className={`fixed top-0 left-0 right-0 z-50 transition-[padding,background-color,border-color] duration-300 ${
         scrolled
-          ? 'py-3.5 bg-[#07060A]/40 backdrop-blur-xl saturate-150 shadow-[0_8px_24px_rgba(0,0,0,0.28)]'
-          : 'py-5 bg-transparent'
+          ? 'py-4 bg-[#070708]/85 backdrop-blur-2xl border-b border-white/[0.08]'
+          : 'py-6 sm:py-7 bg-transparent border-b border-transparent'
       }`}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between">
-          
-          {/* Logo & Brand */}
-          <a
-            href="#"
-            className="flex items-center gap-2.5 group focus:outline-none focus-visible:ring-2 focus-visible:ring-[#FF2D55] rounded-full p-1 -m-1 shrink-0"
-            aria-label="Chordly Home"
-          >
-            <ChordlyLogo size="md" showWordmark={true} />
-          </a>
+      <div className="max-w-7xl mx-auto px-[4vw] sm:px-6 lg:px-8">
+        <div className="flex lg:grid lg:grid-cols-[1fr_auto_1fr] items-center justify-between gap-6">
+          {/* Zone 1: Newsreader Italic Logo */}
+          <div className="justify-self-start">
+            <a
+              href="#"
+              className="inline-flex items-center focus:outline-none focus-visible:ring-2 focus-visible:ring-[#ff2d55] rounded-full p-1 -m-1 shrink-0"
+              aria-label="Chordly Home"
+            >
+              <ChordlyLogo size="md" showWordmark={true} />
+            </a>
+          </div>
 
-          {/* Center Navigation Links (Desktop lg+) */}
-          <nav className="hidden lg:flex items-center gap-1 p-1 rounded-full bg-white/[0.04] border border-white/10 backdrop-blur-md shrink-0" aria-label="Main Navigation">
+          {/* Zone 2: JetBrains Mono Uppercase Navigation Links (Desktop lg+) */}
+          <nav
+            className="hidden lg:flex items-center gap-8 justify-self-center shrink-0"
+            aria-label="Main Navigation"
+          >
             {navLinks.map((link) => (
               <a
                 key={link.label}
                 href={link.href}
-                className="px-4 py-1.5 text-sm font-medium text-zinc-300 hover:text-white rounded-full transition-colors duration-200 hover:bg-white/[0.06] whitespace-nowrap shrink-0"
+                className="font-mono text-[11px] uppercase tracking-[0.12em] text-white/45 hover:text-white transition-colors duration-200 whitespace-nowrap shrink-0"
               >
                 {link.label}
               </a>
             ))}
           </nav>
 
-          {/* Right Action Buttons (Desktop lg+) */}
-          <div className="hidden lg:flex items-center gap-3 shrink-0">
-            <a
-              href="https://github.com/Callmerev95/Chordly"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-sm font-medium text-zinc-300 hover:text-white transition-colors duration-200 rounded-full hover:bg-white/[0.06] whitespace-nowrap shrink-0"
-            >
-              <Github className="w-4 h-4 shrink-0" />
-              <span>GitHub</span>
-              <ExternalLink className="w-3 h-3 text-zinc-500 shrink-0" />
-            </a>
-
+          {/* Zone 3: Single White Pill Primary Action */}
+          <div className="hidden lg:flex items-center justify-self-end shrink-0">
             <a
               href="#install"
-              className="btn-primary text-sm py-2 px-5 shadow-sm hover:shadow-[0_4px_20px_rgba(255,45,85,0.4)] whitespace-nowrap shrink-0"
+              className="btn-primary px-5 py-2.5 text-[12px]"
             >
-              <Download className="w-4 h-4 shrink-0" />
-              <span>Download APK</span>
+              Download v1.9.4
             </a>
           </div>
 
-          {/* Mobile & Tablet Hamburger Controls (< lg) */}
-          <div className="flex lg:hidden items-center gap-2 shrink-0">
-            <a
-              href="#install"
-              className="px-3.5 py-2 rounded-full bg-[#FF2D55] text-white text-xs font-semibold shadow-sm whitespace-nowrap shrink-0"
-            >
-              Get APK
-            </a>
+          {/* Mobile Controls (< lg) */}
+          <div className="flex lg:hidden items-center shrink-0">
             <button
               type="button"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="w-11 h-11 flex items-center justify-center rounded-full text-zinc-300 hover:text-white hover:bg-white/10 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#FF2D55] shrink-0"
+              className="w-10 h-10 flex items-center justify-center rounded-full border border-white/15 bg-white/[0.03] text-white/80 hover:text-white transition-colors shrink-0"
               aria-expanded={mobileMenuOpen}
               aria-label="Toggle navigation menu"
             >
-              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
           </div>
-
         </div>
       </div>
 
-      {/* Mobile & Tablet Drawer Sheet */}
+      {/* Mobile Drawer */}
       {mobileMenuOpen && (
-        <div className="lg:hidden border-b border-white/10 bg-[#0E0C12]/55 backdrop-blur-2xl saturate-150 shadow-[0_16px_40px_rgba(0,0,0,0.35)] px-4 sm:px-6 py-5 space-y-4 max-h-[calc(100vh-4.5rem)] overflow-y-auto animate-in slide-in-from-top-4 duration-200">
-          <nav className="flex flex-col space-y-1.5">
+        <div className="lg:hidden border-b border-white/[0.08] bg-[#070708]/95 backdrop-blur-2xl px-6 py-5 space-y-4">
+          <nav className="flex flex-col space-y-2" aria-label="Mobile Navigation">
             {navLinks.map((link) => (
               <a
                 key={link.label}
                 href={link.href}
                 onClick={() => setMobileMenuOpen(false)}
-                className="px-4 py-2.5 rounded-xl text-base font-medium text-zinc-200 hover:text-white hover:bg-white/10 transition-colors"
+                className="py-2 font-mono text-xs uppercase tracking-[0.12em] text-white/70 hover:text-white transition-colors flex items-center"
               >
-                {link.label}
+                <span>{link.label}</span>
               </a>
             ))}
           </nav>
 
-          <div className="pt-4 border-t border-white/10 flex flex-col gap-3">
-            <a
-              href="https://github.com/Callmerev95/Chordly"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center justify-center gap-2 py-2.5 rounded-full bg-white/5 border border-white/10 text-sm font-medium text-white"
-            >
-              <Github className="w-4 h-4" />
-              <span>GitHub Repository</span>
-              <ExternalLink className="w-3.5 h-3.5 text-zinc-400" />
-            </a>
-
+          <div className="pt-3 border-t border-white/[0.08]">
             <a
               href="#install"
               onClick={() => setMobileMenuOpen(false)}
-              className="btn-primary w-full py-3 text-center"
+              className="btn-primary w-full py-2.5 text-center"
             >
-              <Download className="w-4 h-4" />
-              <span>Download Universal APK (v1.9.4)</span>
+              Download Universal APK (v1.9.4)
             </a>
           </div>
         </div>

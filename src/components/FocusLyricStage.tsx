@@ -34,11 +34,11 @@ interface AudioAnalyserEngine {
   bassFreqData: Uint8Array<ArrayBuffer>;
 }
 
-const ACCENT_COLOR = '#FF2D55';
+const ACCENT_COLOR = '#ff2d55';
 const REFF_2_ANCHOR_SEC = 96.4;
 const DEFAULT_SYNC_OFFSET = -0.75;
 const MAX_VISIBLE_LINES = 4;
-const ILYSB_BEAT_PERIOD_SEC = 60 / 115; // Fallback ~115 BPM chorus groove
+const ILYSB_BEAT_PERIOD_SEC = 60 / 115;
 const MIN_SYNC_OFFSET = -4.0;
 const MAX_SYNC_OFFSET = 4.0;
 const SYNC_STEP = 0.25;
@@ -156,11 +156,9 @@ export const FocusLyricStage: React.FC = () => {
       const gainNode = ctx.createGain();
       gainNode.gain.value = isMuted ? 0 : Math.max(0, Math.min(1, volume / 100));
 
-      // Keep <audio> element at full internal amplitude so analyser reads true vocal energy even when muted
       audio.volume = 1;
       audio.muted = false;
 
-      // Vocal presence bandpass (350Hz - 2.8kHz) + bass/kick lowpass (<210Hz)
       const vocalFilter = ctx.createBiquadFilter();
       vocalFilter.type = 'bandpass';
       vocalFilter.frequency.value = 1250;
@@ -211,7 +209,6 @@ export const FocusLyricStage: React.FC = () => {
   const rawStreamDurationSec = audioDurationSec > 1 ? audioDurationSec : 30;
   const songLyricTime = audioTimeSec + REFF_2_ANCHOR_SEC + syncOffsetSec;
 
-  // Show and play only the first 4 lines of Reff 2
   const visibleLines = useMemo(() => {
     if (lines.length === 0) return [];
     const reff2Lines = lines.filter((l) => l.startSec >= REFF_2_ANCHOR_SEC - 0.4);
@@ -219,7 +216,6 @@ export const FocusLyricStage: React.FC = () => {
     return sourceLines.slice(0, MAX_VISIBLE_LINES);
   }, [lines]);
 
-  // Auto-stop boundary right when line 4 vocal completes
   const clipDurationSec = useMemo(() => {
     const lastLine = visibleLines[visibleLines.length - 1];
     if (!lastLine) return rawStreamDurationSec;
@@ -241,7 +237,6 @@ export const FocusLyricStage: React.FC = () => {
     return 0;
   }, [visibleLines, songLyricTime]);
 
-  // Auto-center active line inside viewport container only (never scrolls the page)
   useEffect(() => {
     const container = viewportRef.current;
     const activeEl = lineRefs.current[activeLineIndex];
@@ -256,7 +251,6 @@ export const FocusLyricStage: React.FC = () => {
     });
   }, [activeLineIndex, prefersReducedMotion, visibleLines.length]);
 
-  // Sync volume & mute to GainNode (when Web Audio is attached) or fallback <audio> element
   useEffect(() => {
     const audio = audioRef.current;
     const engine = audioEngineRef.current;
@@ -276,7 +270,6 @@ export const FocusLyricStage: React.FC = () => {
     audio.muted = normalizedGain === 0;
   }, [volume, isMuted, hasLiveAnalyser]);
 
-  // 60fps hardware clock + real-time vocal-onset gating & audio reactivity loop
   useEffect(() => {
     if (status !== 'playing') {
       if (rafRef.current !== null) {
@@ -314,7 +307,6 @@ export const FocusLyricStage: React.FC = () => {
         nextVocal = smoothedVocalRef.current;
         nextBass = smoothedBassRef.current;
 
-        // Track adaptive instrumental floor slowly so vocal entrances stand out cleanly
         if (nextVocal < vocalFloorRef.current) {
           vocalFloorRef.current = vocalFloorRef.current * 0.9 + nextVocal * 0.1;
         } else {
@@ -322,7 +314,6 @@ export const FocusLyricStage: React.FC = () => {
         }
       }
 
-      // Real-time vocal-onset gate: hold line words dim & still during instrumental gaps
       const curSongTime = curAudioTime + REFF_2_ANCHOR_SEC + syncOffsetSec;
       let curIdx = 0;
       for (let i = 0; i < visibleLines.length; i++) {
@@ -486,7 +477,6 @@ export const FocusLyricStage: React.FC = () => {
   const elapsed = Math.max(0, Math.min(clipDurationSec, audioTimeSec));
   const progressPct = clipDurationSec > 0 ? (elapsed / clipDurationSec) * 100 : 0;
 
-  // Fallback beat-pulse envelope (~115 BPM) when live analyser is not active
   const beatPhase =
     ((Math.max(0, songLyricTime - 96.57) % ILYSB_BEAT_PERIOD_SEC) /
       ILYSB_BEAT_PERIOD_SEC);
@@ -498,11 +488,7 @@ export const FocusLyricStage: React.FC = () => {
     : 0;
 
   return (
-    <div
-      onKeyDown={handleKeyDown}
-      className="relative overflow-hidden rounded-xl space-y-3"
-    >
-      {/* Hidden native HTML5 audio element with CORS enabled for Web Audio vocal-energy analysis */}
+    <div onKeyDown={handleKeyDown} className="relative overflow-hidden space-y-3">
       <audio
         ref={audioRef}
         src={itunesUrl || undefined}
@@ -535,7 +521,6 @@ export const FocusLyricStage: React.FC = () => {
         }}
         onError={() => {
           if (corsEnabled && !audioEngineRef.current) {
-            // Gracefully downgrade to non-CORS playback with calibrated vocal fallback
             setCorsEnabled(false);
             return;
           }
@@ -543,17 +528,10 @@ export const FocusLyricStage: React.FC = () => {
         }}
       />
 
-      {/* Subtle Ambient Glow */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute -top-16 -right-16 w-64 h-64 rounded-full blur-3xl opacity-20"
-        style={{ backgroundColor: ACCENT_COLOR }}
-      />
-
-      {/* Clean Single-Row Header: Artwork + Track Metadata + EQ + Sync Stepper + Translation */}
+      {/* Header */}
       <div className="relative z-10 flex flex-wrap items-center justify-between gap-2.5 border-b border-white/[0.08] pb-3">
         <div className="flex items-center gap-2.5 min-w-0">
-          <div className="w-10 h-10 rounded-lg overflow-hidden bg-white/[0.07] border border-white/10 flex items-center justify-center shrink-0">
+          <div className="w-10 h-10 rounded-xl overflow-hidden bg-white/[0.05] border border-white/10 flex items-center justify-center shrink-0">
             {artworkUrl && !artworkFailed ? (
               <img
                 src={artworkUrl}
@@ -563,17 +541,17 @@ export const FocusLyricStage: React.FC = () => {
                 className="w-full h-full object-cover"
               />
             ) : (
-              <Music2 className="w-4 h-4 text-[#FF6B8A]" />
+              <Music2 className="w-4 h-4 text-white/50" />
             )}
           </div>
 
           <div className="min-w-0 space-y-0.5">
-            <div className="flex items-center gap-1.5 text-sm font-semibold text-white truncate">
+            <div className="flex items-center gap-1.5 text-[14px] font-semibold text-white truncate">
               <span className="truncate">ILYSB</span>
-              <span aria-hidden="true" className="text-zinc-500">·</span>
-              <span className="text-zinc-300 font-medium truncate">LANY</span>
+              <span aria-hidden="true" className="text-white/30">·</span>
+              <span className="text-white/55 font-normal truncate">LANY</span>
             </div>
-            <div className="flex items-center gap-1.5 text-[11px] text-zinc-400 truncate">
+            <div className="flex items-center gap-1.5 font-mono text-[11px] text-white/45 truncate">
               <span>{lyricsOrigin === 'lrclib' ? 'LRCLIB Live' : 'LRCLIB Synced'}</span>
               <span aria-hidden="true">·</span>
               <span className="truncate">Chorus 2 (4 Lines)</span>
@@ -581,7 +559,7 @@ export const FocusLyricStage: React.FC = () => {
           </div>
         </div>
 
-        {/* Right Controls: Equalizer + Sync Offset Stepper + Translation */}
+        {/* Right Controls */}
         <div className="flex flex-wrap items-center gap-2 shrink-0">
           <EqualizerBars
             color={ACCENT_COLOR}
@@ -591,7 +569,7 @@ export const FocusLyricStage: React.FC = () => {
           <div
             role="group"
             aria-label="Adjust lyric sync offset"
-            className="inline-flex items-center rounded-lg bg-white/[0.05] border border-white/10 p-0.5 shrink-0"
+            className="inline-flex items-center rounded-full bg-white/[0.04] border border-white/10 p-0.5 shrink-0"
           >
             <button
               type="button"
@@ -599,7 +577,7 @@ export const FocusLyricStage: React.FC = () => {
               disabled={syncOffsetSec <= MIN_SYNC_OFFSET}
               title="Delay lyrics 0.25s"
               aria-label="Delay lyrics by 0.25 seconds"
-              className="w-6 h-6 rounded-md flex items-center justify-center text-zinc-300 hover:text-white hover:bg-white/10 transition-colors disabled:opacity-40"
+              className="w-6 h-6 rounded-full flex items-center justify-center text-white/70 hover:text-white hover:bg-white/10 transition-colors disabled:opacity-40"
             >
               <Minus className="w-3 h-3" />
             </button>
@@ -610,7 +588,7 @@ export const FocusLyricStage: React.FC = () => {
                 setSyncOffsetSec(DEFAULT_SYNC_OFFSET);
               }}
               title={`Reset offset to default (${formatOffset(DEFAULT_SYNC_OFFSET)})`}
-              className="px-1.5 h-6 text-[11px] font-mono tabular-nums text-zinc-200 hover:text-white transition-colors whitespace-nowrap"
+              className="px-2 h-6 text-[11px] font-mono tabular-nums text-white hover:text-[#ff2d55] transition-colors whitespace-nowrap"
             >
               Sync {formatOffset(syncOffsetSec)}
             </button>
@@ -620,7 +598,7 @@ export const FocusLyricStage: React.FC = () => {
               disabled={syncOffsetSec >= MAX_SYNC_OFFSET}
               title="Advance lyrics 0.25s"
               aria-label="Advance lyrics by 0.25 seconds"
-              className="w-6 h-6 rounded-md flex items-center justify-center text-zinc-300 hover:text-white hover:bg-white/10 transition-colors disabled:opacity-40"
+              className="w-6 h-6 rounded-full flex items-center justify-center text-white/70 hover:text-white hover:bg-white/10 transition-colors disabled:opacity-40"
             >
               <Plus className="w-3 h-3" />
             </button>
@@ -629,34 +607,34 @@ export const FocusLyricStage: React.FC = () => {
           <button
             type="button"
             onClick={() => setShowTranslation((prev) => !prev)}
-            className={`inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border text-xs font-medium transition-colors whitespace-nowrap shrink-0 ${
+            className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-mono uppercase tracking-wider transition-colors whitespace-nowrap shrink-0 border ${
               showTranslation
-                ? 'bg-[#FF2D55]/20 border-[#FF2D55]/45 text-white'
-                : 'bg-white/[0.05] hover:bg-white/[0.1] border-white/10 text-zinc-300'
+                ? 'bg-white text-[#070708] border-white font-semibold'
+                : 'bg-white/[0.04] hover:bg-white/[0.08] border-white/10 text-white/70 font-normal'
             }`}
           >
-            <Languages className="w-3.5 h-3.5 text-[#FF6B8A] shrink-0" />
+            <Languages className={`w-3.5 h-3.5 shrink-0 ${showTranslation ? 'text-[#070708]' : 'text-[#ff2d55]'}`} />
             <span>{showTranslation ? 'Translated' : 'Original'}</span>
           </button>
         </div>
       </div>
 
-      {/* Focus Lyric Viewport with Soft-White Continuous Glow Sweep */}
+      {/* Focus Lyric Viewport */}
       {status === 'error' ? (
         <div className="relative z-10 h-[216px] flex flex-col items-center justify-center text-center px-4 space-y-3">
-          <AlertCircle className="w-6 h-6 text-[#FF6B8A]" />
+          <AlertCircle className="w-6 h-6 text-[#ff2d55]" />
           <div className="space-y-1 max-w-xs">
-            <p className="text-sm font-semibold text-white">
+            <p className="text-[14px] font-semibold text-white">
               Failed to load iTunes preview stream
             </p>
-            <p className="text-xs text-zinc-400">
+            <p className="text-[12px] text-white/50">
               Check your network connection and try reloading the audio preview.
             </p>
           </div>
           <button
             type="button"
             onClick={() => void loadSources()}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#FF2D55] hover:bg-[#FF476C] text-xs font-semibold text-white transition-colors"
+            className="btn-primary text-[12px] px-4 py-1.5"
           >
             <RotateCcw className="w-3.5 h-3.5" />
             <span>Reload</span>
@@ -705,8 +683,8 @@ export const FocusLyricStage: React.FC = () => {
               prefersReducedMotion || isCurrent
                 ? 0
                 : distance === 1
-                  ? 1.4
-                  : 3.0;
+                  ? 1.2
+                  : 2.5;
 
             const baseOpacity = isCurrent ? 1 : distance === 1 ? 0.56 : 0.28;
             const baseScale = prefersReducedMotion
@@ -714,8 +692,8 @@ export const FocusLyricStage: React.FC = () => {
               : isCurrent
                 ? 1
                 : distance === 1
-                  ? 0.97
-                  : 0.94;
+                  ? 0.98
+                  : 0.95;
 
             const wordSlots = buildDynamicWordSlots(line.text);
 
@@ -732,16 +710,16 @@ export const FocusLyricStage: React.FC = () => {
                   opacity: baseOpacity,
                   transform: `scale(${baseScale})`,
                   transition:
-                    'filter 220ms cubic-bezier(0.16, 1, 0.3, 1), opacity 220ms cubic-bezier(0.16, 1, 0.3, 1), transform 220ms cubic-bezier(0.16, 1, 0.3, 1)',
+                    'filter 200ms cubic-bezier(0.16, 1, 0.3, 1), opacity 200ms cubic-bezier(0.16, 1, 0.3, 1), transform 200ms cubic-bezier(0.16, 1, 0.3, 1)',
                 }}
-                className={`group w-full text-left px-3 py-2.5 rounded-xl origin-left focus-visible:outline-none hover:!blur-none hover:!opacity-95 transition-colors cursor-pointer flex items-start justify-between gap-3 ${
-                  isCurrent ? 'bg-white/[0.06]' : 'hover:bg-white/[0.03]'
+                className={`group w-full text-left px-3.5 py-2.5 rounded-xl origin-left focus-visible:outline-none hover:!blur-none hover:!opacity-95 transition-colors cursor-pointer flex items-start justify-between gap-3 ${
+                  isCurrent ? 'bg-white/[0.06] border border-white/10' : 'hover:bg-white/[0.03]'
                 }`}
               >
                 <div className="min-w-0 flex-1 space-y-1">
                   <p
-                    className={`text-sm sm:text-base leading-snug tracking-tight ${
-                      isCurrent ? 'font-bold text-white' : 'font-medium text-zinc-200'
+                    className={`text-[14px] sm:text-[16px] leading-snug tracking-tight ${
+                      isCurrent ? 'font-semibold text-white' : 'font-normal text-white/70'
                     }`}
                   >
                     {isCurrent ? (
@@ -756,16 +734,15 @@ export const FocusLyricStage: React.FC = () => {
                         const isSweeping = wordProgress > 0 && wordProgress < 1;
                         const isLit = wordProgress >= 1;
 
-                        // Audio-reactive soft-white glow intensity (zero pink tint)
                         const glowRadius = isSweeping && isPlaying
-                          ? (9 + reactivePulse * 7 + slot.emphasis * 2).toFixed(1)
+                          ? (8 + reactivePulse * 6 + slot.emphasis * 2).toFixed(1)
                           : isLit || isSweeping
-                            ? (5 + reactivePulse * 3).toFixed(1)
+                            ? (4 + reactivePulse * 2).toFixed(1)
                             : '0';
                         const glowAlpha = isSweeping && isPlaying
-                          ? (0.58 + reactivePulse * 0.3).toFixed(2)
+                          ? (0.55 + reactivePulse * 0.25).toFixed(2)
                           : isLit || isSweeping
-                            ? (0.28 + reactivePulse * 0.16).toFixed(2)
+                            ? (0.25 + reactivePulse * 0.14).toFixed(2)
                             : '0';
 
                         const glowFilter =
@@ -775,11 +752,11 @@ export const FocusLyricStage: React.FC = () => {
 
                         const liftPx =
                           !prefersReducedMotion && isSweeping && isPlaying
-                            ? -(0.8 + reactivePulse * 1.1)
+                            ? -(0.6 + reactivePulse * 0.9)
                             : 0;
                         const wordScale =
                           !prefersReducedMotion && isSweeping && isPlaying
-                            ? 1.02 + reactivePulse * 0.028
+                            ? 1.015 + reactivePulse * 0.02
                             : 1;
 
                         return (
@@ -807,7 +784,7 @@ export const FocusLyricStage: React.FC = () => {
 
                   {showTranslation && line.translation && (
                     <p
-                      className={`text-xs leading-snug text-zinc-300 transition-opacity ${
+                      className={`text-[12px] leading-snug text-[#cccccc] transition-opacity ${
                         isCurrent ? 'opacity-90' : 'opacity-65'
                       }`}
                     >
@@ -816,7 +793,7 @@ export const FocusLyricStage: React.FC = () => {
                   )}
                 </div>
 
-                <span className="text-[11px] font-mono tabular-nums text-zinc-500 pt-0.5 shrink-0">
+                <span className="text-[11px] font-mono tabular-nums text-[#999999] pt-0.5 shrink-0">
                   {formatClock(line.startSec)}
                 </span>
               </button>
@@ -825,7 +802,7 @@ export const FocusLyricStage: React.FC = () => {
         </div>
       )}
 
-      {/* Bottom Playbar: Play/Replay + Timeline Scrubber + Inline Volume Slider */}
+      {/* Bottom Playbar */}
       <div className="relative z-10 border-t border-white/[0.08] pt-3 flex flex-wrap sm:flex-nowrap items-center gap-3">
         <button
           type="button"
@@ -838,13 +815,9 @@ export const FocusLyricStage: React.FC = () => {
                 ? 'Pause track'
                 : 'Play ILYSB Chorus 2'
           }
-          className={`h-10 rounded-full flex items-center justify-center gap-1.5 text-white font-semibold text-xs transition-all active:scale-95 shrink-0 disabled:opacity-50 disabled:cursor-not-allowed ${
-            isEnded ? 'px-3.5' : 'w-10'
+          className={`h-9 rounded-full bg-white hover:bg-white/90 flex items-center justify-center gap-1.5 text-[#070708] font-semibold text-[13px] transition-colors shrink-0 disabled:opacity-50 disabled:cursor-not-allowed ${
+            isEnded ? 'px-3.5' : 'w-9'
           }`}
-          style={{
-            backgroundColor: ACCENT_COLOR,
-            boxShadow: '0 4px 18px -2px rgba(255, 45, 85, 0.5)',
-          }}
         >
           {status === 'loading' ? (
             <Loader2 className="w-4 h-4 animate-spin" />
@@ -872,33 +845,33 @@ export const FocusLyricStage: React.FC = () => {
               disabled={status === 'loading' || !itunesUrl}
               onChange={(e) => handleScrub(parseFloat(e.target.value))}
               aria-label="Seek chorus timeline"
-              className="w-full h-1.5 rounded-full appearance-none cursor-pointer bg-white/15 focus-visible:outline-none disabled:opacity-50"
+              className="w-full h-1.5 rounded-full appearance-none cursor-pointer bg-white/10 focus-visible:outline-none disabled:opacity-50"
               style={{
-                background: `linear-gradient(to right, ${ACCENT_COLOR} ${progressPct}%, rgba(255,255,255,0.14) ${progressPct}%)`,
-                accentColor: ACCENT_COLOR,
+                background: `linear-gradient(to right, ${ACCENT_COLOR} ${progressPct}%, rgba(255,255,255,0.12) ${progressPct}%)`,
+                accentColor: '#ffffff',
               }}
             />
           </div>
-          <div className="flex items-center justify-between text-[11px] font-mono tabular-nums text-zinc-400">
+          <div className="flex items-center justify-between text-[11px] font-mono tabular-nums text-white/45">
             <span>{formatClock(elapsed)}</span>
-            <span className="text-zinc-500 text-[10px] font-sans hidden sm:inline">
+            <span className="text-white/45 text-[11px] font-sans hidden sm:inline">
               {isEnded ? 'Chorus 2 (4 lines) finished' : 'Tap any lyric line to jump'}
             </span>
             <span>{formatClock(clipDurationSec)}</span>
           </div>
         </div>
 
-        {/* Inline Volume Icon + Slider in Playbar */}
+        {/* Inline Volume */}
         <div className="flex items-center gap-1.5 shrink-0">
           <button
             type="button"
             onClick={handleToggleMute}
             aria-label={effectiveVolume === 0 ? 'Unmute audio' : 'Mute audio'}
             title={effectiveVolume === 0 ? 'Unmute audio' : 'Mute audio'}
-            className="inline-flex items-center justify-center w-8 h-8 rounded-lg hover:bg-white/[0.08] text-zinc-300 hover:text-white transition-colors shrink-0"
+            className="inline-flex items-center justify-center w-8 h-8 rounded-full hover:bg-white/10 text-white/75 hover:text-white transition-colors shrink-0"
           >
             {effectiveVolume === 0 ? (
-              <VolumeX className="w-4 h-4 text-zinc-500" />
+              <VolumeX className="w-4 h-4 text-white/35" />
             ) : effectiveVolume < 50 ? (
               <Volume1 className="w-4 h-4" />
             ) : (
@@ -915,10 +888,10 @@ export const FocusLyricStage: React.FC = () => {
             onChange={(e) => handleVolumeChange(parseFloat(e.target.value))}
             aria-label="Audio volume"
             title={`Volume ${effectiveVolume}%`}
-            className="w-16 sm:w-20 h-1.5 rounded-full appearance-none cursor-pointer bg-white/15 focus-visible:outline-none"
+            className="w-16 sm:w-20 h-1.5 rounded-full appearance-none cursor-pointer bg-white/10 focus-visible:outline-none"
             style={{
-              background: `linear-gradient(to right, ${ACCENT_COLOR} ${effectiveVolume}%, rgba(255,255,255,0.16) ${effectiveVolume}%)`,
-              accentColor: ACCENT_COLOR,
+              background: `linear-gradient(to right, ${ACCENT_COLOR} ${effectiveVolume}%, rgba(255,255,255,0.12) ${effectiveVolume}%)`,
+              accentColor: '#ffffff',
             }}
           />
         </div>

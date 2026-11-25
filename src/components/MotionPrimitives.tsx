@@ -5,14 +5,14 @@ export const AUDIO_EASE = [0.16, 1, 0.3, 1] as const;
 
 export const PILL_SPRING = {
   type: 'spring' as const,
-  stiffness: 420,
-  damping: 34,
-  mass: 0.8,
+  stiffness: 460,
+  damping: 38,
+  mass: 0.75,
 };
 
 export const VIEWPORT_CONFIG = {
   once: true,
-  amount: 0.12 as const,
+  amount: 0.08 as const,
 };
 
 interface ScrollRevealProps extends HTMLMotionProps<'div'> {
@@ -23,7 +23,7 @@ interface ScrollRevealProps extends HTMLMotionProps<'div'> {
 
 export const ScrollReveal: React.FC<ScrollRevealProps> = ({
   delay = 0,
-  y = 18,
+  y = 12,
   children,
   className = '',
   ...rest
@@ -35,7 +35,7 @@ export const ScrollReveal: React.FC<ScrollRevealProps> = ({
       initial={prefersReducedMotion ? false : { opacity: 0, y }}
       whileInView={prefersReducedMotion ? undefined : { opacity: 1, y: 0 }}
       viewport={VIEWPORT_CONFIG}
-      transition={{ duration: 0.48, delay, ease: AUDIO_EASE }}
+      transition={{ duration: 0.28, delay, ease: AUDIO_EASE }}
       className={className}
       {...rest}
     >
@@ -51,8 +51,8 @@ interface StaggerGroupProps extends HTMLMotionProps<'div'> {
 }
 
 export const StaggerGroup: React.FC<StaggerGroupProps> = ({
-  stagger = 0.06,
-  delay = 0.04,
+  stagger = 0.04,
+  delay = 0.02,
   children,
   className = '',
   ...rest
@@ -87,7 +87,7 @@ interface StaggerItemProps extends HTMLMotionProps<'div'> {
 }
 
 export const StaggerItem: React.FC<StaggerItemProps> = ({
-  y = 18,
+  y = 12,
   children,
   className = '',
   ...rest
@@ -104,7 +104,7 @@ export const StaggerItem: React.FC<StaggerItemProps> = ({
               visible: {
                 opacity: 1,
                 y: 0,
-                transition: { duration: 0.46, ease: AUDIO_EASE },
+                transition: { duration: 0.26, ease: AUDIO_EASE },
               },
             }
       }
@@ -132,7 +132,7 @@ const BAR_KEYFRAMES = [
 const STATIC_HEIGHTS = [0.55, 0.9, 0.45, 0.75];
 
 export const EqualizerBars: React.FC<EqualizerBarsProps> = ({
-  color = '#4ADE80',
+  color = '#ff2d55',
   active = true,
   className = '',
 }) => {
@@ -147,7 +147,7 @@ export const EqualizerBars: React.FC<EqualizerBarsProps> = ({
       {BAR_KEYFRAMES.map((frames, idx) => (
         <motion.span
           key={idx}
-          className="w-[2.5px] h-full rounded-full origin-bottom will-change-transform"
+          className="w-[2px] h-full rounded-[1px] origin-bottom will-change-transform"
           style={{
             backgroundColor: color,
             scaleY: shouldAnimate ? undefined : STATIC_HEIGHTS[idx],

@@ -15,49 +15,45 @@ export const ProofStrip: React.FC = () => {
     { label: 'ListenBrainz', icon: Brain },
   ];
 
-  // Repeat claims to ensure continuous coverage on all screen resolutions
   const repeatedClaims = [...claims, ...claims];
 
   return (
-    <div className="relative border-y border-white/[0.08] bg-[#0E0C12]/80 backdrop-blur-md overflow-hidden py-3.5 sm:py-4 select-none">
+    <div className="relative border-b border-white/[0.08] bg-[#070708] overflow-hidden py-3.5 select-none">
       <div className="w-full overflow-hidden">
-        {/* Infinite Auto Marquee Container */}
-        <div 
-          className="group relative flex overflow-hidden w-full [mask-image:linear-gradient(to_right,transparent,black_4%,black_96%,transparent)]"
+        <div
+          className="group relative flex overflow-hidden w-full"
           aria-label="Chordly core features ticker"
         >
-          {/* Primary Track */}
-          <div className="flex shrink-0 items-center gap-8 sm:gap-10 pr-8 sm:pr-10 animate-proof-marquee group-hover:[animation-play-state:paused]">
+          <div className="flex shrink-0 items-center gap-8 pr-8 animate-proof-marquee group-hover:[animation-play-state:paused]">
             {repeatedClaims.map((claim, idx) => {
               const Icon = claim.icon;
               return (
-                <div 
-                  key={`track1-${idx}`} 
-                  className="inline-flex items-center gap-2.5 text-xs sm:text-sm font-medium text-zinc-300 hover:text-white transition-colors duration-200 cursor-default"
+                <div
+                  key={`track1-${idx}`}
+                  className="inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.12em] text-white/50 hover:text-white transition-colors duration-150 cursor-default"
                 >
-                  <Icon className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#FF2D55] shrink-0" />
-                  <span className="whitespace-nowrap tracking-tight">{claim.label}</span>
-                  <span className="w-1.5 h-1.5 rounded-full bg-white/20 ml-2 shrink-0" />
+                  <Icon className="w-3.5 h-3.5 text-[#ff2d55] shrink-0" />
+                  <span className="whitespace-nowrap">{claim.label}</span>
+                  <span aria-hidden="true" className="text-white/20 ml-3">·</span>
                 </div>
               );
             })}
           </div>
 
-          {/* Secondary Track for perfectly seamless infinite looping */}
-          <div 
-            className="flex shrink-0 items-center gap-8 sm:gap-10 pr-8 sm:pr-10 animate-proof-marquee group-hover:[animation-play-state:paused]"
+          <div
+            className="flex shrink-0 items-center gap-8 pr-8 animate-proof-marquee group-hover:[animation-play-state:paused]"
             aria-hidden="true"
           >
             {repeatedClaims.map((claim, idx) => {
               const Icon = claim.icon;
               return (
-                <div 
-                  key={`track2-${idx}`} 
-                  className="inline-flex items-center gap-2.5 text-xs sm:text-sm font-medium text-zinc-300 hover:text-white transition-colors duration-200 cursor-default"
+                <div
+                  key={`track2-${idx}`}
+                  className="inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.12em] text-white/50 hover:text-white transition-colors duration-150 cursor-default"
                 >
-                  <Icon className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#FF2D55] shrink-0" />
-                  <span className="whitespace-nowrap tracking-tight">{claim.label}</span>
-                  <span className="w-1.5 h-1.5 rounded-full bg-white/20 ml-2 shrink-0" />
+                  <Icon className="w-3.5 h-3.5 text-[#ff2d55] shrink-0" />
+                  <span className="whitespace-nowrap">{claim.label}</span>
+                  <span aria-hidden="true" className="text-white/20 ml-3">·</span>
                 </div>
               );
             })}
@@ -67,4 +63,3 @@ export const ProofStrip: React.FC = () => {
     </div>
   );
 };
-

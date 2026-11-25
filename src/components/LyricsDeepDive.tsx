@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Mic2, Check, ArrowRight, Smartphone, Monitor } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
 import { PhoneFrame, BrowserFrame } from './DeviceFrames';
-import { AUDIO_EASE, PILL_SPRING, ScrollReveal } from './MotionPrimitives';
+import { AUDIO_EASE, ScrollReveal } from './MotionPrimitives';
 import { FocusLyricStage } from './FocusLyricStage';
 
 export const LyricsDeepDive: React.FC = () => {
@@ -17,113 +17,91 @@ export const LyricsDeepDive: React.FC = () => {
   ];
 
   return (
-    <section id="lyrics" className="py-16 sm:py-24 md:py-32 relative overflow-hidden">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center">
-          
-          {/* Left Column: Text & Bullets */}
+    <section id="lyrics" className="scroll-mt-20 py-20 sm:py-24 bg-[#070708] border-b border-white/[0.08]">
+      <div className="max-w-7xl mx-auto px-[4vw] sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
+          {/* Left Column: Text, FocusLyricStage & Bullets */}
           <ScrollReveal className="lg:col-span-6 space-y-6">
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/[0.05] border border-white/10 text-xs font-semibold text-[#FF2D55] uppercase tracking-wider">
-              <Mic2 className="w-3.5 h-3.5" />
-              <span>Lyrics Engine</span>
+            <div className="inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.2em] text-white/45">
+              <Mic2 className="w-3.5 h-3.5 text-[#ff2d55]" />
+              <span>Lyrics Engine · 12 Providers</span>
             </div>
 
-            <h2 className="text-2xl sm:text-4xl md:text-5xl font-bold text-white tracking-tight leading-tight text-balance">
-              Read, sing, romanize, and translate every line.
+            <h2 className="font-serif font-normal text-[36px] sm:text-[46px] text-white tracking-[-0.03em] leading-[1.06] text-balance">
+              Read, sing, <span className="italic">romanize</span>, and translate every line.
             </h2>
 
-            <p className="text-base sm:text-lg text-zinc-300 leading-relaxed">
+            <p className="text-[17px] leading-[1.6] text-white/55">
               Chordly queries 12 synced lyrics providers—including LRCLIB, Musixmatch, and Genius—and pairs word-level highlights with depth-of-field focus blur, automatic romanization, and instant bilingual translations beneath every line.
             </p>
 
             {/* Interactive Focus Lyric Stage */}
-            <div className="p-3.5 sm:p-5 rounded-2xl liquid-glass border border-white/10">
+            <div className="p-5 sm:p-6 rounded-[24px] v29-glass-card">
               <FocusLyricStage />
             </div>
 
             {/* Bullets */}
-            <div className="space-y-3 pt-1">
+            <div className="space-y-2.5 pt-1">
               {bullets.map((bullet, idx) => (
                 <div key={idx} className="flex items-start gap-3">
-                  <div className="w-5 h-5 rounded-full bg-[#FF2D55]/20 border border-[#FF2D55]/30 flex items-center justify-center flex-shrink-0 mt-0.5 text-[#FF2D55]">
-                    <Check className="w-3.5 h-3.5 stroke-[2.5]" />
+                  <div className="w-5 h-5 rounded-full bg-white/[0.06] border border-white/10 flex items-center justify-center flex-shrink-0 mt-0.5 text-[#ff2d55]">
+                    <Check className="w-3 h-3 stroke-[2.5]" />
                   </div>
-                  <span className="text-sm sm:text-base text-zinc-200">{bullet}</span>
+                  <span className="text-[14px] leading-[1.5] text-white/60">{bullet}</span>
                 </div>
               ))}
             </div>
 
             {/* CTA */}
             <div className="pt-2">
-              <a
-                href="#install"
-                className="btn-primary"
-              >
+              <a href="#install" className="btn-primary">
                 <span>Download for Android</span>
                 <ArrowRight className="w-4 h-4" />
               </a>
             </div>
           </ScrollReveal>
 
-          {/* Right Column: Platform Screen Switcher & Real Assets */}
-          <ScrollReveal delay={0.1} className="lg:col-span-6 relative flex flex-col items-center">
-            {/* View Mode Toggle */}
-            <div className="inline-flex flex-wrap justify-center p-1 rounded-2xl bg-white/[0.06] border border-white/10 mb-6 z-20 max-w-full">
+          {/* Right Column: Platform Screen Switcher */}
+          <ScrollReveal delay={0.08} className="lg:col-span-6 relative flex flex-col items-center">
+            <div className="inline-flex flex-wrap justify-center gap-1.5 p-1.5 rounded-full bg-white/[0.03] border border-white/[0.12] mb-7 max-w-full">
               <button
                 type="button"
                 onClick={() => setViewMode('mobile')}
-                className={`relative flex items-center gap-1.5 sm:gap-2 px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl text-xs font-semibold transition-colors whitespace-nowrap ${
+                className={`flex items-center gap-2 px-4 py-2 rounded-full font-mono text-[11px] uppercase tracking-[0.08em] transition-colors whitespace-nowrap ${
                   viewMode === 'mobile'
-                    ? 'text-white'
-                    : 'text-zinc-400 hover:text-white'
+                    ? 'bg-white text-[#070708] font-semibold'
+                    : 'text-white/55 hover:text-white font-normal'
                 }`}
               >
-                {viewMode === 'mobile' && (
-                  <motion.span
-                    layoutId="lyrics-view-pill"
-                    transition={PILL_SPRING}
-                    className="absolute inset-0 rounded-xl bg-[#FF2D55] shadow-lg"
-                  />
-                )}
-                <Smartphone className="relative z-10 w-3.5 h-3.5 shrink-0" />
-                <span className="relative z-10">Mobile Android View</span>
+                <Smartphone className="w-3.5 h-3.5 shrink-0" />
+                <span>Mobile Android</span>
               </button>
               <button
                 type="button"
                 onClick={() => setViewMode('desktop')}
-                className={`relative flex items-center gap-1.5 sm:gap-2 px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl text-xs font-semibold transition-colors whitespace-nowrap ${
+                className={`flex items-center gap-2 px-4 py-2 rounded-full font-mono text-[11px] uppercase tracking-[0.08em] transition-colors whitespace-nowrap ${
                   viewMode === 'desktop'
-                    ? 'text-white'
-                    : 'text-zinc-400 hover:text-white'
+                    ? 'bg-white text-[#070708] font-semibold'
+                    : 'text-white/55 hover:text-white font-normal'
                 }`}
               >
-                {viewMode === 'desktop' && (
-                  <motion.span
-                    layoutId="lyrics-view-pill"
-                    transition={PILL_SPRING}
-                    className="absolute inset-0 rounded-xl bg-[#FF2D55] shadow-lg"
-                  />
-                )}
-                <Monitor className="relative z-10 w-3.5 h-3.5 shrink-0" />
-                <span className="relative z-10">Desktop Split View</span>
+                <Monitor className="w-3.5 h-3.5 shrink-0" />
+                <span>Desktop Split</span>
               </button>
             </div>
 
-            {/* Ambient Pink Glow behind frames */}
-            <div className="absolute inset-0 bg-[#FF2D55]/20 rounded-full blur-3xl pointer-events-none transform scale-90" />
-            
-            <div className="relative z-10 w-full flex justify-center">
+            <div className="w-full flex justify-center">
               <AnimatePresence mode="wait">
                 {viewMode === 'mobile' ? (
                   <motion.div
                     key="mobile"
-                    initial={{ opacity: 0, y: 8, scale: 0.985 }}
-                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                    exit={{ opacity: 0, y: -6, scale: 0.985 }}
-                    transition={{ duration: 0.22, ease: AUDIO_EASE }}
-                    className="w-full max-w-[320px] sm:max-w-[340px]"
+                    initial={{ opacity: 0, y: 6 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -4 }}
+                    transition={{ duration: 0.18, ease: AUDIO_EASE }}
+                    className="w-full max-w-[300px] sm:max-w-[320px]"
                   >
-                    <PhoneFrame 
+                    <PhoneFrame
                       src="/assets/aistudio/assets-mobile-lyrics.webp"
                       trackTitle="ILYSB (STRIPPED)"
                       artistName="LANY"
@@ -132,18 +110,18 @@ export const LyricsDeepDive: React.FC = () => {
                 ) : (
                   <motion.div
                     key="desktop"
-                    initial={{ opacity: 0, y: 8, scale: 0.985 }}
-                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                    exit={{ opacity: 0, y: -6, scale: 0.985 }}
-                    transition={{ duration: 0.22, ease: AUDIO_EASE }}
+                    initial={{ opacity: 0, y: 6 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -4 }}
+                    transition={{ duration: 0.18, ease: AUDIO_EASE }}
                     className="w-full max-w-xl"
                   >
-                    <BrowserFrame 
+                    <BrowserFrame
                       src="/assets/aistudio/assets-desktop-lyrics-split.webp"
                       alt="Chordly Desktop Live Synced Lyrics"
-                      url="chordly.callmerev.my.id/lyrics"
+                      url="web-player.chordly.my.id/lyrics"
                     />
-                    <div className="text-center mt-3 text-xs text-zinc-400">
+                    <div className="text-center mt-3 font-mono text-[11px] text-white/40">
                       Full-screen synchronized lyrics view with ambient blur in desktop browser
                     </div>
                   </motion.div>
@@ -151,7 +129,6 @@ export const LyricsDeepDive: React.FC = () => {
               </AnimatePresence>
             </div>
           </ScrollReveal>
-
         </div>
       </div>
     </section>

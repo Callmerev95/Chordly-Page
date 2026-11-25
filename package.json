@@ -13,22 +13,11 @@
   "bugs": {
     "url": "https://github.com/Callmerev95/Chordly/issues"
   },
-  "keywords": [
-    "chordly",
-    "youtube-music",
-    "music-player",
-    "synced-lyrics",
-    "android",
-    "wear-os",
-    "react",
-    "vite",
-    "tailwindcss"
-  ],
+  "keywords": ["chordly", "youtube-music", "music-player", "synced-lyrics", "android", "wear-os", "react", "vite", "tailwindcss"],
   "engines": {
     "node": ">=20",
     "npm": ">=10"
   },
-  "packageManager": "npm@11.19.1",
   "scripts": {
     "dev": "vite --port=3000 --host=0.0.0.0",
     "build": "vite build",
@@ -38,11 +27,13 @@
     "test": "tsx --test src/utils/audioEngine.test.ts src/utils/featureCatalog.test.ts"
   },
   "dependencies": {
+    "clsx": "^2.1.1",
     "lrc-kit": "^1.2.1",
     "lucide-react": "^0.546.0",
     "motion": "^12.23.24",
     "react": "^19.0.1",
-    "react-dom": "^19.0.1"
+    "react-dom": "^19.0.1",
+    "tailwind-merge": "^3.7.1"
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.3.3",
