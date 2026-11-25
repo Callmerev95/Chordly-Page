@@ -13,10 +13,10 @@ export const PlatformsSection: React.FC = () => {
             Platforms · Multi-Device Ecosystem
           </span>
           <h2 className="font-serif font-normal text-[36px] sm:text-[48px] text-white tracking-[-0.03em] leading-[1.05] text-balance">
-            One library. <span className="italic">Three ways</span> to listen.
+            One library. <span className="italic">Four ways</span> to listen.
           </h2>
           <p className="text-[17px] leading-[1.6] text-white/50">
-            On your phone, on your wrist, and in your browser. All free, all open source.
+            On your phone, on your wrist, on your TV, and in your browser. All free, all open source.
           </p>
         </ScrollReveal>
 
@@ -163,21 +163,31 @@ export const PlatformsSection: React.FC = () => {
           </StaggerItem>
 
           <StaggerItem className="md:col-span-1 lg:col-span-6 flex">
-            <div className="w-full p-6 rounded-[20px] border border-white/[0.08] bg-white/[0.02] flex items-center gap-4">
-              <div className="w-10 h-10 rounded-full bg-white/[0.05] border border-white/10 flex items-center justify-center text-white/60 shrink-0">
-                <Tv className="w-4 h-4" />
-              </div>
-              <div className="min-w-0">
-                <div className="flex flex-wrap items-center gap-2">
-                  <h4 className="font-serif italic text-[20px] text-white">Android TV</h4>
-                  <span className="font-mono text-[10px] uppercase tracking-[0.12em] text-[#ff2d55]">
-                    · Coming Soon
-                  </span>
+            <div className="w-full p-6 rounded-[20px] border border-white/[0.12] bg-white/[0.03] flex items-center justify-between gap-4">
+              <div className="flex items-center gap-4 min-w-0">
+                <div className="w-10 h-10 rounded-full bg-white/[0.06] border border-white/10 flex items-center justify-center text-[#ff2d55] shrink-0">
+                  <Tv className="w-4 h-4" />
                 </div>
-                <p className="text-[13px] text-white/45 mt-0.5">
-                  Living room 10-foot couch interface
-                </p>
+                <div className="min-w-0">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <h4 className="font-serif italic text-[20px] text-white">Android TV</h4>
+                    <span className="font-mono text-[10px] uppercase tracking-[0.12em] text-[#ff2d55]">
+                      · Available
+                    </span>
+                  </div>
+                  <p className="text-[13px] text-white/50 mt-0.5">
+                    Living room 10-foot couch interface &amp; D-pad navigation
+                  </p>
+                </div>
               </div>
+
+              <a
+                href="#install-tv"
+                className="inline-flex items-center gap-1.5 font-mono text-[11px] uppercase tracking-[0.08em] text-[#ff2d55] hover:underline underline-offset-4 whitespace-nowrap shrink-0"
+              >
+                <span>Get APK</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </a>
             </div>
           </StaggerItem>
         </StaggerGroup>

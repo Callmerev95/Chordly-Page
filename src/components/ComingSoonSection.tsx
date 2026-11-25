@@ -1,5 +1,5 @@
 import React from 'react';
-import { Monitor, Tv, Clock, ArrowRight } from 'lucide-react';
+import { Monitor, Smartphone, Clock } from 'lucide-react';
 import { ScrollReveal, StaggerGroup, StaggerItem } from './MotionPrimitives';
 
 export const ComingSoonSection: React.FC = () => {
@@ -45,7 +45,7 @@ export const ComingSoonSection: React.FC = () => {
             <div className="w-full p-7 rounded-[24px] border border-dashed border-white/[0.14] bg-white/[0.02] space-y-3 hover:border-white/30 transition-colors">
               <div className="flex items-center justify-between">
                 <div className="w-10 h-10 rounded-full bg-white/[0.05] border border-white/10 flex items-center justify-center text-white/75">
-                  <Tv className="w-4 h-4" />
+                  <Smartphone className="w-4 h-4" />
                 </div>
                 <span className="px-3 py-1 rounded-full bg-white/[0.04] border border-white/10 font-mono text-[10px] uppercase tracking-wider text-white/55">
                   In Development
@@ -53,27 +53,15 @@ export const ComingSoonSection: React.FC = () => {
               </div>
 
               <h3 className="font-serif italic text-[24px] text-white">
-                Android TV
+                iOS (iPhone &amp; iPad)
               </h3>
 
               <p className="text-[14px] text-white/50 leading-[1.6]">
-                A couch-friendly 10-foot interface with D-pad navigation, synced full-screen lyrics, and high-fidelity living room playback.
+                A native Apple mobile experience with background playback, offline caching, and synchronized full-screen lyrics built for iPhone and iPad.
               </p>
             </div>
           </StaggerItem>
         </StaggerGroup>
-
-        <ScrollReveal delay={0.08} className="mt-8">
-          <a
-            href="https://github.com/Callmerev95/Chordly-release/releases"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 font-mono text-[12px] uppercase tracking-[0.08em] text-[#ff2d55] hover:underline underline-offset-4"
-          >
-            <span>Follow releases on GitHub</span>
-            <ArrowRight className="w-4 h-4" />
-          </a>
-        </ScrollReveal>
       </div>
     </section>
   );

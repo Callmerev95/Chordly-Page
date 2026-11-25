@@ -18,6 +18,7 @@ import { FaqSection } from './components/FaqSection';
 import { FinalCtaSection } from './components/FinalCtaSection';
 import { TermsPage } from './components/TermsPage';
 import { PrivacyPage } from './components/PrivacyPage';
+import { NewsPage } from './components/NewsPage';
 import { NotFoundPage } from './components/NotFoundPage';
 import { Footer } from './components/Footer';
 import { AmbientParallaxBackdrop } from './components/AmbientParallaxBackdrop';
@@ -38,9 +39,10 @@ export default function App() {
   );
 
   const isHomePage = currentPath === '/';
+  const isNewsPage = currentPath === '/news';
   const isTermsPage = currentPath === '/terms';
   const isPrivacyPage = currentPath === '/privacy';
-  const isNotFoundPage = !isHomePage && !isTermsPage && !isPrivacyPage;
+  const isNotFoundPage = !isHomePage && !isNewsPage && !isTermsPage && !isPrivacyPage;
 
   useEffect(() => {
     const handlePopState = () => {
@@ -51,7 +53,9 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    if (isTermsPage) {
+    if (isNewsPage) {
+      document.title = 'News & Releases — Chordly';
+    } else if (isTermsPage) {
       document.title = 'Terms of Service — Chordly';
     } else if (isPrivacyPage) {
       document.title = 'Privacy Policy — Chordly';
@@ -60,7 +64,7 @@ export default function App() {
     } else {
       document.title = 'Chordly — Independent YouTube Music Player with Synced Lyrics';
     }
-  }, [isTermsPage, isPrivacyPage, isNotFoundPage]);
+  }, [isNewsPage, isTermsPage, isPrivacyPage, isNotFoundPage]);
 
   useEffect(() => {
     if (window.location.hash) {
@@ -113,7 +117,9 @@ export default function App() {
         <Navbar onNavigate={navigate} currentPath={currentPath} />
 
         <main id="main-content" className="relative z-10 flex-1 flex flex-col">
-          {isTermsPage ? (
+          {isNewsPage ? (
+            <NewsPage onNavigate={navigate} />
+          ) : isTermsPage ? (
             <TermsPage onNavigate={navigate} />
           ) : isPrivacyPage ? (
             <PrivacyPage onNavigate={navigate} />

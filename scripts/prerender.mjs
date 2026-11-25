@@ -87,6 +87,15 @@ const routes = [
     robots: 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1',
   },
   {
+    path: '/news',
+    outFile: path.join('news', 'index.html'),
+    title: 'News & Releases — Chordly',
+    description:
+      'Release notes, playback engine refinements, synced lyrics updates, and platform announcements for Chordly.',
+    canonical: `${ORIGIN}/news`,
+    robots: 'index, follow',
+  },
+  {
     path: '/privacy',
     outFile: path.join('privacy', 'index.html'),
     title: 'Privacy Policy — Chordly',

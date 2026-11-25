@@ -20,11 +20,11 @@ export const Navbar: React.FC<NavbarProps> = ({ onNavigate, currentPath = '/' })
   }, []);
 
   const navLinks = [
-    { label: 'Platforms', href: '#platforms' },
-    { label: 'Features', href: '#features' },
-    { label: 'Lyrics', href: '#lyrics' },
-    { label: 'Audio', href: '#audio' },
-    { label: 'FAQ', href: '#faq' },
+    { label: 'Home', to: '/' },
+    { label: 'Platforms', to: '/#platforms' },
+    { label: 'Features', to: '/#features' },
+    { label: 'News', to: '/news' },
+    { label: 'FAQ', to: '/#faq' },
   ];
 
   return (
@@ -54,29 +54,38 @@ export const Navbar: React.FC<NavbarProps> = ({ onNavigate, currentPath = '/' })
             className="hidden lg:flex items-center gap-8 justify-self-center shrink-0"
             aria-label="Main Navigation"
           >
-            {navLinks.map((link) => (
-              <a
-                key={link.label}
-                href={`/${link.href}`}
-                onClick={(e) => onNavigate?.(`/${link.href}`, e)}
-                className={`font-mono text-[11px] uppercase tracking-[0.12em] transition-colors duration-200 whitespace-nowrap shrink-0 ${
-                  currentPath === '/' ? 'text-white/45 hover:text-white' : 'text-white/55 hover:text-white'
-                }`}
-              >
-                {link.label}
-              </a>
-            ))}
+            {navLinks.map((link) => {
+              const isActive =
+                (link.to === '/' && currentPath === '/') ||
+                (link.to === '/news' && currentPath === '/news');
+              return (
+                <a
+                  key={link.label}
+                  href={link.to}
+                  onClick={(e) => onNavigate?.(link.to, e)}
+                  className={`font-mono text-[11px] uppercase tracking-[0.12em] transition-colors duration-200 whitespace-nowrap shrink-0 ${
+                    isActive
+                      ? 'text-white underline underline-offset-8 decoration-[#ff2d55]'
+                      : currentPath === '/'
+                        ? 'text-white/45 hover:text-white'
+                        : 'text-white/55 hover:text-white'
+                  }`}
+                >
+                  {link.label}
+                </a>
+              );
+            })}
           </nav>
 
           {/* Zone 3: Single White Pill Primary Action */}
           <div className="hidden lg:flex items-center justify-self-end shrink-0">
-            <a
-              href="/#install"
-              onClick={(e) => onNavigate?.('/#install', e)}
-              className="btn-primary px-5 py-2.5 text-[12px]"
-            >
-              Download v1.9.4
-            </a>
+              <a
+                href="/#install"
+                onClick={(e) => onNavigate?.('/#install', e)}
+                className="btn-primary px-5 py-2.5 text-[12px]"
+              >
+                Get APK
+              </a>
           </div>
 
           {/* Mobile Controls (< lg) */}
@@ -98,19 +107,26 @@ export const Navbar: React.FC<NavbarProps> = ({ onNavigate, currentPath = '/' })
       {mobileMenuOpen && (
         <div className="lg:hidden border-b border-white/[0.08] bg-[#070708]/95 backdrop-blur-2xl px-6 py-5 space-y-4">
           <nav className="flex flex-col space-y-2" aria-label="Mobile Navigation">
-            {navLinks.map((link) => (
-              <a
-                key={link.label}
-                href={`/${link.href}`}
-                onClick={(e) => {
-                  setMobileMenuOpen(false);
-                  onNavigate?.(`/${link.href}`, e);
-                }}
-                className="py-2 font-mono text-xs uppercase tracking-[0.12em] text-white/70 hover:text-white transition-colors flex items-center"
-              >
-                <span>{link.label}</span>
-              </a>
-            ))}
+            {navLinks.map((link) => {
+              const isActive =
+                (link.to === '/' && currentPath === '/') ||
+                (link.to === '/news' && currentPath === '/news');
+              return (
+                <a
+                  key={link.label}
+                  href={link.to}
+                  onClick={(e) => {
+                    setMobileMenuOpen(false);
+                    onNavigate?.(link.to, e);
+                  }}
+                  className={`py-2 font-mono text-xs uppercase tracking-[0.12em] transition-colors flex items-center ${
+                    isActive ? 'text-[#ff2d55]' : 'text-white/70 hover:text-white'
+                  }`}
+                >
+                  <span>{link.label}</span>
+                </a>
+              );
+            })}
           </nav>
 
           <div className="pt-3 border-t border-white/[0.08]">
@@ -122,7 +138,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onNavigate, currentPath = '/' })
               }}
               className="btn-primary w-full py-2.5 text-center"
             >
-              Download Universal APK (v1.9.4)
+              Get APK
             </a>
           </div>
         </div>

@@ -44,6 +44,15 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
               </li>
               <li>
                 <a
+                  href="/#install-tv"
+                  onClick={(e) => onNavigate?.('/#install-tv', e)}
+                  className="hover:text-white transition-colors"
+                >
+                  Android TV
+                </a>
+              </li>
+              <li>
+                <a
                   href="https://web-player.chordly.my.id"
                   target="_blank"
                   rel="noopener noreferrer"
@@ -54,7 +63,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                 </a>
               </li>
               <li>
-                <span className="text-white/30">TV &amp; Desktop (Soon)</span>
+                <span className="text-white/30">Desktop &amp; iOS (Soon)</span>
               </li>
             </ul>
           </div>
@@ -65,6 +74,15 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
             <ul className="space-y-1.5 text-[13px]">
               <li>
                 <a
+                  href="/news"
+                  onClick={(e) => onNavigate?.('/news', e)}
+                  className="hover:text-white transition-colors"
+                >
+                  News &amp; Releases
+                </a>
+              </li>
+              <li>
+                <a
                   href="https://github.com/Callmerev95/Chordly"
                   target="_blank"
                   rel="noopener noreferrer"
@@ -72,16 +90,6 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                 >
                   <Github className="w-3.5 h-3.5 shrink-0" />
                   <span>GitHub Repository</span>
-                </a>
-              </li>
-              <li>
-                <a
-                  href="https://github.com/Callmerev95/Chordly-release/releases"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="hover:text-white transition-colors"
-                >
-                  Releases &amp; Changelog
                 </a>
               </li>
               <li>
@@ -146,7 +154,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                   rel="noopener noreferrer"
                   className="hover:text-white transition-colors"
                 >
-                  Callmerev Profile
+                  Developer
                 </a>
               </li>
               <li>

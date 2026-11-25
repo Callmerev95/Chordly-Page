@@ -93,7 +93,7 @@ export const HeroSection: React.FC = () => {
             <div className="flex flex-wrap items-center gap-3 pt-1">
               <a href="#install" className="btn-primary px-6 py-3">
                 <Download className="w-4 h-4 shrink-0" />
-                <span>Download v1.9.4</span>
+                <span>Get Chordly</span>
               </a>
 
               <a
