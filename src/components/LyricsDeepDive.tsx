@@ -1,12 +1,17 @@
 import React, { useState } from 'react';
 import { Mic2, Check, ArrowRight, Smartphone, Monitor } from 'lucide-react';
-import { AnimatePresence, motion } from 'motion/react';
+import { motion, useReducedMotion } from 'motion/react';
 import { PhoneFrame, BrowserFrame } from './DeviceFrames';
-import { AUDIO_EASE, ScrollReveal } from './MotionPrimitives';
+import { AUDIO_EASE, PILL_SPRING, ScrollReveal } from './MotionPrimitives';
 import { FocusLyricStage } from './FocusLyricStage';
 
 export const LyricsDeepDive: React.FC = () => {
+  const prefersReducedMotion = useReducedMotion();
   const [viewMode, setViewMode] = useState<'mobile' | 'desktop'>('mobile');
+  const stageTransition = {
+    duration: prefersReducedMotion ? 0 : 0.2,
+    ease: AUDIO_EASE,
+  };
 
   const bullets = [
     'Beat-reactive soft-white glow tracking synced smoothly to vocal phrasing',
@@ -19,7 +24,7 @@ export const LyricsDeepDive: React.FC = () => {
   return (
     <section id="lyrics" className="scroll-mt-20 py-20 sm:py-24 bg-[#070708] border-b border-white/[0.08]">
       <div className="max-w-7xl mx-auto px-[4vw] sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center lg:items-start">
           {/* Left Column: Text, FocusLyricStage & Bullets */}
           <ScrollReveal className="lg:col-span-6 space-y-6">
             <div className="inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.2em] text-white/45">
@@ -63,70 +68,95 @@ export const LyricsDeepDive: React.FC = () => {
 
           {/* Right Column: Platform Screen Switcher */}
           <ScrollReveal delay={0.08} className="lg:col-span-6 relative flex flex-col items-center">
-            <div className="inline-flex flex-wrap justify-center gap-1.5 p-1.5 rounded-full bg-white/[0.03] border border-white/[0.12] mb-7 max-w-full">
-              <button
-                type="button"
-                onClick={() => setViewMode('mobile')}
-                className={`flex items-center gap-2 px-4 py-2 rounded-full font-mono text-[11px] uppercase tracking-[0.08em] transition-colors whitespace-nowrap ${
-                  viewMode === 'mobile'
-                    ? 'bg-white text-[#070708] font-semibold'
-                    : 'text-white/55 hover:text-white font-normal'
-                }`}
-              >
-                <Smartphone className="w-3.5 h-3.5 shrink-0" />
-                <span>Mobile Android</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => setViewMode('desktop')}
-                className={`flex items-center gap-2 px-4 py-2 rounded-full font-mono text-[11px] uppercase tracking-[0.08em] transition-colors whitespace-nowrap ${
-                  viewMode === 'desktop'
-                    ? 'bg-white text-[#070708] font-semibold'
-                    : 'text-white/55 hover:text-white font-normal'
-                }`}
-              >
-                <Monitor className="w-3.5 h-3.5 shrink-0" />
-                <span>Desktop Split</span>
-              </button>
+            <div
+              role="tablist"
+              aria-label="Lyrics preview device"
+              className="inline-flex flex-wrap justify-center gap-1.5 p-1.5 rounded-full bg-white/[0.03] border border-white/[0.12] mb-7 max-w-full"
+            >
+              {(
+                [
+                  { id: 'mobile', label: 'Mobile Android', icon: Smartphone },
+                  { id: 'desktop', label: 'Desktop Split', icon: Monitor },
+                ] as const
+              ).map((tab) => {
+                const Icon = tab.icon;
+                const isActive = viewMode === tab.id;
+                return (
+                  <button
+                    key={tab.id}
+                    type="button"
+                    role="tab"
+                    aria-selected={isActive}
+                    onClick={() => setViewMode(tab.id)}
+                    className={`relative flex items-center gap-2 px-4 py-2 rounded-full font-mono text-[11px] uppercase tracking-[0.08em] transition-colors whitespace-nowrap min-h-[40px] ${
+                      isActive
+                        ? 'text-[#070708] font-semibold'
+                        : 'text-white/55 hover:text-white font-normal'
+                    }`}
+                  >
+                    {isActive && (
+                      <motion.span
+                        layoutId="lyrics-view-indicator"
+                        transition={prefersReducedMotion ? { duration: 0 } : PILL_SPRING}
+                        className="absolute inset-0 rounded-full bg-white"
+                      />
+                    )}
+                    <span className="relative z-10 flex items-center gap-2">
+                      <Icon className="w-3.5 h-3.5 shrink-0" />
+                      <span>{tab.label}</span>
+                    </span>
+                  </button>
+                );
+              })}
             </div>
 
-            <div className="w-full flex justify-center">
-              <AnimatePresence mode="wait">
-                {viewMode === 'mobile' ? (
-                  <motion.div
-                    key="mobile"
-                    initial={{ opacity: 0, y: 6 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -4 }}
-                    transition={{ duration: 0.18, ease: AUDIO_EASE }}
-                    className="w-full max-w-[300px] sm:max-w-[320px]"
-                  >
-                    <PhoneFrame
-                      src="/assets/aistudio/assets-mobile-lyrics.webp"
-                      trackTitle="ILYSB (STRIPPED)"
-                      artistName="LANY"
-                    />
-                  </motion.div>
-                ) : (
-                  <motion.div
-                    key="desktop"
-                    initial={{ opacity: 0, y: 6 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -4 }}
-                    transition={{ duration: 0.18, ease: AUDIO_EASE }}
-                    className="w-full max-w-xl"
-                  >
-                    <BrowserFrame
-                      src="/assets/aistudio/assets-desktop-lyrics-split.webp"
-                      alt="Chordly Desktop Live Synced Lyrics"
-                      url="web-player.chordly.my.id/lyrics"
-                    />
-                    <div className="text-center mt-3 font-mono text-[11px] text-white/40">
-                      Full-screen synchronized lyrics view with ambient blur in desktop browser
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
+            <div className="grid grid-cols-1 grid-rows-1 w-full place-items-center">
+              <motion.div
+                initial={false}
+                animate={{
+                  opacity: viewMode === 'mobile' ? 1 : 0,
+                  scale: viewMode === 'mobile' || prefersReducedMotion ? 1 : 0.985,
+                }}
+                transition={stageTransition}
+                aria-hidden={viewMode !== 'mobile'}
+                className={`col-start-1 row-start-1 w-full max-w-[300px] sm:max-w-[320px] will-change-[opacity,transform] ${
+                  viewMode === 'mobile'
+                    ? 'relative z-10 pointer-events-auto'
+                    : 'z-0 pointer-events-none select-none'
+                }`}
+              >
+                <PhoneFrame
+                  eager
+                  src="/assets/aistudio/assets-mobile-lyrics.webp"
+                  trackTitle="ILYSB (STRIPPED)"
+                  artistName="LANY"
+                />
+              </motion.div>
+
+              <motion.div
+                initial={false}
+                animate={{
+                  opacity: viewMode === 'desktop' ? 1 : 0,
+                  scale: viewMode === 'desktop' || prefersReducedMotion ? 1 : 0.985,
+                }}
+                transition={stageTransition}
+                aria-hidden={viewMode !== 'desktop'}
+                className={`col-start-1 row-start-1 w-full max-w-xl will-change-[opacity,transform] ${
+                  viewMode === 'desktop'
+                    ? 'relative z-10 pointer-events-auto'
+                    : 'z-0 pointer-events-none select-none'
+                }`}
+              >
+                <BrowserFrame
+                  eager
+                  src="/assets/aistudio/assets-desktop-lyrics-split.webp"
+                  alt="Chordly Desktop Live Synced Lyrics"
+                  url="web-player.chordly.my.id/lyrics"
+                />
+                <div className="text-center mt-3 font-mono text-[11px] text-white/40">
+                  Full-screen synchronized lyrics view with ambient blur in desktop browser
+                </div>
+              </motion.div>
             </div>
           </ScrollReveal>
         </div>

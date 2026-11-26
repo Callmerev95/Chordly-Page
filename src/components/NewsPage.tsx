@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { ExternalLink } from 'lucide-react';
+import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
+import { AUDIO_EASE, PILL_SPRING } from './MotionPrimitives';
 import { NEWS_UPDATES } from '../data/newsUpdates';
 import {
   fetchReleases,
@@ -32,6 +34,7 @@ const SOURCE_LABEL: Record<FeedSource, string> = {
 };
 
 export const NewsPage: React.FC<NewsPageProps> = () => {
+  const prefersReducedMotion = useReducedMotion();
   const [selectedCategory, setSelectedCategory] = useState<FilterOption>('all');
   const [entries, setEntries] = useState<NewsEntry[]>(NEWS_UPDATES);
   const [currentRelease, setCurrentRelease] = useState<string>(FALLBACK_RELEASE);
@@ -97,7 +100,7 @@ export const NewsPage: React.FC<NewsPageProps> = () => {
           {/* Category Filter Toolbar */}
           <div className="flex flex-wrap items-center justify-between gap-4 border-b border-white/[0.08] pb-6">
             <div
-              role="group"
+              role="tablist"
               aria-label="Filter updates by category"
               className="inline-flex items-center gap-1 rounded-[10px] border border-white/[0.12] bg-white/[0.03] p-1"
             >
@@ -107,15 +110,23 @@ export const NewsPage: React.FC<NewsPageProps> = () => {
                   <button
                     key={tab.id}
                     type="button"
-                    aria-pressed={isActive}
+                    role="tab"
+                    aria-selected={isActive}
                     onClick={() => setSelectedCategory(tab.id)}
-                    className={`min-h-[40px] shrink-0 whitespace-nowrap rounded-[7px] px-4 py-2 font-mono text-[11px] uppercase tracking-[0.1em] transition-colors duration-150 ${
+                    className={`relative min-h-[40px] shrink-0 whitespace-nowrap rounded-[7px] px-4 py-2 font-mono text-[11px] uppercase tracking-[0.1em] transition-colors duration-150 ${
                       isActive
-                        ? 'bg-white text-[#070708] font-semibold'
+                        ? 'text-[#070708] font-semibold'
                         : 'text-white/55 hover:text-white'
                     }`}
                   >
-                    {tab.label}
+                    {isActive && (
+                      <motion.span
+                        layoutId="news-filter-indicator"
+                        transition={prefersReducedMotion ? { duration: 0 } : PILL_SPRING}
+                        className="absolute inset-0 rounded-[7px] bg-white"
+                      />
+                    )}
+                    <span className="relative z-10">{tab.label}</span>
                   </button>
                 );
               })}
@@ -131,61 +142,73 @@ export const NewsPage: React.FC<NewsPageProps> = () => {
           </div>
 
           {/* Chronological Article List */}
-          <div className="divide-y divide-white/[0.08]">
-            {filteredUpdates.map((entry) => (
-              <article key={entry.id} className="py-10 first:pt-10 last:pb-2 space-y-4">
-                <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1 font-mono text-[11.5px] text-white/45">
-                  <span className="uppercase tracking-[0.16em] text-[#ff2d55]">
-                    {entry.categoryLabel}
-                  </span>
-                  {entry.dateLabel && (
-                    <>
-                      <span aria-hidden="true">·</span>
-                      <span className="tabular-nums text-white/65">{entry.dateLabel}</span>
-                    </>
+          <AnimatePresence mode="wait" initial={false}>
+            <motion.div
+              key={selectedCategory}
+              initial={prefersReducedMotion ? false : { opacity: 0, y: 6 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={prefersReducedMotion ? undefined : { opacity: 0, y: -4 }}
+              transition={{
+                duration: prefersReducedMotion ? 0 : 0.18,
+                ease: AUDIO_EASE,
+              }}
+              className="divide-y divide-white/[0.08] will-change-[opacity,transform]"
+            >
+              {filteredUpdates.map((entry) => (
+                <article key={entry.id} className="py-10 first:pt-10 last:pb-2 space-y-4">
+                  <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1 font-mono text-[11.5px] text-white/45">
+                    <span className="uppercase tracking-[0.16em] text-[#ff2d55]">
+                      {entry.categoryLabel}
+                    </span>
+                    {entry.dateLabel && (
+                      <>
+                        <span aria-hidden="true">·</span>
+                        <span className="tabular-nums text-white/65">{entry.dateLabel}</span>
+                      </>
+                    )}
+                    {entry.versionTag && (
+                      <>
+                        <span aria-hidden="true">·</span>
+                        <span className="tabular-nums text-white/90">{entry.versionTag}</span>
+                      </>
+                    )}
+                    <span aria-hidden="true">·</span>
+                    <span className="text-white/55">{entry.platformScope}</span>
+                  </div>
+
+                  <h2 className="font-serif font-normal text-[26px] sm:text-[30px] leading-[1.2] tracking-[-0.02em] text-white">
+                    {entry.title}
+                  </h2>
+
+                  {entry.summary && (
+                    <p className="max-w-[740px] text-[15.5px] leading-[1.68] text-white/65">
+                      {entry.summary}
+                    </p>
                   )}
-                  {entry.versionTag && (
-                    <>
-                      <span aria-hidden="true">·</span>
-                      <span className="tabular-nums text-white/90">{entry.versionTag}</span>
-                    </>
+
+                  {entry.highlights.length > 0 && (
+                    <ul className="list-disc space-y-2 pl-5 pt-1 text-[15px] leading-[1.65] text-white/80 marker:text-[#ff2d55]/75">
+                      {entry.highlights.map((bullet) => (
+                        <li key={bullet}>{bullet}</li>
+                      ))}
+                    </ul>
                   )}
-                  <span aria-hidden="true">·</span>
-                  <span className="text-white/55">{entry.platformScope}</span>
-                </div>
 
-                <h2 className="font-serif font-normal text-[26px] sm:text-[30px] leading-[1.2] tracking-[-0.02em] text-white">
-                  {entry.title}
-                </h2>
-
-                {entry.summary && (
-                  <p className="max-w-[740px] text-[15.5px] leading-[1.68] text-white/65">
-                    {entry.summary}
-                  </p>
-                )}
-
-                {entry.highlights.length > 0 && (
-                  <ul className="list-disc space-y-2 pl-5 pt-1 text-[15px] leading-[1.65] text-white/80 marker:text-[#ff2d55]/75">
-                    {entry.highlights.map((bullet) => (
-                      <li key={bullet}>{bullet}</li>
-                    ))}
-                  </ul>
-                )}
-
-                {entry.url && (
-                  <a
-                    href={entry.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 font-mono text-[11px] uppercase tracking-[0.1em] text-[#ff2d55] hover:underline underline-offset-4"
-                  >
-                    {entry.versionTag ? 'View release on GitHub' : 'View on GitHub'}
-                    <ExternalLink className="w-3 h-3" />
-                  </a>
-                )}
-              </article>
-            ))}
-          </div>
+                  {entry.url && (
+                    <a
+                      href={entry.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 font-mono text-[11px] uppercase tracking-[0.1em] text-[#ff2d55] hover:underline underline-offset-4"
+                    >
+                      {entry.versionTag ? 'View release on GitHub' : 'View on GitHub'}
+                      <ExternalLink className="w-3 h-3" />
+                    </a>
+                  )}
+                </article>
+              ))}
+            </motion.div>
+          </AnimatePresence>
         </div>
       </section>
     </div>

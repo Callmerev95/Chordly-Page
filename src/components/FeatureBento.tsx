@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { PlayCircle, Link2, Palette, Sliders } from 'lucide-react';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
-import { AUDIO_EASE, ScrollReveal, VIEWPORT_CONFIG } from './MotionPrimitives';
+import { AUDIO_EASE, PILL_SPRING, ScrollReveal } from './MotionPrimitives';
 import {
   FEATURE_CATEGORIES,
   FEATURE_FILTERS,
@@ -59,13 +59,20 @@ export const FeatureBento: React.FC = () => {
                   role="tab"
                   aria-selected={isActive}
                   onClick={() => setFilter(tab.id)}
-                  className={`px-4 py-2 rounded-full font-mono text-[11px] uppercase tracking-[0.08em] transition-colors duration-150 whitespace-nowrap shrink-0 border ${
+                  className={`relative px-4 py-2 rounded-full font-mono text-[11px] uppercase tracking-[0.08em] transition-colors duration-150 whitespace-nowrap shrink-0 border ${
                     isActive
-                      ? 'bg-white text-[#070708] border-white font-semibold'
+                      ? 'text-[#070708] border-transparent font-semibold'
                       : 'bg-white/[0.03] text-white/55 border-white/[0.12] hover:text-white hover:border-white/25'
                   }`}
                 >
-                  {tab.label}
+                  {isActive && (
+                    <motion.span
+                      layoutId="feature-filter-pill"
+                      transition={prefersReducedMotion ? { duration: 0 } : PILL_SPRING}
+                      className="absolute inset-0 rounded-full bg-white"
+                    />
+                  )}
+                  <span className="relative z-10">{tab.label}</span>
                 </button>
               );
             })}
@@ -73,8 +80,15 @@ export const FeatureBento: React.FC = () => {
         </ScrollReveal>
 
         {/* 12-Column Asymmetric Category Grid */}
-        <motion.div layout className="grid grid-cols-1 lg:grid-cols-12 gap-5">
-          <AnimatePresence mode="popLayout">
+        <AnimatePresence mode="wait" initial={false}>
+          <motion.div
+            key={filter}
+            initial={prefersReducedMotion ? false : { opacity: 0, y: 6 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={prefersReducedMotion ? undefined : { opacity: 0, y: -4 }}
+            transition={{ duration: prefersReducedMotion ? 0 : 0.16, ease: AUDIO_EASE }}
+            className="grid grid-cols-1 lg:grid-cols-12 gap-5 will-change-[opacity,transform]"
+          >
             {visibleCategories.map((category, idx) => {
               const Icon = CATEGORY_ICONS[category.id];
               const isExpandedView = filter !== 'all';
@@ -84,16 +98,12 @@ export const FeatureBento: React.FC = () => {
               return (
                 <motion.article
                   key={category.id}
-                  layout
-                  initial={prefersReducedMotion ? false : { opacity: 0, y: 12 }}
-                  whileInView={prefersReducedMotion ? undefined : { opacity: 1, y: 0 }}
-                  exit={prefersReducedMotion ? undefined : { opacity: 0 }}
-                  viewport={VIEWPORT_CONFIG}
+                  initial={prefersReducedMotion ? false : { opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
                   transition={{
-                    duration: 0.25,
-                    delay: idx * 0.03,
+                    duration: prefersReducedMotion ? 0 : 0.2,
+                    delay: prefersReducedMotion ? 0 : idx * 0.025,
                     ease: AUDIO_EASE,
-                    layout: { duration: 0.22, ease: AUDIO_EASE },
                   }}
                   className={`${gridSpanClass} flex`}
                 >
@@ -148,8 +158,8 @@ export const FeatureBento: React.FC = () => {
                 </motion.article>
               );
             })}
-          </AnimatePresence>
-        </motion.div>
+          </motion.div>
+        </AnimatePresence>
       </div>
     </section>
   );

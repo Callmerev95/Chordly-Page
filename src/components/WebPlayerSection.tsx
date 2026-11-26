@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { Globe, ExternalLink, ShieldAlert, Music2, Compass, Layers, Radio } from 'lucide-react';
-import { AnimatePresence, motion } from 'motion/react';
-import { BrowserFrame } from './DeviceFrames';
-import { AUDIO_EASE, ScrollReveal } from './MotionPrimitives';
+import { motion, useReducedMotion } from 'motion/react';
+import { BrowserFrame, type BrowserFrameSlide } from './DeviceFrames';
+import { AUDIO_EASE, PILL_SPRING, ScrollReveal } from './MotionPrimitives';
 
 export const WebPlayerSection: React.FC = () => {
+  const prefersReducedMotion = useReducedMotion();
   const [activeTab, setActiveTab] = useState<'recent' | 'explore' | 'player' | 'extension'>('recent');
 
   const tabs = [
@@ -43,6 +44,11 @@ export const WebPlayerSection: React.FC = () => {
   ];
 
   const current = tabs.find((t) => t.id === activeTab) || tabs[0];
+  const browserSlides: BrowserFrameSlide[] = tabs.map((t) => ({
+    id: t.id,
+    src: t.src,
+    alt: t.label,
+  }));
 
   return (
     <section id="web-player" className="py-20 sm:py-24 bg-[#070708] border-b border-white/[0.08]">
@@ -80,7 +86,11 @@ export const WebPlayerSection: React.FC = () => {
 
           {/* Interactive Screen Switcher */}
           <ScrollReveal delay={0.05} className="relative z-10 flex justify-center mb-6">
-            <div className="flex flex-wrap items-center justify-center gap-1.5 p-1.5 rounded-full bg-[#070708]/80 border border-white/[0.12] max-w-full">
+            <div
+              role="tablist"
+              aria-label="Web player interface preview"
+              className="flex flex-wrap items-center justify-center gap-1.5 p-1.5 rounded-2xl sm:rounded-full bg-[#070708]/80 border border-white/[0.12] max-w-full"
+            >
               {tabs.map((tab) => {
                 const Icon = tab.icon;
                 const isActive = activeTab === tab.id;
@@ -88,15 +98,26 @@ export const WebPlayerSection: React.FC = () => {
                   <button
                     key={tab.id}
                     type="button"
+                    role="tab"
+                    aria-selected={isActive}
                     onClick={() => setActiveTab(tab.id)}
-                    className={`flex items-center gap-1.5 px-3.5 py-2 rounded-full font-mono text-[11px] uppercase tracking-[0.06em] transition-colors duration-150 whitespace-nowrap ${
+                    className={`relative flex items-center gap-1.5 px-3.5 py-2 rounded-xl sm:rounded-full font-mono text-[11px] uppercase tracking-[0.06em] transition-colors duration-150 whitespace-nowrap min-h-[40px] ${
                       isActive
-                        ? 'bg-white text-[#070708] font-semibold'
+                        ? 'text-[#070708] font-semibold'
                         : 'text-white/55 hover:text-white hover:bg-white/[0.06] font-normal'
                     }`}
                   >
-                    <Icon className={`w-3.5 h-3.5 shrink-0 ${isActive ? 'text-[#ff2d55]' : ''}`} />
-                    <span>{tab.label}</span>
+                    {isActive && (
+                      <motion.span
+                        layoutId="webplayer-tab-indicator"
+                        transition={prefersReducedMotion ? { duration: 0 } : PILL_SPRING}
+                        className="absolute inset-0 rounded-xl sm:rounded-full bg-white"
+                      />
+                    )}
+                    <span className="relative z-10 flex items-center gap-1.5">
+                      <Icon className={`w-3.5 h-3.5 shrink-0 ${isActive ? 'text-[#ff2d55]' : ''}`} />
+                      <span>{tab.label}</span>
+                    </span>
                   </button>
                 );
               })}
@@ -105,21 +126,32 @@ export const WebPlayerSection: React.FC = () => {
 
           {/* Browser Window Mockup */}
           <ScrollReveal delay={0.1} className="relative z-10 max-w-5xl mx-auto">
-            <BrowserFrame src={current.src} url={current.url} alt={current.label} />
+            <BrowserFrame slides={browserSlides} activeSlideId={activeTab} url={current.url} />
 
-            <div className="mt-4 min-h-[20px] flex items-center justify-center">
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={current.id}
-                  initial={{ opacity: 0, y: 4 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -4 }}
-                  transition={{ duration: 0.16, ease: AUDIO_EASE }}
-                  className="text-center font-mono text-[12px] text-white/50"
-                >
-                  {current.caption}
-                </motion.div>
-              </AnimatePresence>
+            <div className="mt-4 grid grid-cols-1 grid-rows-1 place-items-center">
+              {tabs.map((tab) => {
+                const isActive = activeTab === tab.id;
+                return (
+                  <motion.div
+                    key={tab.id}
+                    initial={false}
+                    animate={{
+                      opacity: isActive ? 1 : 0,
+                      y: isActive || prefersReducedMotion ? 0 : 4,
+                    }}
+                    transition={{
+                      duration: prefersReducedMotion ? 0 : 0.18,
+                      ease: AUDIO_EASE,
+                    }}
+                    aria-hidden={!isActive}
+                    className={`col-start-1 row-start-1 text-center font-mono text-[12px] text-white/50 px-2 ${
+                      isActive ? 'relative z-10' : 'z-0 pointer-events-none select-none'
+                    }`}
+                  >
+                    {tab.caption}
+                  </motion.div>
+                );
+              })}
             </div>
           </ScrollReveal>
 

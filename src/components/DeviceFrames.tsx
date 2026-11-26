@@ -12,16 +12,24 @@ import {
   Battery,
   Lock,
 } from 'lucide-react';
-import { AnimatePresence, motion } from 'motion/react';
+import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import { AUDIO_EASE } from './MotionPrimitives';
 
 /* =========================================================================
    1. Phone Mockup Frame (Android — Variation 29 Obsidian Glass Shell)
    ========================================================================= */
 
+export interface PhoneFrameSlide {
+  id: string;
+  src: string;
+  alt: string;
+}
+
 interface PhoneFrameProps {
   src?: string;
   alt?: string;
+  slides?: ReadonlyArray<PhoneFrameSlide>;
+  activeSlideId?: string;
   className?: string;
   screenClassName?: string;
   imgClassName?: string;
@@ -29,11 +37,14 @@ interface PhoneFrameProps {
   variant?: 'lyrics' | 'audio' | 'player';
   trackTitle?: string;
   artistName?: string;
+  eager?: boolean;
 }
 
 export const PhoneFrame: React.FC<PhoneFrameProps> = ({
   src,
   alt = 'Chordly Android Player',
+  slides,
+  activeSlideId,
   className = '',
   screenClassName = '',
   imgClassName = '',
@@ -41,14 +52,19 @@ export const PhoneFrame: React.FC<PhoneFrameProps> = ({
   variant = 'lyrics',
   trackTitle = 'Starboy',
   artistName = 'The Weeknd ft. Daft Punk',
+  eager = false,
 }) => {
+  const prefersReducedMotion = useReducedMotion();
   const [imageError, setImageError] = useState(false);
+  const [erroredSlides, setErroredSlides] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
     setImageError(false);
   }, [src]);
 
-  const showImage = Boolean(src && !imageError);
+  const hasSlides = Boolean(slides && slides.length > 0 && activeSlideId);
+  const activeSlideErrored = activeSlideId ? Boolean(erroredSlides[activeSlideId]) : false;
+  const showImage = hasSlides ? !activeSlideErrored : Boolean(src && !imageError);
 
   return (
     <div className={`relative mx-auto max-w-[300px] sm:max-w-[320px] w-full select-none ${className}`}>
@@ -65,23 +81,58 @@ export const PhoneFrame: React.FC<PhoneFrameProps> = ({
           }`}
         >
           {showImage ? (
-            <div className="relative flex-1 min-h-0 overflow-hidden w-full bg-[#070708]">
-              <AnimatePresence mode="wait">
-                <motion.img
-                  key={src}
-                  src={src}
-                  alt={alt}
-                  referrerPolicy="no-referrer"
-                  onError={() => setImageError(true)}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.18, ease: AUDIO_EASE }}
-                  className={imgClassName || 'block w-full h-auto'}
-                  loading="lazy"
-                />
-              </AnimatePresence>
-            </div>
+            hasSlides && slides ? (
+              <div className="relative grid grid-cols-1 grid-rows-1 w-full bg-[#070708] overflow-hidden">
+                {slides.map((slide) => {
+                  const isActive = slide.id === activeSlideId;
+                  return (
+                    <motion.img
+                      key={slide.id}
+                      src={slide.src}
+                      alt={slide.alt}
+                      referrerPolicy="no-referrer"
+                      loading="eager"
+                      decoding="async"
+                      aria-hidden={!isActive}
+                      onError={() =>
+                        setErroredSlides((prev) => ({ ...prev, [slide.id]: true }))
+                      }
+                      initial={false}
+                      animate={{
+                        opacity: isActive ? 1 : 0,
+                        scale: isActive || prefersReducedMotion ? 1 : 0.992,
+                      }}
+                      transition={{
+                        duration: prefersReducedMotion ? 0 : 0.22,
+                        ease: AUDIO_EASE,
+                      }}
+                      className={`col-start-1 row-start-1 block w-full h-auto will-change-[opacity,transform] ${
+                        isActive ? 'relative z-10' : 'z-0 pointer-events-none'
+                      } ${imgClassName}`}
+                    />
+                  );
+                })}
+              </div>
+            ) : (
+              <div className="relative flex-1 min-h-0 overflow-hidden w-full bg-[#070708]">
+                <AnimatePresence mode="wait">
+                  <motion.img
+                    key={src}
+                    src={src}
+                    alt={alt}
+                    referrerPolicy="no-referrer"
+                    onError={() => setImageError(true)}
+                    initial={eager ? false : { opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.18, ease: AUDIO_EASE }}
+                    className={imgClassName || 'block w-full h-auto'}
+                    loading={eager ? 'eager' : 'lazy'}
+                    decoding={eager ? 'async' : undefined}
+                  />
+                </AnimatePresence>
+              </div>
+            )
           ) : (
             <>
               <div className="relative z-30 flex items-center justify-between px-5 pt-3 pb-1 text-[11px] text-white/60 font-mono">
@@ -188,24 +239,42 @@ export const PhoneFrame: React.FC<PhoneFrameProps> = ({
    2. Browser Mockup Frame (Web Player — Variation 29 Frosted Window)
    ========================================================================= */
 
+export interface BrowserFrameSlide {
+  id: string;
+  src: string;
+  alt: string;
+}
+
 interface BrowserFrameProps {
   src?: string;
   alt?: string;
+  slides?: ReadonlyArray<BrowserFrameSlide>;
+  activeSlideId?: string;
   className?: string;
   url?: string;
+  eager?: boolean;
 }
 
 export const BrowserFrame: React.FC<BrowserFrameProps> = ({
   src,
   alt = 'Chordly Web Player in Chrome',
+  slides,
+  activeSlideId,
   className = '',
   url = 'https://web-player.chordly.my.id',
+  eager = false,
 }) => {
+  const prefersReducedMotion = useReducedMotion();
   const [imageError, setImageError] = useState(false);
+  const [erroredSlides, setErroredSlides] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
     setImageError(false);
   }, [src]);
+
+  const hasSlides = Boolean(slides && slides.length > 0 && activeSlideId);
+  const activeSlideErrored = activeSlideId ? Boolean(erroredSlides[activeSlideId]) : false;
+  const showImage = hasSlides ? !activeSlideErrored : Boolean(src && !imageError);
 
   return (
     <div
@@ -230,24 +299,59 @@ export const BrowserFrame: React.FC<BrowserFrameProps> = ({
         </div>
       </div>
 
-      {src && !imageError ? (
-        <div className="relative w-full overflow-hidden bg-[#070708]">
-          <AnimatePresence mode="wait">
-            <motion.img
-              key={src}
-              src={src}
-              alt={alt}
-              referrerPolicy="no-referrer"
-              onError={() => setImageError(true)}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.18, ease: AUDIO_EASE }}
-              className="block w-full h-auto"
-              loading="lazy"
-            />
-          </AnimatePresence>
-        </div>
+      {showImage ? (
+        hasSlides && slides ? (
+          <div className="relative grid grid-cols-1 grid-rows-1 w-full bg-[#070708] overflow-hidden">
+            {slides.map((slide) => {
+              const isActive = slide.id === activeSlideId;
+              return (
+                <motion.img
+                  key={slide.id}
+                  src={slide.src}
+                  alt={slide.alt}
+                  referrerPolicy="no-referrer"
+                  loading="eager"
+                  decoding="async"
+                  aria-hidden={!isActive}
+                  onError={() =>
+                    setErroredSlides((prev) => ({ ...prev, [slide.id]: true }))
+                  }
+                  initial={false}
+                  animate={{
+                    opacity: isActive ? 1 : 0,
+                    scale: isActive || prefersReducedMotion ? 1 : 0.994,
+                  }}
+                  transition={{
+                    duration: prefersReducedMotion ? 0 : 0.22,
+                    ease: AUDIO_EASE,
+                  }}
+                  className={`col-start-1 row-start-1 block w-full h-auto will-change-[opacity,transform] ${
+                    isActive ? 'relative z-10' : 'z-0 pointer-events-none'
+                  }`}
+                />
+              );
+            })}
+          </div>
+        ) : (
+          <div className="relative w-full overflow-hidden bg-[#070708]">
+            <AnimatePresence mode="wait">
+              <motion.img
+                key={src}
+                src={src}
+                alt={alt}
+                referrerPolicy="no-referrer"
+                onError={() => setImageError(true)}
+                initial={eager ? false : { opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.18, ease: AUDIO_EASE }}
+                className="block w-full h-auto"
+                loading={eager ? 'eager' : 'lazy'}
+                decoding={eager ? 'async' : undefined}
+              />
+            </AnimatePresence>
+          </div>
+        )
       ) : (
         <div className="relative aspect-[16/9] w-full overflow-hidden bg-[#070708] flex flex-col text-white">
           <div className="flex-1 flex overflow-hidden">
