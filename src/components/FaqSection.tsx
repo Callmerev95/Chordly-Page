@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { HelpCircle, ChevronDown } from 'lucide-react';
-import { ScrollReveal, StaggerGroup, StaggerItem } from './MotionPrimitives';
+import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
+import { AUDIO_EASE, ScrollReveal, StaggerGroup, StaggerItem } from './MotionPrimitives';
 
 export const FaqSection: React.FC = () => {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
+  const prefersReducedMotion = useReducedMotion();
 
   const faqs = [
     {
@@ -80,7 +82,7 @@ export const FaqSection: React.FC = () => {
           </ScrollReveal>
 
           {/* Right Column (Accessible Accordion) */}
-          <StaggerGroup stagger={0.03} className="lg:col-span-7 space-y-3">
+          <StaggerGroup stagger={0.035} className="lg:col-span-7 space-y-3">
             {faqs.map((faq, idx) => {
               const isOpen = openIndex === idx;
               return (
@@ -103,31 +105,45 @@ export const FaqSection: React.FC = () => {
                       <span className="text-[15px] sm:text-[17px] font-medium text-white leading-snug">
                         {faq.q}
                       </span>
-                      <div
-                        className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 transition-transform duration-200 ${
+                      <motion.div
+                        animate={{ rotate: isOpen ? 180 : 0 }}
+                        transition={{
+                          duration: prefersReducedMotion ? 0 : 0.22,
+                          ease: AUDIO_EASE,
+                        }}
+                        className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 transition-colors duration-150 ${
                           isOpen
-                            ? 'bg-white text-[#070708] rotate-180'
+                            ? 'bg-white text-[#070708]'
                             : 'bg-white/[0.06] text-white/70'
                         }`}
                       >
                         <ChevronDown className="w-4 h-4" />
-                      </div>
+                      </motion.div>
                     </button>
 
-                    <div
-                      id={`faq-answer-${idx}`}
-                      role="region"
-                      aria-labelledby={`faq-question-${idx}`}
-                      className={`grid transition-all duration-200 ease-out px-5 sm:px-6 ${
-                        isOpen ? 'grid-rows-[1fr] pb-6 opacity-100' : 'grid-rows-[0fr] pb-0 opacity-0'
-                      }`}
-                    >
-                      <div className="overflow-hidden">
-                        <p className="text-[14px] sm:text-[15px] text-white/55 leading-[1.6]">
-                          {faq.a}
-                        </p>
-                      </div>
-                    </div>
+                    <AnimatePresence initial={false}>
+                      {isOpen && (
+                        <motion.div
+                          id={`faq-answer-${idx}`}
+                          role="region"
+                          aria-labelledby={`faq-question-${idx}`}
+                          initial={prefersReducedMotion ? false : { height: 0, opacity: 0 }}
+                          animate={{ height: 'auto', opacity: 1 }}
+                          exit={prefersReducedMotion ? undefined : { height: 0, opacity: 0 }}
+                          transition={{
+                            duration: prefersReducedMotion ? 0 : 0.24,
+                            ease: AUDIO_EASE,
+                          }}
+                          className="overflow-hidden"
+                        >
+                          <div className="px-5 sm:px-6 pb-6">
+                            <p className="text-[14px] sm:text-[15px] text-white/55 leading-[1.6]">
+                              {faq.a}
+                            </p>
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
                   </div>
                 </StaggerItem>
               );

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Activity, Sliders, ShieldCheck, Cpu, Database, RefreshCw, Disc3 } from 'lucide-react';
 import { motion, useReducedMotion } from 'motion/react';
 import { PhoneFrame, type PhoneFrameSlide } from './DeviceFrames';
-import { ScrollReveal, AUDIO_EASE, PILL_SPRING } from './MotionPrimitives';
+import { DeviceFloat, ScrollReveal, AUDIO_EASE, PILL_SPRING } from './MotionPrimitives';
 
 type AudioTabId = 'lossless' | 'equalizer' | 'playback' | 'sources';
 
@@ -160,14 +160,14 @@ export const AudioDeepDive: React.FC = () => {
               })}
             </div>
 
-            <div className="w-full flex justify-center">
+            <DeviceFloat amplitude={5} duration={6.0} phaseDelay={0.2} className="w-full flex justify-center">
               <PhoneFrame
                 slides={phoneSlides}
                 activeSlideId={activeTab}
                 trackTitle="Twenty Eight"
                 artistName="The Weeknd"
               />
-            </div>
+            </DeviceFloat>
           </ScrollReveal>
 
           {/* Right Column: Audio Engineering Details & Per-Tab Interactive Panel */}

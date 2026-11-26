@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Mic2, Check, ArrowRight, Smartphone, Monitor } from 'lucide-react';
 import { motion, useReducedMotion } from 'motion/react';
 import { PhoneFrame, BrowserFrame } from './DeviceFrames';
-import { AUDIO_EASE, PILL_SPRING, ScrollReveal } from './MotionPrimitives';
+import { AUDIO_EASE, DeviceFloat, PILL_SPRING, ScrollReveal, StaggerGroup, StaggerItem } from './MotionPrimitives';
 import { FocusLyricStage } from './FocusLyricStage';
 
 export const LyricsDeepDive: React.FC = () => {
@@ -46,16 +46,16 @@ export const LyricsDeepDive: React.FC = () => {
             </div>
 
             {/* Bullets */}
-            <div className="space-y-2.5 pt-1">
+            <StaggerGroup stagger={0.035} className="space-y-2.5 pt-1">
               {bullets.map((bullet, idx) => (
-                <div key={idx} className="flex items-start gap-3">
+                <StaggerItem key={idx} y={8} className="flex items-start gap-3">
                   <div className="w-5 h-5 rounded-full bg-white/[0.06] border border-white/10 flex items-center justify-center flex-shrink-0 mt-0.5 text-[#ff2d55]">
                     <Check className="w-3 h-3 stroke-[2.5]" />
                   </div>
                   <span className="text-[14px] leading-[1.5] text-white/60">{bullet}</span>
-                </div>
+                </StaggerItem>
               ))}
-            </div>
+            </StaggerGroup>
 
             {/* CTA */}
             <div className="pt-2">
@@ -110,54 +110,56 @@ export const LyricsDeepDive: React.FC = () => {
               })}
             </div>
 
-            <div className="grid grid-cols-1 grid-rows-1 w-full place-items-center">
-              <motion.div
-                initial={false}
-                animate={{
-                  opacity: viewMode === 'mobile' ? 1 : 0,
-                  scale: viewMode === 'mobile' || prefersReducedMotion ? 1 : 0.985,
-                }}
-                transition={stageTransition}
-                aria-hidden={viewMode !== 'mobile'}
-                className={`col-start-1 row-start-1 w-full max-w-[300px] sm:max-w-[320px] will-change-[opacity,transform] ${
-                  viewMode === 'mobile'
-                    ? 'relative z-10 pointer-events-auto'
-                    : 'z-0 pointer-events-none select-none'
-                }`}
-              >
-                <PhoneFrame
-                  eager
-                  src="/assets/aistudio/assets-mobile-lyrics.webp"
-                  trackTitle="ILYSB (STRIPPED)"
-                  artistName="LANY"
-                />
-              </motion.div>
+            <DeviceFloat amplitude={4} duration={6.4} phaseDelay={0.3} className="w-full">
+              <div className="grid grid-cols-1 grid-rows-1 w-full place-items-center">
+                <motion.div
+                  initial={false}
+                  animate={{
+                    opacity: viewMode === 'mobile' ? 1 : 0,
+                    scale: viewMode === 'mobile' || prefersReducedMotion ? 1 : 0.985,
+                  }}
+                  transition={stageTransition}
+                  aria-hidden={viewMode !== 'mobile'}
+                  className={`col-start-1 row-start-1 w-full max-w-[300px] sm:max-w-[320px] will-change-[opacity,transform] ${
+                    viewMode === 'mobile'
+                      ? 'relative z-10 pointer-events-auto'
+                      : 'z-0 pointer-events-none select-none'
+                  }`}
+                >
+                  <PhoneFrame
+                    eager
+                    src="/assets/aistudio/assets-mobile-lyrics.webp"
+                    trackTitle="ILYSB (STRIPPED)"
+                    artistName="LANY"
+                  />
+                </motion.div>
 
-              <motion.div
-                initial={false}
-                animate={{
-                  opacity: viewMode === 'desktop' ? 1 : 0,
-                  scale: viewMode === 'desktop' || prefersReducedMotion ? 1 : 0.985,
-                }}
-                transition={stageTransition}
-                aria-hidden={viewMode !== 'desktop'}
-                className={`col-start-1 row-start-1 w-full max-w-xl will-change-[opacity,transform] ${
-                  viewMode === 'desktop'
-                    ? 'relative z-10 pointer-events-auto'
-                    : 'z-0 pointer-events-none select-none'
-                }`}
-              >
-                <BrowserFrame
-                  eager
-                  src="/assets/aistudio/assets-desktop-lyrics-split.webp"
-                  alt="Chordly Desktop Live Synced Lyrics"
-                  url="web-player.chordly.my.id/lyrics"
-                />
-                <div className="text-center mt-3 font-mono text-[11px] text-white/40">
-                  Full-screen synchronized lyrics view with ambient blur in desktop browser
-                </div>
-              </motion.div>
-            </div>
+                <motion.div
+                  initial={false}
+                  animate={{
+                    opacity: viewMode === 'desktop' ? 1 : 0,
+                    scale: viewMode === 'desktop' || prefersReducedMotion ? 1 : 0.985,
+                  }}
+                  transition={stageTransition}
+                  aria-hidden={viewMode !== 'desktop'}
+                  className={`col-start-1 row-start-1 w-full max-w-xl will-change-[opacity,transform] ${
+                    viewMode === 'desktop'
+                      ? 'relative z-10 pointer-events-auto'
+                      : 'z-0 pointer-events-none select-none'
+                  }`}
+                >
+                  <BrowserFrame
+                    eager
+                    src="/assets/aistudio/assets-desktop-lyrics-split.webp"
+                    alt="Chordly Desktop Live Synced Lyrics"
+                    url="web-player.chordly.my.id/lyrics"
+                  />
+                  <div className="text-center mt-3 font-mono text-[11px] text-white/40">
+                    Full-screen synchronized lyrics view with ambient blur in desktop browser
+                  </div>
+                </motion.div>
+              </div>
+            </DeviceFloat>
           </ScrollReveal>
         </div>
       </div>

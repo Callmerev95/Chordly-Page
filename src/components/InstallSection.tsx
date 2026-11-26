@@ -91,7 +91,7 @@ export const InstallSection: React.FC = () => {
         </ScrollReveal>
 
         {/* 4 Cards Grid */}
-        <StaggerGroup className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-5 items-stretch">
+        <StaggerGroup stagger={0.05} className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-5 items-stretch">
           {/* Card 1: Android (Recommended) */}
           <StaggerItem className="flex">
             <div className="w-full p-7 rounded-[28px] v29-glass-frame flex flex-col justify-between">

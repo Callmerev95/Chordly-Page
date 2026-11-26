@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import {
   Play,
   Pause,
@@ -267,6 +267,11 @@ export const BrowserFrame: React.FC<BrowserFrameProps> = ({
   const prefersReducedMotion = useReducedMotion();
   const [imageError, setImageError] = useState(false);
   const [erroredSlides, setErroredSlides] = useState<Record<string, boolean>>({});
+  const slideRefs = useRef<Record<string, HTMLImageElement | null>>({});
+  const prevActiveSlideRef = useRef<string | undefined>(activeSlideId);
+  const prevWidthRef = useRef<number>(0);
+  const [viewportHeight, setViewportHeight] = useState<number | null>(null);
+  const [isTabTransition, setIsTabTransition] = useState(false);
 
   useEffect(() => {
     setImageError(false);
@@ -275,6 +280,48 @@ export const BrowserFrame: React.FC<BrowserFrameProps> = ({
   const hasSlides = Boolean(slides && slides.length > 0 && activeSlideId);
   const activeSlideErrored = activeSlideId ? Boolean(erroredSlides[activeSlideId]) : false;
   const showImage = hasSlides ? !activeSlideErrored : Boolean(src && !imageError);
+
+  useLayoutEffect(() => {
+    if (!hasSlides || !showImage || !activeSlideId) return;
+
+    const didTabChange = prevActiveSlideRef.current !== activeSlideId;
+    if (didTabChange) {
+      prevActiveSlideRef.current = activeSlideId;
+      setIsTabTransition(true);
+    }
+
+    const activeEl = slideRefs.current[activeSlideId];
+    if (activeEl && activeEl.offsetHeight > 0) {
+      prevWidthRef.current = activeEl.offsetWidth;
+      setViewportHeight(activeEl.offsetHeight);
+    }
+  }, [hasSlides, showImage, activeSlideId]);
+
+  useEffect(() => {
+    if (!hasSlides || !showImage || !activeSlideId || typeof ResizeObserver === 'undefined') {
+      return;
+    }
+
+    const activeEl = slideRefs.current[activeSlideId];
+    if (!activeEl) return;
+
+    const observer = new ResizeObserver((entries) => {
+      const entry = entries[0];
+      if (!entry) return;
+      const nextWidth = Math.round(entry.contentRect.width);
+      const nextHeight = activeEl.offsetHeight;
+      if (nextHeight <= 0) return;
+
+      if (prevWidthRef.current !== 0 && nextWidth !== prevWidthRef.current) {
+        setIsTabTransition(false);
+      }
+      prevWidthRef.current = nextWidth;
+      setViewportHeight(nextHeight);
+    });
+
+    observer.observe(activeEl);
+    return () => observer.disconnect();
+  }, [hasSlides, showImage, activeSlideId]);
 
   return (
     <div
@@ -301,18 +348,36 @@ export const BrowserFrame: React.FC<BrowserFrameProps> = ({
 
       {showImage ? (
         hasSlides && slides ? (
-          <div className="relative grid grid-cols-1 grid-rows-1 w-full bg-[#070708] overflow-hidden">
+          <motion.div
+            initial={false}
+            animate={viewportHeight !== null ? { height: viewportHeight } : undefined}
+            transition={{
+              duration: prefersReducedMotion || !isTabTransition ? 0 : 0.26,
+              ease: AUDIO_EASE,
+            }}
+            onAnimationComplete={() => setIsTabTransition(false)}
+            className="relative w-full bg-[#070708] overflow-hidden"
+          >
             {slides.map((slide) => {
               const isActive = slide.id === activeSlideId;
               return (
                 <motion.img
                   key={slide.id}
+                  ref={(el) => {
+                    slideRefs.current[slide.id] = el;
+                  }}
                   src={slide.src}
                   alt={slide.alt}
                   referrerPolicy="no-referrer"
                   loading="eager"
                   decoding="async"
                   aria-hidden={!isActive}
+                  onLoad={(e) => {
+                    if (slide.id === activeSlideId && e.currentTarget.offsetHeight > 0) {
+                      prevWidthRef.current = e.currentTarget.offsetWidth;
+                      setViewportHeight(e.currentTarget.offsetHeight);
+                    }
+                  }}
                   onError={() =>
                     setErroredSlides((prev) => ({ ...prev, [slide.id]: true }))
                   }
@@ -325,13 +390,15 @@ export const BrowserFrame: React.FC<BrowserFrameProps> = ({
                     duration: prefersReducedMotion ? 0 : 0.22,
                     ease: AUDIO_EASE,
                   }}
-                  className={`col-start-1 row-start-1 block w-full h-auto will-change-[opacity,transform] ${
-                    isActive ? 'relative z-10' : 'z-0 pointer-events-none'
-                  }`}
+                  className={`${
+                    isActive
+                      ? 'relative z-10'
+                      : 'absolute inset-x-0 top-0 z-0 pointer-events-none'
+                  } block w-full h-auto will-change-[opacity,transform]`}
                 />
               );
             })}
-          </div>
+          </motion.div>
         ) : (
           <div className="relative w-full overflow-hidden bg-[#070708]">
             <AnimatePresence mode="wait">

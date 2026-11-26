@@ -19,7 +19,7 @@ export const ComingSoonSection: React.FC = () => {
           </p>
         </ScrollReveal>
 
-        <StaggerGroup className="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <StaggerGroup stagger={0.06} className="grid grid-cols-1 md:grid-cols-2 gap-5">
           <StaggerItem className="flex">
             <div className="w-full p-7 rounded-[24px] border border-dashed border-white/[0.14] bg-white/[0.02] space-y-3 hover:border-white/30 transition-colors">
               <div className="flex items-center justify-between">

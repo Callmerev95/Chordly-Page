@@ -87,9 +87,9 @@ export const OpenSourceSection: React.FC = () => {
           </ScrollReveal>
 
           {/* Right Column: 2x2 Frosted Stats Grid */}
-          <StaggerGroup className="lg:col-span-5 grid grid-cols-2 gap-4">
+          <StaggerGroup stagger={0.05} className="lg:col-span-5 grid grid-cols-2 gap-4">
             {stats.map((stat, idx) => (
-              <StaggerItem key={idx} className="flex">
+              <StaggerItem key={idx} scale={0.96} className="flex">
                 <div className="w-full p-6 rounded-[24px] v29-glass-card hover:border-white/25 transition-colors flex flex-col justify-center space-y-1.5">
                   <span className="font-serif italic text-[28px] sm:text-[34px] text-white leading-none tracking-tight tabular-nums">
                     {stat.value}

@@ -1,7 +1,7 @@
 import React from 'react';
 import { ExternalLink, Smartphone, Watch, Globe, Monitor, Tv, ArrowRight } from 'lucide-react';
 import { PhoneFrame, WatchFrame, BrowserFrame } from './DeviceFrames';
-import { ScrollReveal, StaggerGroup, StaggerItem } from './MotionPrimitives';
+import { DeviceFloat, ScrollReveal, StaggerGroup, StaggerItem } from './MotionPrimitives';
 
 export const PlatformsSection: React.FC = () => {
   return (
@@ -53,14 +53,14 @@ export const PlatformsSection: React.FC = () => {
               </div>
 
               <div className="mt-8 flex justify-center">
-                <div className="w-full max-w-[300px] sm:max-w-[316px]">
+                <DeviceFloat amplitude={5} duration={6.2} className="w-full max-w-[300px] sm:max-w-[316px]">
                   <PhoneFrame
                     src="/assets/chordly/android_app.webp"
                     alt="Chordly Android App Home Screen"
                     trackTitle="block my number"
                     artistName="Hayes Mint"
                   />
-                </div>
+                </DeviceFloat>
               </div>
             </div>
           </StaggerItem>
@@ -96,7 +96,9 @@ export const PlatformsSection: React.FC = () => {
               </div>
 
               <div className="mt-6 flex justify-center">
-                <WatchFrame screenType="playback" />
+                <DeviceFloat amplitude={4} duration={5.6} phaseDelay={0.6}>
+                  <WatchFrame screenType="playback" />
+                </DeviceFloat>
               </div>
             </div>
           </StaggerItem>

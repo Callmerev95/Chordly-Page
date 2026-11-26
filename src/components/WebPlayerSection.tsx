@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Globe, ExternalLink, ShieldAlert, Music2, Compass, Layers, Radio } from 'lucide-react';
 import { motion, useReducedMotion } from 'motion/react';
 import { BrowserFrame, type BrowserFrameSlide } from './DeviceFrames';
-import { AUDIO_EASE, PILL_SPRING, ScrollReveal } from './MotionPrimitives';
+import { AUDIO_EASE, DeviceFloat, PILL_SPRING, ScrollReveal } from './MotionPrimitives';
 
 export const WebPlayerSection: React.FC = () => {
   const prefersReducedMotion = useReducedMotion();
@@ -126,7 +126,9 @@ export const WebPlayerSection: React.FC = () => {
 
           {/* Browser Window Mockup */}
           <ScrollReveal delay={0.1} className="relative z-10 max-w-5xl mx-auto">
-            <BrowserFrame slides={browserSlides} activeSlideId={activeTab} url={current.url} />
+            <DeviceFloat amplitude={3.5} duration={6.8} phaseDelay={0.4}>
+              <BrowserFrame slides={browserSlides} activeSlideId={activeTab} url={current.url} />
+            </DeviceFloat>
 
             <div className="mt-4 grid grid-cols-1 grid-rows-1 place-items-center">
               {tabs.map((tab) => {

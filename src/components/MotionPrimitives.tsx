@@ -18,12 +18,14 @@ export const VIEWPORT_CONFIG = {
 interface ScrollRevealProps extends HTMLMotionProps<'div'> {
   delay?: number;
   y?: number;
+  scale?: number;
   children: React.ReactNode;
 }
 
 export const ScrollReveal: React.FC<ScrollRevealProps> = ({
   delay = 0,
   y = 12,
+  scale = 1,
   children,
   className = '',
   ...rest
@@ -32,10 +34,10 @@ export const ScrollReveal: React.FC<ScrollRevealProps> = ({
 
   return (
     <motion.div
-      initial={prefersReducedMotion ? false : { opacity: 0, y }}
-      whileInView={prefersReducedMotion ? undefined : { opacity: 1, y: 0 }}
+      initial={prefersReducedMotion ? false : { opacity: 0, y, scale }}
+      whileInView={prefersReducedMotion ? undefined : { opacity: 1, y: 0, scale: 1 }}
       viewport={VIEWPORT_CONFIG}
-      transition={{ duration: 0.28, delay, ease: AUDIO_EASE }}
+      transition={{ duration: 0.32, delay, ease: AUDIO_EASE }}
       className={className}
       {...rest}
     >
@@ -51,7 +53,7 @@ interface StaggerGroupProps extends HTMLMotionProps<'div'> {
 }
 
 export const StaggerGroup: React.FC<StaggerGroupProps> = ({
-  stagger = 0.04,
+  stagger = 0.045,
   delay = 0.02,
   children,
   className = '',
@@ -83,11 +85,13 @@ export const StaggerGroup: React.FC<StaggerGroupProps> = ({
 
 interface StaggerItemProps extends HTMLMotionProps<'div'> {
   y?: number;
+  scale?: number;
   children: React.ReactNode;
 }
 
 export const StaggerItem: React.FC<StaggerItemProps> = ({
   y = 12,
+  scale = 1,
   children,
   className = '',
   ...rest
@@ -100,16 +104,60 @@ export const StaggerItem: React.FC<StaggerItemProps> = ({
         prefersReducedMotion
           ? undefined
           : {
-              hidden: { opacity: 0, y },
+              hidden: { opacity: 0, y, scale },
               visible: {
                 opacity: 1,
                 y: 0,
-                transition: { duration: 0.26, ease: AUDIO_EASE },
+                scale: 1,
+                transition: { duration: 0.28, ease: AUDIO_EASE },
               },
             }
       }
       className={className}
       {...rest}
+    >
+      {children}
+    </motion.div>
+  );
+};
+
+interface DeviceFloatProps {
+  amplitude?: number;
+  duration?: number;
+  phaseDelay?: number;
+  className?: string;
+  children: React.ReactNode;
+}
+
+export const DeviceFloat: React.FC<DeviceFloatProps> = ({
+  amplitude = 5,
+  duration = 6,
+  phaseDelay = 0,
+  className = '',
+  children,
+}) => {
+  const prefersReducedMotion = useReducedMotion();
+
+  return (
+    <motion.div
+      animate={
+        prefersReducedMotion
+          ? undefined
+          : {
+              y: [0, -amplitude, 0],
+            }
+      }
+      transition={
+        prefersReducedMotion
+          ? undefined
+          : {
+              duration,
+              delay: phaseDelay,
+              repeat: Infinity,
+              ease: 'easeInOut',
+            }
+      }
+      className={`will-change-transform ${className}`}
     >
       {children}
     </motion.div>

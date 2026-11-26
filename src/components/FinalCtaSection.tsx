@@ -6,8 +6,12 @@ export const FinalCtaSection: React.FC = () => {
   return (
     <section className="py-20 sm:py-24 bg-[#070708] border-b border-white/[0.08]">
       <div className="max-w-7xl mx-auto px-[4vw] sm:px-6 lg:px-8">
-        <div className="p-8 sm:p-14 lg:p-16 rounded-[36px] v29-glass-frame text-center">
-          <ScrollReveal className="relative z-10 max-w-2xl mx-auto space-y-6">
+        <ScrollReveal
+          scale={0.98}
+          y={14}
+          className="p-8 sm:p-14 lg:p-16 rounded-[36px] v29-glass-frame text-center"
+        >
+          <div className="relative z-10 max-w-2xl mx-auto space-y-6">
             <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-[#ff2d55]">
               Ready to Listen · Free &amp; Open Source
             </p>
@@ -41,8 +45,8 @@ export const FinalCtaSection: React.FC = () => {
                 <ExternalLink className="w-4 h-4 text-white/55 shrink-0" />
               </a>
             </div>
-          </ScrollReveal>
-        </div>
+          </div>
+        </ScrollReveal>
       </div>
     </section>
   );
