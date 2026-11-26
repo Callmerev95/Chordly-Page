@@ -1,55 +1,8 @@
 import React, { useState } from 'react';
-import {
-  Download,
-  ExternalLink,
-  Disc3,
-  Mic2,
-  ListMusic,
-  BarChart2,
-} from 'lucide-react';
-import { PhoneFrame } from './DeviceFrames';
+import { Download, ExternalLink, Disc3 } from 'lucide-react';
 
 export const HeroSection: React.FC = () => {
-  const [activeScreen, setActiveScreen] = useState<'now_playing' | 'lyrics' | 'replay' | 'queue'>(
-    'now_playing'
-  );
-
-  const screens = [
-    {
-      id: 'now_playing' as const,
-      label: 'Now Playing',
-      code: '0x2A94F',
-      subtext: 'ILYSB (STRIPPED) · LANY',
-      src: '/assets/aistudio/assets-mobile-now-playing.webp',
-      icon: Disc3,
-    },
-    {
-      id: 'lyrics' as const,
-      label: 'Synced Lyrics',
-      code: '0x12LRC',
-      subtext: 'Real-time syllable tracking',
-      src: '/assets/aistudio/assets-mobile-lyrics.webp',
-      icon: Mic2,
-    },
-    {
-      id: 'queue' as const,
-      label: 'Smart Queue',
-      code: '0x08QUE',
-      subtext: 'Sanctuary · Joji',
-      src: '/assets/aistudio/assets-mobile-queue.webp',
-      icon: ListMusic,
-    },
-    {
-      id: 'replay' as const,
-      label: '2026 Replay',
-      code: '0x201MN',
-      subtext: 'Personal listening metrics',
-      src: '/assets/aistudio/assets-mobile-replay.webp',
-      icon: BarChart2,
-    },
-  ];
-
-  const current = screens.find((s) => s.id === activeScreen) || screens[0];
+  const [heroImageError, setHeroImageError] = useState(false);
 
   const platformSummary = [
     {
@@ -75,17 +28,17 @@ export const HeroSection: React.FC = () => {
   ];
 
   return (
-    <section id="hero" className="relative pt-28 sm:pt-32 lg:pt-36 border-b border-white/[0.08]">
+    <section id="hero" className="relative overflow-x-clip pt-28 sm:pt-32 lg:pt-36 border-b border-white/[0.08]">
       <div className="max-w-7xl mx-auto px-[4vw] sm:px-6 lg:px-8">
-        {/* Variation 29 Split Hero (1.2fr / 0.8fr) */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-12 items-center pb-16 sm:pb-20">
+        {/* Variation 29 Balanced Split Hero (6 / 6) */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-10 items-center pb-16 sm:pb-20">
           {/* Left Column: Editorial Serif Hero */}
-          <div className="lg:col-span-7 space-y-7 max-w-[680px] mx-auto lg:mx-0 text-center lg:text-left">
+          <div className="lg:col-span-6 space-y-7 max-w-[580px] mx-auto lg:mx-0 text-center lg:text-left">
             <span className="block font-mono text-[11px] uppercase tracking-[0.2em] text-[#ff2d55]">
               Bit-Perfect Audio Engine · Open Source
             </span>
 
-            <h1 className="font-serif font-normal text-[clamp(3.6rem,7.2vw,6.75rem)] leading-[0.92] tracking-[-0.045em] text-white text-balance">
+            <h1 className="font-serif font-normal text-[clamp(3.25rem,6vw,5.75rem)] leading-[0.94] tracking-[-0.045em] text-white text-balance">
               Feel every <br className="hidden sm:block" />
               <span className="italic text-white">lyric.</span>
             </h1>
@@ -111,68 +64,37 @@ export const HeroSection: React.FC = () => {
                 <ExternalLink className="w-3.5 h-3.5 text-white/60 shrink-0" />
               </a>
             </div>
-
-            {/* Screen Switcher Controls */}
-            <div className="pt-2 space-y-2.5">
-              <div className="font-mono text-[10px] uppercase tracking-[0.16em] text-white/40">
-                Preview Interface · {current.subtext}
-              </div>
-              <div className="flex flex-wrap justify-center lg:justify-start gap-2">
-                {screens.map((screen) => {
-                  const Icon = screen.icon;
-                  const isActive = activeScreen === screen.id;
-                  return (
-                    <button
-                      key={screen.id}
-                      type="button"
-                      onClick={() => setActiveScreen(screen.id)}
-                      className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full font-mono text-[11px] uppercase tracking-[0.08em] transition-colors whitespace-nowrap shrink-0 border ${
-                        isActive
-                          ? 'bg-white text-[#070708] border-white font-semibold'
-                          : 'bg-white/[0.03] text-white/60 border-white/[0.12] hover:text-white hover:border-white/25'
-                      }`}
-                    >
-                      <Icon className={`w-3.5 h-3.5 shrink-0 ${isActive ? 'text-[#ff2d55]' : ''}`} />
-                      <span>{screen.label}</span>
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
           </div>
 
-          {/* Right Column: Variation 29 Frosted Glass Visual Frame */}
-          <div className="lg:col-span-5">
-            <div className="v29-glass-frame rounded-[36px] p-6 sm:p-8 flex items-center justify-center">
-              {/* Embedded Interactive Phone Preview */}
-              <div
-                onClick={() => {
-                  const idx = screens.findIndex((s) => s.id === activeScreen);
-                  setActiveScreen(screens[(idx + 1) % screens.length].id);
-                }}
-                role="button"
-                tabIndex={0}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    const idx = screens.findIndex((s) => s.id === activeScreen);
-                    setActiveScreen(screens[(idx + 1) % screens.length].id);
-                  }
-                }}
-                aria-label="Cycle mobile app preview screens"
-                title="Click to preview next screen"
-                className="relative z-10 w-full max-w-[260px] mx-auto cursor-pointer group focus:outline-none"
-              >
-                <PhoneFrame
-                  src={current.src}
-                  alt={`Chordly ${current.label}`}
-                  trackTitle={current.subtext}
-                  artistName="Chordly Android"
-                  screenClassName="aspect-[9/19.5]"
-                  imgClassName="block w-full h-full object-cover"
+          {/* Right Column: Floating Triple-Phone Visual Showcase */}
+          <div className="lg:col-span-6 flex items-center justify-center">
+            {!heroImageError ? (
+              <div className="relative w-full max-w-[680px] lg:max-w-none lg:w-[106%] lg:shrink-0 aspect-[1.32/1] overflow-hidden mx-auto select-none">
+                <img
+                  src="/assets/chordly/hero.webp"
+                  alt="Chordly mobile interface showing synced lyrics, now playing controls, and album library"
+                  referrerPolicy="no-referrer"
+                  loading="eager"
+                  decoding="async"
+                  onError={() => setHeroImageError(true)}
+                  className="relative z-10 block w-full h-full object-cover object-center [mask-image:linear-gradient(to_bottom,black_76%,transparent_100%)] [-webkit-mask-image:linear-gradient(to_bottom,black_76%,transparent_100%)]"
+                />
+                <div
+                  aria-hidden="true"
+                  className="pointer-events-none absolute inset-x-0 bottom-0 z-20 h-[24%] backdrop-blur-md [mask-image:linear-gradient(to_bottom,transparent_0%,black_55%,transparent_100%)] [-webkit-mask-image:linear-gradient(to_bottom,transparent_0%,black_55%,transparent_100%)]"
                 />
               </div>
-            </div>
+            ) : (
+              <div className="relative z-10 aspect-video w-full max-w-[640px] rounded-[24px] border border-white/10 bg-[#070708]/80 flex flex-col items-center justify-center gap-3 p-8 text-center">
+                <div className="grid size-12 place-items-center rounded-full bg-white/[0.06] border border-white/10 text-[#ff2d55]">
+                  <Disc3 className="w-5 h-5" />
+                </div>
+                <p className="font-serif italic text-xl text-white">Chordly Mobile Suite</p>
+                <p className="text-xs font-mono uppercase tracking-[0.14em] text-white/45">
+                  Synced Lyrics · Now Playing · Library
+                </p>
+              </div>
+            )}
           </div>
         </div>
 
