@@ -53,11 +53,12 @@ export const PlatformsSection: React.FC = () => {
               </div>
 
               <div className="mt-8 flex justify-center">
-                <div className="w-full max-w-[260px]">
+                <div className="w-full max-w-[300px] sm:max-w-[316px]">
                   <PhoneFrame
-                    src="/assets/aistudio/assets-mobile-now-playing.webp"
-                    trackTitle="ILYSB (STRIPPED)"
-                    artistName="LANY"
+                    src="/assets/chordly/android_app.webp"
+                    alt="Chordly Android App Home Screen"
+                    trackTitle="block my number"
+                    artistName="Hayes Mint"
                   />
                 </div>
               </div>
