@@ -12,6 +12,7 @@ import {
 } from 'motion/react';
 import { BadgeCheck, ChevronLeft, ChevronRight, ExternalLink, Quote } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { Skeleton } from './skeleton';
 import type { Testimonial } from '../../data/testimonials';
 
 export type { Testimonial };
@@ -38,6 +39,16 @@ interface CardProps {
 }
 
 function Card({ item, i, pos, w, reduce, active, figureRef }: CardProps) {
+  const [avatarLoaded, setAvatarLoaded] = React.useState(false);
+  const [avatarError, setAvatarError] = React.useState(false);
+  const avatarImgRef = React.useRef<HTMLImageElement | null>(null);
+
+  React.useEffect(() => {
+    setAvatarError(false);
+    const img = avatarImgRef.current;
+    setAvatarLoaded(Boolean(img && img.complete && img.naturalWidth > 0));
+  }, [item.avatarUrl]);
+
   const d = useTransform(pos, (p) => i - p);
   const x = useTransform(d, (v) =>
     reduce
@@ -112,15 +123,29 @@ function Card({ item, i, pos, w, reduce, active, figureRef }: CardProps) {
         <figcaption className="relative mt-4 sm:mt-5 pt-3.5 sm:pt-4 border-t border-white/[0.08] flex items-center gap-3">
           <motion.span
             style={{ x: px3 }}
-            className="grid size-10 shrink-0 place-items-center overflow-hidden rounded-full border border-white/15 bg-white/[0.06] text-xs font-mono font-semibold text-white tracking-wide"
+            className="relative grid size-10 shrink-0 place-items-center overflow-hidden rounded-full border border-white/15 bg-white/[0.06] text-xs font-mono font-semibold text-white tracking-wide"
           >
-            {item.avatarUrl ? (
-              <img
-                src={item.avatarUrl}
-                alt=""
-                referrerPolicy="no-referrer"
-                className="size-full object-cover"
-              />
+            {item.avatarUrl && !avatarError ? (
+              <>
+                {!avatarLoaded && (
+                  <Skeleton
+                    variant="circle"
+                    className="absolute inset-0 size-full border-0 z-10"
+                  />
+                )}
+                <img
+                  ref={avatarImgRef}
+                  src={item.avatarUrl}
+                  alt=""
+                  referrerPolicy="no-referrer"
+                  onLoad={() => setAvatarLoaded(true)}
+                  onError={() => setAvatarError(true)}
+                  className={cn(
+                    'size-full object-cover transition-opacity duration-200',
+                    avatarLoaded ? 'opacity-100' : 'opacity-0'
+                  )}
+                />
+              </>
             ) : (
               <span className="grid size-full place-items-center text-[#ff2d55]">
                 {item.initials ?? item.name.slice(0, 2).toUpperCase()}

@@ -1,6 +1,7 @@
 import React from 'react';
 import { ChordlyLogo } from './ChordlyLogo';
 import { Github, ExternalLink } from 'lucide-react';
+import { StaggerGroup, StaggerItem } from './MotionPrimitives';
 
 interface FooterProps {
   onNavigate?: (to: string, e?: React.MouseEvent<HTMLAnchorElement>) => void;
@@ -11,17 +12,17 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
     <footer className="relative z-10 bg-[#070708] pt-14 pb-10 text-[14px] text-white/50 select-none">
       <div className="max-w-7xl mx-auto px-[4vw] sm:px-6 lg:px-8">
         {/* Directory Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-12 gap-x-6 gap-y-8 pb-10">
+        <StaggerGroup stagger={0.065} amount={0.05} className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-12 gap-x-6 gap-y-8 pb-10">
           {/* Col 1: Brand & Bio */}
-          <div className="col-span-2 md:col-span-3 lg:col-span-5 space-y-3 pb-6 border-b border-white/[0.08] lg:pb-0 lg:border-b-0">
+          <StaggerItem y={14} className="col-span-2 md:col-span-3 lg:col-span-5 space-y-3 pb-6 border-b border-white/[0.08] lg:pb-0 lg:border-b-0">
             <ChordlyLogo size="md" showWordmark={true} />
             <p className="text-white/55 text-[14px] leading-[1.55] max-w-sm">
               Independent YouTube Music player for Android, Wear OS, and the web. Open source under GPL-3.0.
             </p>
-          </div>
+          </StaggerItem>
 
           {/* Col 2: Platforms */}
-          <div className="col-span-1 lg:col-span-2 space-y-2.5">
+          <StaggerItem y={14} className="col-span-1 lg:col-span-2 space-y-2.5">
             <h4 className="font-mono uppercase tracking-[0.12em] text-white text-[11px]">Platforms</h4>
             <ul className="space-y-1.5 text-[13px]">
               <li>
@@ -66,10 +67,10 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                 <span className="text-white/30">Desktop &amp; iOS (Soon)</span>
               </li>
             </ul>
-          </div>
+          </StaggerItem>
 
           {/* Col 3: Resources */}
-          <div className="col-span-1 lg:col-span-3 space-y-2.5">
+          <StaggerItem y={14} className="col-span-1 lg:col-span-3 space-y-2.5">
             <h4 className="font-mono uppercase tracking-[0.12em] text-white text-[11px]">Resources</h4>
             <ul className="space-y-1.5 text-[13px]">
               <li>
@@ -113,10 +114,10 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                 </a>
               </li>
             </ul>
-          </div>
+          </StaggerItem>
 
           {/* Col 4: Legal & About */}
-          <div className="col-span-2 md:col-span-1 lg:col-span-2 space-y-2.5">
+          <StaggerItem y={14} className="col-span-2 md:col-span-1 lg:col-span-2 space-y-2.5">
             <h4 className="font-mono uppercase tracking-[0.12em] text-white text-[11px]">Legal &amp; About</h4>
             <ul className="grid grid-cols-2 gap-x-6 gap-y-1.5 md:block md:space-y-1.5 text-[13px]">
               <li>
@@ -168,8 +169,8 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                 </a>
               </li>
             </ul>
-          </div>
-        </div>
+          </StaggerItem>
+        </StaggerGroup>
 
         {/* Bottom Disclaimer */}
         <div className="pt-6 border-t border-white/[0.08] flex flex-col xl:flex-row items-start xl:items-center justify-between gap-3 text-[12px]">

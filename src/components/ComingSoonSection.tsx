@@ -19,8 +19,8 @@ export const ComingSoonSection: React.FC = () => {
           </p>
         </ScrollReveal>
 
-        <StaggerGroup stagger={0.06} className="grid grid-cols-1 md:grid-cols-2 gap-5">
-          <StaggerItem className="flex">
+        <StaggerGroup stagger={0.1} className="grid grid-cols-1 md:grid-cols-2 gap-5">
+          <StaggerItem y={20} scale={0.97} className="flex">
             <div className="w-full p-7 rounded-[24px] border border-dashed border-white/[0.14] bg-white/[0.02] space-y-3 hover:border-white/30 transition-colors">
               <div className="flex items-center justify-between">
                 <div className="w-10 h-10 rounded-full bg-white/[0.05] border border-white/10 flex items-center justify-center text-white/75">
@@ -41,7 +41,7 @@ export const ComingSoonSection: React.FC = () => {
             </div>
           </StaggerItem>
 
-          <StaggerItem className="flex">
+          <StaggerItem y={20} scale={0.97} className="flex">
             <div className="w-full p-7 rounded-[24px] border border-dashed border-white/[0.14] bg-white/[0.02] space-y-3 hover:border-white/30 transition-colors">
               <div className="flex items-center justify-between">
                 <div className="w-10 h-10 rounded-full bg-white/[0.05] border border-white/10 flex items-center justify-center text-white/75">

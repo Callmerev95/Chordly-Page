@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import { AUDIO_EASE } from './MotionPrimitives';
+import { DeviceMediaSkeleton } from './ui/skeleton';
 
 /* =========================================================================
    1. Phone Mockup Frame (Android — Variation 29 Obsidian Glass Shell)
@@ -55,16 +56,41 @@ export const PhoneFrame: React.FC<PhoneFrameProps> = ({
   eager = false,
 }) => {
   const prefersReducedMotion = useReducedMotion();
+  const [imageLoaded, setImageLoaded] = useState(false);
   const [imageError, setImageError] = useState(false);
+  const [loadedSlides, setLoadedSlides] = useState<Record<string, boolean>>({});
   const [erroredSlides, setErroredSlides] = useState<Record<string, boolean>>({});
+  const singleImgRef = useRef<HTMLImageElement | null>(null);
+  const slideImgRefs = useRef<Record<string, HTMLImageElement | null>>({});
 
   useEffect(() => {
     setImageError(false);
+    const img = singleImgRef.current;
+    setImageLoaded(Boolean(img && img.complete && img.naturalWidth > 0));
   }, [src]);
+
+  useEffect(() => {
+    if (!slides || slides.length === 0) return;
+    const ready: Record<string, boolean> = {};
+    for (const s of slides) {
+      const el = slideImgRefs.current[s.id];
+      if (el && el.complete && el.naturalWidth > 0) {
+        ready[s.id] = true;
+      }
+    }
+    if (Object.keys(ready).length > 0) {
+      setLoadedSlides((prev) => ({ ...prev, ...ready }));
+    }
+  }, [slides, activeSlideId]);
 
   const hasSlides = Boolean(slides && slides.length > 0 && activeSlideId);
   const activeSlideErrored = activeSlideId ? Boolean(erroredSlides[activeSlideId]) : false;
   const showImage = hasSlides ? !activeSlideErrored : Boolean(src && !imageError);
+  const activeImageLoaded = hasSlides
+    ? activeSlideId
+      ? Boolean(loadedSlides[activeSlideId])
+      : false
+    : imageLoaded;
 
   return (
     <div className={`relative mx-auto max-w-[300px] sm:max-w-[320px] w-full select-none ${className}`}>
@@ -77,29 +103,45 @@ export const PhoneFrame: React.FC<PhoneFrameProps> = ({
         {/* Screen Bezel */}
         <div
           className={`relative overflow-hidden rounded-[20px] bg-[#070708] border border-white/[0.08] flex flex-col ${
-            showImage ? screenClassName : 'aspect-[9/19.5]'
+            showImage
+              ? activeImageLoaded
+                ? screenClassName
+                : screenClassName || 'aspect-[9/19.5]'
+              : 'aspect-[9/19.5]'
           }`}
         >
           {showImage ? (
             hasSlides && slides ? (
-              <div className="relative grid grid-cols-1 grid-rows-1 w-full bg-[#070708] overflow-hidden">
+              <div className="relative grid grid-cols-1 grid-rows-1 w-full h-full bg-[#070708] overflow-hidden">
+                {!activeImageLoaded && (
+                  <div className="absolute inset-0 z-20 pointer-events-none">
+                    <DeviceMediaSkeleton kind="phone" />
+                  </div>
+                )}
                 {slides.map((slide) => {
                   const isActive = slide.id === activeSlideId;
+                  const isSlideLoaded = Boolean(loadedSlides[slide.id]);
                   return (
                     <motion.img
                       key={slide.id}
+                      ref={(el) => {
+                        slideImgRefs.current[slide.id] = el;
+                      }}
                       src={slide.src}
                       alt={slide.alt}
                       referrerPolicy="no-referrer"
                       loading="eager"
                       decoding="async"
                       aria-hidden={!isActive}
+                      onLoad={() =>
+                        setLoadedSlides((prev) => ({ ...prev, [slide.id]: true }))
+                      }
                       onError={() =>
                         setErroredSlides((prev) => ({ ...prev, [slide.id]: true }))
                       }
                       initial={false}
                       animate={{
-                        opacity: isActive ? 1 : 0,
+                        opacity: isActive && isSlideLoaded ? 1 : 0,
                         scale: isActive || prefersReducedMotion ? 1 : 0.992,
                       }}
                       transition={{
@@ -115,15 +157,22 @@ export const PhoneFrame: React.FC<PhoneFrameProps> = ({
               </div>
             ) : (
               <div className="relative flex-1 min-h-0 overflow-hidden w-full bg-[#070708]">
+                {!imageLoaded && (
+                  <div className="absolute inset-0 z-20 pointer-events-none">
+                    <DeviceMediaSkeleton kind="phone" />
+                  </div>
+                )}
                 <AnimatePresence mode="wait">
                   <motion.img
+                    ref={singleImgRef}
                     key={src}
                     src={src}
                     alt={alt}
                     referrerPolicy="no-referrer"
+                    onLoad={() => setImageLoaded(true)}
                     onError={() => setImageError(true)}
                     initial={eager ? false : { opacity: 0 }}
-                    animate={{ opacity: 1 }}
+                    animate={{ opacity: imageLoaded ? 1 : 0 }}
                     exit={{ opacity: 0 }}
                     transition={{ duration: 0.18, ease: AUDIO_EASE }}
                     className={imgClassName || 'block w-full h-auto'}
@@ -265,8 +314,11 @@ export const BrowserFrame: React.FC<BrowserFrameProps> = ({
   eager = false,
 }) => {
   const prefersReducedMotion = useReducedMotion();
+  const [imageLoaded, setImageLoaded] = useState(false);
   const [imageError, setImageError] = useState(false);
+  const [loadedSlides, setLoadedSlides] = useState<Record<string, boolean>>({});
   const [erroredSlides, setErroredSlides] = useState<Record<string, boolean>>({});
+  const singleImgRef = useRef<HTMLImageElement | null>(null);
   const slideRefs = useRef<Record<string, HTMLImageElement | null>>({});
   const prevActiveSlideRef = useRef<string | undefined>(activeSlideId);
   const prevWidthRef = useRef<number>(0);
@@ -275,11 +327,32 @@ export const BrowserFrame: React.FC<BrowserFrameProps> = ({
 
   useEffect(() => {
     setImageError(false);
+    const img = singleImgRef.current;
+    setImageLoaded(Boolean(img && img.complete && img.naturalWidth > 0));
   }, [src]);
+
+  useEffect(() => {
+    if (!slides || slides.length === 0) return;
+    const ready: Record<string, boolean> = {};
+    for (const s of slides) {
+      const el = slideRefs.current[s.id];
+      if (el && el.complete && el.naturalWidth > 0) {
+        ready[s.id] = true;
+      }
+    }
+    if (Object.keys(ready).length > 0) {
+      setLoadedSlides((prev) => ({ ...prev, ...ready }));
+    }
+  }, [slides, activeSlideId]);
 
   const hasSlides = Boolean(slides && slides.length > 0 && activeSlideId);
   const activeSlideErrored = activeSlideId ? Boolean(erroredSlides[activeSlideId]) : false;
   const showImage = hasSlides ? !activeSlideErrored : Boolean(src && !imageError);
+  const activeImageLoaded = hasSlides
+    ? activeSlideId
+      ? Boolean(loadedSlides[activeSlideId])
+      : false
+    : imageLoaded;
 
   useLayoutEffect(() => {
     if (!hasSlides || !showImage || !activeSlideId) return;
@@ -358,8 +431,20 @@ export const BrowserFrame: React.FC<BrowserFrameProps> = ({
             onAnimationComplete={() => setIsTabTransition(false)}
             className="relative w-full bg-[#070708] overflow-hidden"
           >
+            {!activeImageLoaded && (
+              <div
+                className={
+                  viewportHeight === null
+                    ? 'relative z-20 aspect-[16/9] w-full pointer-events-none'
+                    : 'absolute inset-0 z-20 pointer-events-none'
+                }
+              >
+                <DeviceMediaSkeleton kind="browser" />
+              </div>
+            )}
             {slides.map((slide) => {
               const isActive = slide.id === activeSlideId;
+              const isSlideLoaded = Boolean(loadedSlides[slide.id]);
               return (
                 <motion.img
                   key={slide.id}
@@ -373,6 +458,7 @@ export const BrowserFrame: React.FC<BrowserFrameProps> = ({
                   decoding="async"
                   aria-hidden={!isActive}
                   onLoad={(e) => {
+                    setLoadedSlides((prev) => ({ ...prev, [slide.id]: true }));
                     if (slide.id === activeSlideId && e.currentTarget.offsetHeight > 0) {
                       prevWidthRef.current = e.currentTarget.offsetWidth;
                       setViewportHeight(e.currentTarget.offsetHeight);
@@ -383,7 +469,7 @@ export const BrowserFrame: React.FC<BrowserFrameProps> = ({
                   }
                   initial={false}
                   animate={{
-                    opacity: isActive ? 1 : 0,
+                    opacity: isActive && isSlideLoaded ? 1 : 0,
                     scale: isActive || prefersReducedMotion ? 1 : 0.994,
                   }}
                   transition={{
@@ -392,7 +478,9 @@ export const BrowserFrame: React.FC<BrowserFrameProps> = ({
                   }}
                   className={`${
                     isActive
-                      ? 'relative z-10'
+                      ? viewportHeight === null && !activeImageLoaded
+                        ? 'absolute inset-x-0 top-0 z-10'
+                        : 'relative z-10'
                       : 'absolute inset-x-0 top-0 z-0 pointer-events-none'
                   } block w-full h-auto will-change-[opacity,transform]`}
                 />
@@ -400,16 +488,27 @@ export const BrowserFrame: React.FC<BrowserFrameProps> = ({
             })}
           </motion.div>
         ) : (
-          <div className="relative w-full overflow-hidden bg-[#070708]">
+          <div
+            className={`relative w-full overflow-hidden bg-[#070708] ${
+              imageLoaded ? '' : 'aspect-[16/9]'
+            }`}
+          >
+            {!imageLoaded && (
+              <div className="absolute inset-0 z-20 pointer-events-none">
+                <DeviceMediaSkeleton kind="browser" />
+              </div>
+            )}
             <AnimatePresence mode="wait">
               <motion.img
+                ref={singleImgRef}
                 key={src}
                 src={src}
                 alt={alt}
                 referrerPolicy="no-referrer"
+                onLoad={() => setImageLoaded(true)}
                 onError={() => setImageError(true)}
                 initial={eager ? false : { opacity: 0 }}
-                animate={{ opacity: 1 }}
+                animate={{ opacity: imageLoaded ? 1 : 0 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.18, ease: AUDIO_EASE }}
                 className="block w-full h-auto"
@@ -507,7 +606,15 @@ export const WatchFrame: React.FC<WatchFrameProps> = ({
   title = 'Starboy',
   artist = 'The Weeknd',
 }) => {
+  const [imageLoaded, setImageLoaded] = useState(false);
   const [imageError, setImageError] = useState(false);
+  const watchImgRef = useRef<HTMLImageElement | null>(null);
+
+  useEffect(() => {
+    setImageError(false);
+    const img = watchImgRef.current;
+    setImageLoaded(Boolean(img && img.complete && img.naturalWidth > 0));
+  }, [src]);
 
   return (
     <div className={`relative inline-block select-none ${className}`}>
@@ -517,14 +624,25 @@ export const WatchFrame: React.FC<WatchFrameProps> = ({
 
         <div className="relative w-full h-full rounded-full overflow-hidden bg-[#070708] border border-white/10 flex flex-col items-center justify-between p-4 text-center">
           {src && !imageError ? (
-            <img
-              src={src}
-              alt={alt}
-              referrerPolicy="no-referrer"
-              onError={() => setImageError(true)}
-              className="w-full h-full object-cover rounded-full"
-              loading="lazy"
-            />
+            <>
+              {!imageLoaded && (
+                <div className="absolute inset-0 z-10 pointer-events-none">
+                  <DeviceMediaSkeleton kind="watch" />
+                </div>
+              )}
+              <img
+                ref={watchImgRef}
+                src={src}
+                alt={alt}
+                referrerPolicy="no-referrer"
+                onLoad={() => setImageLoaded(true)}
+                onError={() => setImageError(true)}
+                className={`w-full h-full object-cover rounded-full transition-opacity duration-200 ${
+                  imageLoaded ? 'opacity-100' : 'opacity-0'
+                }`}
+                loading="lazy"
+              />
+            </>
           ) : screenType === 'playback' ? (
             <div className="relative w-full h-full rounded-full flex flex-col items-center justify-between py-2 text-white bg-[#070708]">
               <div className="text-[10px] text-white/50 font-mono tabular-nums pt-1 flex items-center gap-1.5">

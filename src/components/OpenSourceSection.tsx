@@ -47,7 +47,7 @@ export const OpenSourceSection: React.FC = () => {
       <div className="max-w-7xl mx-auto px-[4vw] sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
           {/* Left Column */}
-          <ScrollReveal className="lg:col-span-7 space-y-6">
+          <ScrollReveal x={-16} y={18} className="lg:col-span-7 space-y-6">
             <div className="inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.2em] text-white/45">
               <Scale className="w-3.5 h-3.5 text-[#ff2d55]" />
               <span>Free &amp; Open Source</span>
@@ -87,9 +87,9 @@ export const OpenSourceSection: React.FC = () => {
           </ScrollReveal>
 
           {/* Right Column: 2x2 Frosted Stats Grid */}
-          <StaggerGroup stagger={0.05} className="lg:col-span-5 grid grid-cols-2 gap-4">
+          <StaggerGroup stagger={0.08} className="lg:col-span-5 grid grid-cols-2 gap-4">
             {stats.map((stat, idx) => (
-              <StaggerItem key={idx} scale={0.96} className="flex">
+              <StaggerItem key={idx} scale={0.93} y={20} className="flex">
                 <div className="w-full p-6 rounded-[24px] v29-glass-card hover:border-white/25 transition-colors flex flex-col justify-center space-y-1.5">
                   <span className="font-serif italic text-[28px] sm:text-[34px] text-white leading-none tracking-tight tabular-nums">
                     {stat.value}

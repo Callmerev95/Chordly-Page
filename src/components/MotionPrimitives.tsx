@@ -1,5 +1,12 @@
-import React from 'react';
-import { motion, useReducedMotion, type HTMLMotionProps } from 'motion/react';
+import React, { useRef } from 'react';
+import {
+  motion,
+  useReducedMotion,
+  useScroll,
+  useSpring,
+  useTransform,
+  type HTMLMotionProps,
+} from 'motion/react';
 
 export const AUDIO_EASE = [0.16, 1, 0.3, 1] as const;
 
@@ -10,22 +17,34 @@ export const PILL_SPRING = {
   mass: 0.75,
 };
 
+export const PARALLAX_SPRING = {
+  stiffness: 120,
+  damping: 24,
+  mass: 0.45,
+};
+
 export const VIEWPORT_CONFIG = {
   once: true,
-  amount: 0.08 as const,
+  amount: 0.12 as const,
 };
 
 interface ScrollRevealProps extends HTMLMotionProps<'div'> {
   delay?: number;
+  duration?: number;
+  x?: number;
   y?: number;
   scale?: number;
+  amount?: number;
   children: React.ReactNode;
 }
 
 export const ScrollReveal: React.FC<ScrollRevealProps> = ({
   delay = 0,
-  y = 12,
+  duration = 0.44,
+  x = 0,
+  y = 20,
   scale = 1,
+  amount = VIEWPORT_CONFIG.amount,
   children,
   className = '',
   ...rest
@@ -34,10 +53,10 @@ export const ScrollReveal: React.FC<ScrollRevealProps> = ({
 
   return (
     <motion.div
-      initial={prefersReducedMotion ? false : { opacity: 0, y, scale }}
-      whileInView={prefersReducedMotion ? undefined : { opacity: 1, y: 0, scale: 1 }}
-      viewport={VIEWPORT_CONFIG}
-      transition={{ duration: 0.32, delay, ease: AUDIO_EASE }}
+      initial={prefersReducedMotion ? false : { opacity: 0, x, y, scale }}
+      whileInView={prefersReducedMotion ? undefined : { opacity: 1, x: 0, y: 0, scale: 1 }}
+      viewport={{ once: true, amount }}
+      transition={{ duration, delay, ease: AUDIO_EASE }}
       className={className}
       {...rest}
     >
@@ -49,12 +68,16 @@ export const ScrollReveal: React.FC<ScrollRevealProps> = ({
 interface StaggerGroupProps extends HTMLMotionProps<'div'> {
   stagger?: number;
   delay?: number;
+  amount?: number;
+  immediate?: boolean;
   children: React.ReactNode;
 }
 
 export const StaggerGroup: React.FC<StaggerGroupProps> = ({
-  stagger = 0.045,
-  delay = 0.02,
+  stagger = 0.07,
+  delay = 0.03,
+  amount = VIEWPORT_CONFIG.amount,
+  immediate = false,
   children,
   className = '',
   ...rest
@@ -64,8 +87,9 @@ export const StaggerGroup: React.FC<StaggerGroupProps> = ({
   return (
     <motion.div
       initial={prefersReducedMotion ? false : 'hidden'}
-      whileInView={prefersReducedMotion ? undefined : 'visible'}
-      viewport={VIEWPORT_CONFIG}
+      animate={immediate && !prefersReducedMotion ? 'visible' : undefined}
+      whileInView={!immediate && !prefersReducedMotion ? 'visible' : undefined}
+      viewport={immediate ? undefined : { once: true, amount }}
       variants={{
         hidden: {},
         visible: {
@@ -84,14 +108,18 @@ export const StaggerGroup: React.FC<StaggerGroupProps> = ({
 };
 
 interface StaggerItemProps extends HTMLMotionProps<'div'> {
+  x?: number;
   y?: number;
   scale?: number;
+  duration?: number;
   children: React.ReactNode;
 }
 
 export const StaggerItem: React.FC<StaggerItemProps> = ({
-  y = 12,
+  x = 0,
+  y = 18,
   scale = 1,
+  duration = 0.38,
   children,
   className = '',
   ...rest
@@ -104,12 +132,13 @@ export const StaggerItem: React.FC<StaggerItemProps> = ({
         prefersReducedMotion
           ? undefined
           : {
-              hidden: { opacity: 0, y, scale },
+              hidden: { opacity: 0, x, y, scale },
               visible: {
                 opacity: 1,
+                x: 0,
                 y: 0,
                 scale: 1,
-                transition: { duration: 0.28, ease: AUDIO_EASE },
+                transition: { duration, ease: AUDIO_EASE },
               },
             }
       }
@@ -118,6 +147,58 @@ export const StaggerItem: React.FC<StaggerItemProps> = ({
     >
       {children}
     </motion.div>
+  );
+};
+
+type ScrollOffsetTuple = NonNullable<Parameters<typeof useScroll>[0]>['offset'];
+
+interface ScrollParallaxProps {
+  offsetRange?: [number, number];
+  xRange?: [number, number];
+  scaleRange?: [number, number];
+  scrollOffset?: ScrollOffsetTuple;
+  className?: string;
+  children: React.ReactNode;
+}
+
+export const ScrollParallax: React.FC<ScrollParallaxProps> = ({
+  offsetRange = [20, -20],
+  xRange,
+  scaleRange,
+  scrollOffset = ['start end', 'end start'],
+  className = '',
+  children,
+}) => {
+  const prefersReducedMotion = useReducedMotion();
+  const targetRef = useRef<HTMLDivElement | null>(null);
+
+  const { scrollYProgress } = useScroll({
+    target: targetRef,
+    offset: scrollOffset,
+  });
+
+  const smoothProgress = useSpring(scrollYProgress, PARALLAX_SPRING);
+  const y = useTransform(smoothProgress, [0, 1], offsetRange);
+  const x = useTransform(smoothProgress, [0, 1], xRange ?? [0, 0]);
+  const scale = useTransform(smoothProgress, [0, 1], scaleRange ?? [1, 1]);
+
+  if (prefersReducedMotion) {
+    return <div className={className}>{children}</div>;
+  }
+
+  return (
+    <div ref={targetRef} className={className}>
+      <motion.div
+        style={{
+          y,
+          x: xRange ? x : undefined,
+          scale: scaleRange ? scale : undefined,
+        }}
+        className="will-change-transform"
+      >
+        {children}
+      </motion.div>
+    </div>
   );
 };
 

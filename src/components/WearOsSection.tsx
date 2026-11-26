@@ -1,7 +1,7 @@
 import React from 'react';
 import { Watch, Check, Download, AlertCircle } from 'lucide-react';
 import { WatchFrame } from './DeviceFrames';
-import { ScrollReveal, StaggerGroup, StaggerItem, DeviceFloat } from './MotionPrimitives';
+import { ScrollParallax, ScrollReveal, StaggerGroup, StaggerItem, DeviceFloat } from './MotionPrimitives';
 
 export const WearOsSection: React.FC = () => {
   const bullets = [
@@ -21,28 +21,32 @@ export const WearOsSection: React.FC = () => {
     >
       <div className="max-w-7xl mx-auto px-[4vw] sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
-          {/* Left: Two Watch Mockups in Glass Stage */}
-          <div className="lg:col-span-5 relative flex items-center justify-center min-h-[290px] sm:min-h-[360px] rounded-[32px] v29-glass-card p-6">
+          {/* Left: Two Watch Mockups in Glass Stage with Dual-Plane Opposing Parallax */}
+          <div className="lg:col-span-5 relative flex items-center justify-center min-h-[290px] sm:min-h-[360px] rounded-[32px] v29-glass-card p-6 overflow-hidden">
             <div className="relative w-full max-w-[320px] flex items-center justify-center">
               <div className="absolute -top-4 right-2 sm:right-4 -rotate-3 scale-90 opacity-85">
-                <ScrollReveal delay={0.08} scale={0.96}>
-                  <DeviceFloat amplitude={4} duration={5.6} phaseDelay={0}>
-                    <WatchFrame screenType="queue" />
-                  </DeviceFloat>
-                </ScrollReveal>
+                <ScrollParallax offsetRange={[-24, 24]}>
+                  <ScrollReveal delay={0.08} scale={0.94}>
+                    <DeviceFloat amplitude={4} duration={5.6} phaseDelay={0}>
+                      <WatchFrame screenType="queue" />
+                    </DeviceFloat>
+                  </ScrollReveal>
+                </ScrollParallax>
               </div>
               <div className="relative z-20 translate-y-6 -translate-x-4">
-                <ScrollReveal delay={0.14} scale={0.96}>
-                  <DeviceFloat amplitude={5} duration={6.2} phaseDelay={1.1}>
-                    <WatchFrame screenType="playback" title="Starboy" artist="The Weeknd" />
-                  </DeviceFloat>
-                </ScrollReveal>
+                <ScrollParallax offsetRange={[26, -26]}>
+                  <ScrollReveal delay={0.16} scale={0.94}>
+                    <DeviceFloat amplitude={5} duration={6.2} phaseDelay={1.1}>
+                      <WatchFrame screenType="playback" title="Starboy" artist="The Weeknd" />
+                    </DeviceFloat>
+                  </ScrollReveal>
+                </ScrollParallax>
               </div>
             </div>
           </div>
 
           {/* Right: Editorial Copy & Pill CTA */}
-          <ScrollReveal className="lg:col-span-7 space-y-6">
+          <ScrollReveal x={16} y={18} className="lg:col-span-7 space-y-6">
             <div className="inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.2em] text-white/45">
               <Watch className="w-3.5 h-3.5 text-[#ff2d55]" />
               <span>Wear OS Companion · ~4.5 MB</span>
@@ -57,9 +61,9 @@ export const WearOsSection: React.FC = () => {
             </p>
 
             {/* 7 Bullets */}
-            <StaggerGroup stagger={0.03} className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+            <StaggerGroup stagger={0.05} amount={0.08} className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
               {bullets.map((bullet, idx) => (
-                <StaggerItem key={idx} y={8} className="flex items-start gap-2.5">
+                <StaggerItem key={idx} y={12} className="flex items-start gap-2.5">
                   <div className="w-5 h-5 rounded-full bg-white/[0.06] border border-white/10 flex items-center justify-center flex-shrink-0 mt-0.5 text-[#ff2d55]">
                     <Check className="w-3 h-3 stroke-[2.5]" />
                   </div>

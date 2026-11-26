@@ -15,6 +15,7 @@ import {
 } from 'lucide-react';
 import { useReducedMotion } from 'motion/react';
 import { EqualizerBars } from './MotionPrimitives';
+import { FocusLyricStageSkeleton, Skeleton } from './ui/skeleton';
 import {
   buildDynamicWordSlots,
   fetchIlysbFromLrclib,
@@ -75,6 +76,7 @@ export const FocusLyricStage: React.FC = () => {
   const [lines, setLines] = useState<SyncedLyricLine[]>([]);
   const [lyricsOrigin, setLyricsOrigin] = useState<'lrclib' | 'fallback'>('lrclib');
   const [artworkUrl, setArtworkUrl] = useState<string>('');
+  const [artworkLoaded, setArtworkLoaded] = useState<boolean>(false);
   const [artworkFailed, setArtworkFailed] = useState(false);
 
   const [itunesUrl, setItunesUrl] = useState<string>('');
@@ -91,6 +93,7 @@ export const FocusLyricStage: React.FC = () => {
   const [showTranslation, setShowTranslation] = useState<boolean>(false);
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const artworkImgRef = useRef<HTMLImageElement | null>(null);
   const audioEngineRef = useRef<AudioAnalyserEngine | null>(null);
   const viewportRef = useRef<HTMLDivElement | null>(null);
   const lineRefs = useRef<(HTMLButtonElement | null)[]>([]);
@@ -99,6 +102,14 @@ export const FocusLyricStage: React.FC = () => {
   const smoothedVocalRef = useRef<number>(0);
   const smoothedBassRef = useRef<number>(0);
   const vocalFloorRef = useRef<number>(0.08);
+
+  useEffect(() => {
+    setArtworkLoaded(false);
+    const img = artworkImgRef.current;
+    if (img && img.complete && img.naturalWidth > 0) {
+      setArtworkLoaded(true);
+    }
+  }, [artworkUrl]);
 
   const loadSources = useCallback(async (signal?: AbortSignal) => {
     setStatus('loading');
@@ -531,18 +542,28 @@ export const FocusLyricStage: React.FC = () => {
       {/* Header */}
       <div className="relative z-10 flex flex-wrap items-center justify-between gap-2.5 border-b border-white/[0.08] pb-3">
         <div className="flex items-center gap-2.5 min-w-0">
-          <div className="w-10 h-10 rounded-xl overflow-hidden bg-white/[0.05] border border-white/10 flex items-center justify-center shrink-0">
+          <div className="relative w-10 h-10 rounded-xl overflow-hidden bg-white/[0.05] border border-white/10 flex items-center justify-center shrink-0">
+            {(status === 'loading' || (artworkUrl && !artworkFailed && !artworkLoaded)) && (
+              <Skeleton
+                variant="default"
+                className="absolute inset-0 w-full h-full rounded-xl z-10"
+              />
+            )}
             {artworkUrl && !artworkFailed ? (
               <img
+                ref={artworkImgRef}
                 src={artworkUrl}
                 alt="LANY ILYSB cover"
                 referrerPolicy="no-referrer"
+                onLoad={() => setArtworkLoaded(true)}
                 onError={() => setArtworkFailed(true)}
-                className="w-full h-full object-cover"
+                className={`w-full h-full object-cover transition-opacity duration-200 ${
+                  artworkLoaded ? 'opacity-100' : 'opacity-0'
+                }`}
               />
-            ) : (
+            ) : status !== 'loading' ? (
               <Music2 className="w-4 h-4 text-white/50" />
-            )}
+            ) : null}
           </div>
 
           <div className="min-w-0 space-y-0.5">
@@ -552,9 +573,15 @@ export const FocusLyricStage: React.FC = () => {
               <span className="text-white/55 font-normal truncate">LANY</span>
             </div>
             <div className="flex items-center gap-1.5 font-mono text-[11px] text-white/45 truncate">
-              <span>{lyricsOrigin === 'lrclib' ? 'LRCLIB Live' : 'LRCLIB Synced'}</span>
-              <span aria-hidden="true">·</span>
-              <span className="truncate">Chorus 2 (4 Lines)</span>
+              {status === 'loading' ? (
+                <Skeleton variant="subtle" className="w-36 h-3 rounded" />
+              ) : (
+                <>
+                  <span>{lyricsOrigin === 'lrclib' ? 'LRCLIB Live' : 'LRCLIB Synced'}</span>
+                  <span aria-hidden="true">·</span>
+                  <span className="truncate">Chorus 2 (4 Lines)</span>
+                </>
+              )}
             </div>
           </div>
         </div>
@@ -620,7 +647,9 @@ export const FocusLyricStage: React.FC = () => {
       </div>
 
       {/* Focus Lyric Viewport */}
-      {status === 'error' ? (
+      {status === 'loading' ? (
+        <FocusLyricStageSkeleton showTranslation={showTranslation} />
+      ) : status === 'error' ? (
         <div className="relative z-10 h-[216px] flex flex-col items-center justify-center text-center px-4 space-y-3">
           <AlertCircle className="w-6 h-6 text-[#ff2d55]" />
           <div className="space-y-1 max-w-xs">
@@ -853,11 +882,21 @@ export const FocusLyricStage: React.FC = () => {
             />
           </div>
           <div className="flex items-center justify-between text-[11px] font-mono tabular-nums text-white/45">
-            <span>{formatClock(elapsed)}</span>
-            <span className="text-white/45 text-[11px] font-sans hidden sm:inline">
-              {isEnded ? 'Chorus 2 (4 lines) finished' : 'Tap any lyric line to jump'}
-            </span>
-            <span>{formatClock(clipDurationSec)}</span>
+            {status === 'loading' ? (
+              <>
+                <Skeleton variant="subtle" className="w-7 h-3 rounded" />
+                <Skeleton variant="subtle" className="w-32 h-3 rounded hidden sm:block" />
+                <Skeleton variant="subtle" className="w-7 h-3 rounded" />
+              </>
+            ) : (
+              <>
+                <span>{formatClock(elapsed)}</span>
+                <span className="text-white/45 text-[11px] font-sans hidden sm:inline">
+                  {isEnded ? 'Chorus 2 (4 lines) finished' : 'Tap any lyric line to jump'}
+                </span>
+                <span>{formatClock(clipDurationSec)}</span>
+              </>
+            )}
           </div>
         </div>
 

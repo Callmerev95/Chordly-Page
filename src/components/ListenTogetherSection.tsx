@@ -50,11 +50,11 @@ export const ListenTogetherSection: React.FC = () => {
           </ScrollReveal>
 
           {/* 3 Steps Grid */}
-          <StaggerGroup stagger={0.06} className="relative z-10 grid grid-cols-1 md:grid-cols-3 border-t border-white/[0.08] mt-10">
+          <StaggerGroup stagger={0.1} delay={0.06} className="relative z-10 grid grid-cols-1 md:grid-cols-3 border-t border-white/[0.08] mt-10">
             {steps.map((step, idx) => {
               const Icon = step.icon;
               return (
-                <StaggerItem key={step.num} y={14} className="flex">
+                <StaggerItem key={step.num} y={20} scale={0.97} className="flex">
                   <div
                     className={`w-full py-7 ${
                       idx < 2 ? 'md:border-r md:border-white/[0.08] md:pr-8' : ''

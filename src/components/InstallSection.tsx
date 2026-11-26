@@ -91,9 +91,9 @@ export const InstallSection: React.FC = () => {
         </ScrollReveal>
 
         {/* 4 Cards Grid */}
-        <StaggerGroup stagger={0.05} className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-5 items-stretch">
+        <StaggerGroup stagger={0.085} amount={0.05} className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-5 items-stretch">
           {/* Card 1: Android (Recommended) */}
-          <StaggerItem className="flex">
+          <StaggerItem y={24} scale={0.97} className="flex">
             <div className="w-full p-7 rounded-[28px] v29-glass-frame flex flex-col justify-between">
               <div className="relative z-10 space-y-5">
                 <div className="flex items-center justify-between">
@@ -112,32 +112,32 @@ export const InstallSection: React.FC = () => {
                   </p>
                 </div>
 
-                <div className="space-y-3 pt-1">
-                  <div className="flex items-start gap-3">
+                <StaggerGroup stagger={0.055} delay={0.08} amount={0.05} className="space-y-3 pt-1">
+                  <StaggerItem y={10} className="flex items-start gap-3">
                     <span className="w-6 h-6 rounded-full bg-white/[0.06] border border-white/10 font-mono text-[11px] text-white flex items-center justify-center flex-shrink-0 mt-0.5 tabular-nums">
                       1
                     </span>
                     <p className="text-[14px] text-white/65 leading-[1.5]">
                       Download the universal APK from GitHub Releases
                     </p>
-                  </div>
-                  <div className="flex items-start gap-3">
+                  </StaggerItem>
+                  <StaggerItem y={10} className="flex items-start gap-3">
                     <span className="w-6 h-6 rounded-full bg-white/[0.06] border border-white/10 font-mono text-[11px] text-white flex items-center justify-center flex-shrink-0 mt-0.5 tabular-nums">
                       2
                     </span>
                     <p className="text-[14px] text-white/65 leading-[1.5]">
                       Open the downloaded file and allow &apos;Install unknown apps&apos; if prompted
                     </p>
-                  </div>
-                  <div className="flex items-start gap-3">
+                  </StaggerItem>
+                  <StaggerItem y={10} className="flex items-start gap-3">
                     <span className="w-6 h-6 rounded-full bg-white/[0.06] border border-white/10 font-mono text-[11px] text-white flex items-center justify-center flex-shrink-0 mt-0.5 tabular-nums">
                       3
                     </span>
                     <p className="text-[14px] text-white/65 leading-[1.5]">
                       Launch Chordly and sign in to YouTube Music
                     </p>
-                  </div>
-                </div>
+                  </StaggerItem>
+                </StaggerGroup>
               </div>
 
               <div className="relative z-10 pt-8 space-y-3">
@@ -167,7 +167,7 @@ export const InstallSection: React.FC = () => {
           </StaggerItem>
 
           {/* Card 2: Wear OS */}
-          <StaggerItem className="flex">
+          <StaggerItem y={24} scale={0.97} className="flex">
             <div className="w-full p-7 rounded-[28px] v29-glass-card flex flex-col justify-between">
               <div className="space-y-5">
                 <div className="flex items-center justify-between">
@@ -186,32 +186,32 @@ export const InstallSection: React.FC = () => {
                   </p>
                 </div>
 
-                <div className="space-y-3 pt-1">
-                  <div className="flex items-start gap-3">
+                <StaggerGroup stagger={0.055} delay={0.12} amount={0.05} className="space-y-3 pt-1">
+                  <StaggerItem y={10} className="flex items-start gap-3">
                     <span className="w-6 h-6 rounded-full bg-white/[0.06] border border-white/10 font-mono text-[11px] text-white flex items-center justify-center flex-shrink-0 mt-0.5 tabular-nums">
                       1
                     </span>
                     <p className="text-[14px] text-white/65 leading-[1.5]">
                       Install Chordly on your Android phone first
                     </p>
-                  </div>
-                  <div className="flex items-start gap-3">
+                  </StaggerItem>
+                  <StaggerItem y={10} className="flex items-start gap-3">
                     <span className="w-6 h-6 rounded-full bg-white/[0.06] border border-white/10 font-mono text-[11px] text-white flex items-center justify-center flex-shrink-0 mt-0.5 tabular-nums">
                       2
                     </span>
                     <p className="text-[14px] text-white/65 leading-[1.5]">
                       Download the Wear OS APK from GitHub Releases
                     </p>
-                  </div>
-                  <div className="flex items-start gap-3">
+                  </StaggerItem>
+                  <StaggerItem y={10} className="flex items-start gap-3">
                     <span className="w-6 h-6 rounded-full bg-white/[0.06] border border-white/10 font-mono text-[11px] text-white flex items-center justify-center flex-shrink-0 mt-0.5 tabular-nums">
                       3
                     </span>
                     <p className="text-[14px] text-white/65 leading-[1.5]">
                       Sideload via ADB or your favorite watch tool (e.g. Bugjaeger)
                     </p>
-                  </div>
-                </div>
+                  </StaggerItem>
+                </StaggerGroup>
               </div>
 
               <div className="pt-8 space-y-3">
@@ -234,7 +234,7 @@ export const InstallSection: React.FC = () => {
           </StaggerItem>
 
           {/* Card 3: Android TV */}
-          <StaggerItem className="flex">
+          <StaggerItem y={24} scale={0.97} className="flex">
             <div
               id="install-tv"
               className="scroll-mt-24 w-full p-7 rounded-[28px] v29-glass-card flex flex-col justify-between"
@@ -256,32 +256,32 @@ export const InstallSection: React.FC = () => {
                   </p>
                 </div>
 
-                <div className="space-y-3 pt-1">
-                  <div className="flex items-start gap-3">
+                <StaggerGroup stagger={0.055} delay={0.16} amount={0.05} className="space-y-3 pt-1">
+                  <StaggerItem y={10} className="flex items-start gap-3">
                     <span className="w-6 h-6 rounded-full bg-white/[0.06] border border-white/10 font-mono text-[11px] text-white flex items-center justify-center flex-shrink-0 mt-0.5 tabular-nums">
                       1
                     </span>
                     <p className="text-[14px] text-white/65 leading-[1.5]">
                       Download the Android TV APK from GitHub Releases
                     </p>
-                  </div>
-                  <div className="flex items-start gap-3">
+                  </StaggerItem>
+                  <StaggerItem y={10} className="flex items-start gap-3">
                     <span className="w-6 h-6 rounded-full bg-white/[0.06] border border-white/10 font-mono text-[11px] text-white flex items-center justify-center flex-shrink-0 mt-0.5 tabular-nums">
                       2
                     </span>
                     <p className="text-[14px] text-white/65 leading-[1.5]">
                       Install via Downloader, USB drive, or ADB on your TV
                     </p>
-                  </div>
-                  <div className="flex items-start gap-3">
+                  </StaggerItem>
+                  <StaggerItem y={10} className="flex items-start gap-3">
                     <span className="w-6 h-6 rounded-full bg-white/[0.06] border border-white/10 font-mono text-[11px] text-white flex items-center justify-center flex-shrink-0 mt-0.5 tabular-nums">
                       3
                     </span>
                     <p className="text-[14px] text-white/65 leading-[1.5]">
                       Sign in with YouTube Music for couch playback &amp; full-screen lyrics
                     </p>
-                  </div>
-                </div>
+                  </StaggerItem>
+                </StaggerGroup>
               </div>
 
               <div className="pt-8 space-y-3">
@@ -304,7 +304,7 @@ export const InstallSection: React.FC = () => {
           </StaggerItem>
 
           {/* Card 4: Web Player */}
-          <StaggerItem className="flex">
+          <StaggerItem y={24} scale={0.97} className="flex">
             <div className="w-full p-7 rounded-[28px] v29-glass-card flex flex-col justify-between">
               <div className="space-y-5">
                 <div className="flex items-center justify-between">
@@ -323,32 +323,32 @@ export const InstallSection: React.FC = () => {
                   </p>
                 </div>
 
-                <div className="space-y-3 pt-1">
-                  <div className="flex items-start gap-3">
+                <StaggerGroup stagger={0.055} delay={0.2} amount={0.05} className="space-y-3 pt-1">
+                  <StaggerItem y={10} className="flex items-start gap-3">
                     <span className="w-6 h-6 rounded-full bg-white/[0.06] border border-white/10 font-mono text-[11px] text-white flex items-center justify-center flex-shrink-0 mt-0.5 tabular-nums">
                       1
                     </span>
                     <p className="text-[14px] text-white/65 leading-[1.5]">
                       Install the Chordly browser extension from Chrome Web Store or Firefox Add-ons
                     </p>
-                  </div>
-                  <div className="flex items-start gap-3">
+                  </StaggerItem>
+                  <StaggerItem y={10} className="flex items-start gap-3">
                     <span className="w-6 h-6 rounded-full bg-white/[0.06] border border-white/10 font-mono text-[11px] text-white flex items-center justify-center flex-shrink-0 mt-0.5 tabular-nums">
                       2
                     </span>
                     <p className="text-[14px] text-white/65 leading-[1.5]">
                       Navigate to web-player.chordly.my.id
                     </p>
-                  </div>
-                  <div className="flex items-start gap-3">
+                  </StaggerItem>
+                  <StaggerItem y={10} className="flex items-start gap-3">
                     <span className="w-6 h-6 rounded-full bg-white/[0.06] border border-white/10 font-mono text-[11px] text-white flex items-center justify-center flex-shrink-0 mt-0.5 tabular-nums">
                       3
                     </span>
                     <p className="text-[14px] text-white/65 leading-[1.5]">
                       Sign in with your YouTube Music account and start streaming
                     </p>
-                  </div>
-                </div>
+                  </StaggerItem>
+                </StaggerGroup>
               </div>
 
               <div className="pt-8 space-y-3">

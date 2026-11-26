@@ -98,11 +98,12 @@ export const FeatureBento: React.FC = () => {
               return (
                 <motion.article
                   key={category.id}
-                  initial={prefersReducedMotion ? false : { opacity: 0, y: 8 }}
-                  animate={{ opacity: 1, y: 0 }}
+                  initial={prefersReducedMotion ? false : { opacity: 0, y: 20, scale: 0.98 }}
+                  whileInView={prefersReducedMotion ? undefined : { opacity: 1, y: 0, scale: 1 }}
+                  viewport={{ once: true, amount: 0.06 }}
                   transition={{
-                    duration: prefersReducedMotion ? 0 : 0.2,
-                    delay: prefersReducedMotion ? 0 : idx * 0.025,
+                    duration: prefersReducedMotion ? 0 : 0.4,
+                    delay: prefersReducedMotion ? 0 : idx * 0.075,
                     ease: AUDIO_EASE,
                   }}
                   className={`${gridSpanClass} flex`}
@@ -131,9 +132,19 @@ export const FeatureBento: React.FC = () => {
                           : 'divide-y divide-white/[0.08]'
                       }
                     >
-                      {category.items.map((item) => (
-                        <li
+                      {category.items.map((item, itemIdx) => (
+                        <motion.li
                           key={item.id}
+                          initial={prefersReducedMotion ? false : { opacity: 0, y: 10 }}
+                          whileInView={prefersReducedMotion ? undefined : { opacity: 1, y: 0 }}
+                          viewport={{ once: true, amount: 0.05 }}
+                          transition={{
+                            duration: prefersReducedMotion ? 0 : 0.28,
+                            delay: prefersReducedMotion
+                              ? 0
+                              : idx * 0.06 + Math.min(itemIdx * 0.03, 0.24),
+                            ease: AUDIO_EASE,
+                          }}
                           className={
                             isWideCard
                               ? 'pb-3 border-b border-white/[0.08] last:border-b-0 md:[&:nth-last-child(-n+2)]:border-b-0 md:[&:nth-last-child(-n+2)]:pb-0'
@@ -151,7 +162,7 @@ export const FeatureBento: React.FC = () => {
                               ) : null}
                             </p>
                           </div>
-                        </li>
+                        </motion.li>
                       ))}
                     </ul>
                   </div>

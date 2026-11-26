@@ -214,3 +214,48 @@ body {
     animation-play-state: paused;
   }
 }
+
+/* Variation 29 Dark Glass Shimmer Skeleton */
+@keyframes v29-shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.v29-skeleton {
+  position: relative;
+  overflow: hidden;
+  background-color: rgba(255, 255, 255, 0.045);
+}
+
+.v29-skeleton::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.085) 50%,
+    transparent 100%
+  );
+  animation: v29-shimmer 1.65s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+  will-change: transform;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .v29-skeleton::after {
+    animation: none;
+    transform: translateX(0);
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.03) 50%,
+      transparent 100%
+    );
+  }
+}

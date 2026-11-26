@@ -1,7 +1,7 @@
 import React from 'react';
 import { ExternalLink, Smartphone, Watch, Globe, Monitor, Tv, ArrowRight } from 'lucide-react';
 import { PhoneFrame, WatchFrame, BrowserFrame } from './DeviceFrames';
-import { DeviceFloat, ScrollReveal, StaggerGroup, StaggerItem } from './MotionPrimitives';
+import { DeviceFloat, ScrollParallax, ScrollReveal, StaggerGroup, StaggerItem } from './MotionPrimitives';
 
 export const PlatformsSection: React.FC = () => {
   return (
@@ -21,9 +21,9 @@ export const PlatformsSection: React.FC = () => {
         </ScrollReveal>
 
         {/* Glass Cards Grid */}
-        <StaggerGroup className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-5">
+        <StaggerGroup stagger={0.085} amount={0.05} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-5">
           {/* Card 1: Android */}
-          <StaggerItem className="md:col-span-2 lg:col-span-6 lg:row-span-2 flex">
+          <StaggerItem y={24} scale={0.97} className="md:col-span-2 lg:col-span-6 lg:row-span-2 flex">
             <div className="w-full p-7 sm:p-8 rounded-[28px] v29-glass-card flex flex-col justify-between">
               <div className="space-y-4">
                 <div className="flex items-center justify-between font-mono text-[11px] uppercase tracking-[0.12em] text-white/45">
@@ -53,20 +53,22 @@ export const PlatformsSection: React.FC = () => {
               </div>
 
               <div className="mt-8 flex justify-center">
-                <DeviceFloat amplitude={5} duration={6.2} className="w-full max-w-[300px] sm:max-w-[316px]">
-                  <PhoneFrame
-                    src="/assets/chordly/android_app.webp"
-                    alt="Chordly Android App Home Screen"
-                    trackTitle="block my number"
-                    artistName="Hayes Mint"
-                  />
-                </DeviceFloat>
+                <ScrollParallax offsetRange={[20, -20]} className="w-full flex justify-center">
+                  <DeviceFloat amplitude={5} duration={6.2} className="w-full max-w-[300px] sm:max-w-[316px]">
+                    <PhoneFrame
+                      src="/assets/chordly/android_app.webp"
+                      alt="Chordly Android App Home Screen"
+                      trackTitle="block my number"
+                      artistName="Hayes Mint"
+                    />
+                  </DeviceFloat>
+                </ScrollParallax>
               </div>
             </div>
           </StaggerItem>
 
           {/* Card 2: Wear OS */}
-          <StaggerItem className="md:col-span-1 lg:col-span-6 flex">
+          <StaggerItem y={22} scale={0.97} className="md:col-span-1 lg:col-span-6 flex">
             <div className="w-full p-7 sm:p-8 rounded-[28px] v29-glass-card flex flex-col justify-between">
               <div className="space-y-3.5">
                 <div className="flex items-center justify-between font-mono text-[11px] uppercase tracking-[0.12em] text-white/45">
@@ -96,15 +98,17 @@ export const PlatformsSection: React.FC = () => {
               </div>
 
               <div className="mt-6 flex justify-center">
-                <DeviceFloat amplitude={4} duration={5.6} phaseDelay={0.6}>
-                  <WatchFrame screenType="playback" />
-                </DeviceFloat>
+                <ScrollParallax offsetRange={[24, -24]}>
+                  <DeviceFloat amplitude={4} duration={5.6} phaseDelay={0.6}>
+                    <WatchFrame screenType="playback" />
+                  </DeviceFloat>
+                </ScrollParallax>
               </div>
             </div>
           </StaggerItem>
 
           {/* Card 3: Web Player */}
-          <StaggerItem className="md:col-span-1 lg:col-span-6 flex">
+          <StaggerItem y={22} scale={0.97} className="md:col-span-1 lg:col-span-6 flex">
             <div className="w-full p-7 sm:p-8 rounded-[28px] v29-glass-card flex flex-col justify-between">
               <div className="space-y-3.5">
                 <div className="flex items-center justify-between font-mono text-[11px] uppercase tracking-[0.12em] text-white/45">
@@ -136,17 +140,19 @@ export const PlatformsSection: React.FC = () => {
               </div>
 
               <div className="mt-6">
-                <BrowserFrame
-                  src="/assets/aistudio/assets-web-recent-lyrics.webp"
-                  alt="Chordly Web Player Recently Played"
-                  url="web-player.chordly.my.id/library/recent"
-                />
+                <ScrollParallax offsetRange={[16, -16]}>
+                  <BrowserFrame
+                    src="/assets/aistudio/assets-web-recent-lyrics.webp"
+                    alt="Chordly Web Player Recently Played"
+                    url="web-player.chordly.my.id/library/recent"
+                  />
+                </ScrollParallax>
               </div>
             </div>
           </StaggerItem>
 
           {/* Card 4 & 5: Upcoming Platforms */}
-          <StaggerItem className="md:col-span-1 lg:col-span-6 flex">
+          <StaggerItem y={18} className="md:col-span-1 lg:col-span-6 flex">
             <div className="w-full p-6 rounded-[20px] border border-white/[0.08] bg-white/[0.02] flex items-center gap-4">
               <div className="w-10 h-10 rounded-full bg-white/[0.05] border border-white/10 flex items-center justify-center text-white/60 shrink-0">
                 <Monitor className="w-4 h-4" />
@@ -165,7 +171,7 @@ export const PlatformsSection: React.FC = () => {
             </div>
           </StaggerItem>
 
-          <StaggerItem className="md:col-span-1 lg:col-span-6 flex">
+          <StaggerItem y={18} className="md:col-span-1 lg:col-span-6 flex">
             <div className="w-full p-6 rounded-[20px] border border-white/[0.12] bg-white/[0.03] flex items-center justify-between gap-4">
               <div className="flex items-center gap-4 min-w-0">
                 <div className="w-10 h-10 rounded-full bg-white/[0.06] border border-white/10 flex items-center justify-center text-[#ff2d55] shrink-0">

@@ -51,7 +51,7 @@ export const FaqSection: React.FC = () => {
       <div className="max-w-7xl mx-auto px-[4vw] sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-start">
           {/* Left Column */}
-          <ScrollReveal className="lg:col-span-5 lg:sticky lg:top-28 space-y-4">
+          <ScrollReveal x={-16} y={18} className="lg:col-span-5 lg:sticky lg:top-28 space-y-4">
             <div className="inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.2em] text-white/45">
               <HelpCircle className="w-3.5 h-3.5 text-[#ff2d55]" />
               <span>Questions</span>
@@ -82,11 +82,11 @@ export const FaqSection: React.FC = () => {
           </ScrollReveal>
 
           {/* Right Column (Accessible Accordion) */}
-          <StaggerGroup stagger={0.035} className="lg:col-span-7 space-y-3">
+          <StaggerGroup stagger={0.055} amount={0.06} className="lg:col-span-7 space-y-3">
             {faqs.map((faq, idx) => {
               const isOpen = openIndex === idx;
               return (
-                <StaggerItem key={idx}>
+                <StaggerItem key={idx} y={14}>
                   <div
                     className={`rounded-[20px] border transition-colors duration-150 ${
                       isOpen

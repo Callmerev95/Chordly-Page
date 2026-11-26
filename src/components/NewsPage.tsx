@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { ExternalLink } from 'lucide-react';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
-import { AUDIO_EASE, PILL_SPRING } from './MotionPrimitives';
+import { AUDIO_EASE, PILL_SPRING, StaggerGroup, StaggerItem } from './MotionPrimitives';
+import { NewsEntrySkeletonList, Skeleton } from './ui/skeleton';
 import { NEWS_UPDATES } from '../data/newsUpdates';
 import {
   fetchReleases,
@@ -76,21 +77,29 @@ export const NewsPage: React.FC<NewsPageProps> = () => {
       {/* Editorial Header */}
       <section className="pt-32 sm:pt-36 pb-16 lg:pb-20">
         <div className="mx-auto max-w-7xl px-[4vw] sm:px-6 lg:px-8">
-          <div className="max-w-[760px]">
-            <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-[#ff2d55]">
-              News &amp; Releases
-            </p>
-            <h1 className="mt-3 font-serif font-normal text-[clamp(2.5rem,5vw,4rem)] leading-[1.02] tracking-[-0.035em] text-white text-balance">
-              Updates, releases, and announcements.
-            </h1>
-            <p className="mt-6 max-w-[580px] text-[17px] leading-[1.6] text-white/60">
-              Follow release notes, playback engine refinements, and platform milestones for Chordly across Android, Wear OS, and the web.
-            </p>
+          <StaggerGroup immediate stagger={0.07} delay={0.02} className="max-w-[760px]">
+            <StaggerItem y={12}>
+              <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-[#ff2d55]">
+                News &amp; Releases
+              </p>
+            </StaggerItem>
+            <StaggerItem y={16}>
+              <h1 className="mt-3 font-serif font-normal text-[clamp(2.5rem,5vw,4rem)] leading-[1.02] tracking-[-0.035em] text-white text-balance">
+                Updates, releases, and announcements.
+              </h1>
+            </StaggerItem>
+            <StaggerItem y={16}>
+              <p className="mt-6 max-w-[580px] text-[17px] leading-[1.6] text-white/60">
+                Follow release notes, playback engine refinements, and platform milestones for Chordly across Android, Wear OS, and the web.
+              </p>
+            </StaggerItem>
 
-            <div className="mt-6 flex flex-wrap items-center gap-x-3 gap-y-2 font-mono text-[12px] text-white/45">
-              <span className="tabular-nums text-white/85">Current release: {currentRelease}</span>
-            </div>
-          </div>
+            <StaggerItem y={12}>
+              <div className="mt-6 flex flex-wrap items-center gap-x-3 gap-y-2 font-mono text-[12px] text-white/45">
+                <span className="tabular-nums text-white/85">Current release: {currentRelease}</span>
+              </div>
+            </StaggerItem>
+          </StaggerGroup>
         </div>
       </section>
 
@@ -137,7 +146,12 @@ export const NewsPage: React.FC<NewsPageProps> = () => {
                 Showing {filteredUpdates.length}{' '}
                 {filteredUpdates.length === 1 ? 'update' : 'updates'}
               </p>
-              <p className="font-mono text-[10.5px] text-white/30">{SOURCE_LABEL[source]}</p>
+              <div className="mt-0.5 flex items-center justify-end gap-2">
+                {source === 'loading' && (
+                  <Skeleton variant="subtle" className="w-10 h-2 rounded-full" />
+                )}
+                <p className="font-mono text-[10.5px] text-white/30">{SOURCE_LABEL[source]}</p>
+              </div>
             </div>
           </div>
 
@@ -154,8 +168,22 @@ export const NewsPage: React.FC<NewsPageProps> = () => {
               }}
               className="divide-y divide-white/[0.08] will-change-[opacity,transform]"
             >
-              {filteredUpdates.map((entry) => (
-                <article key={entry.id} className="py-10 first:pt-10 last:pb-2 space-y-4">
+              {filteredUpdates.length === 0 && source === 'loading' ? (
+                <NewsEntrySkeletonList count={3} />
+              ) : (
+                filteredUpdates.map((entry, idx) => (
+                <motion.article
+                  key={entry.id}
+                  initial={prefersReducedMotion ? false : { opacity: 0, y: 18 }}
+                  whileInView={prefersReducedMotion ? undefined : { opacity: 1, y: 0 }}
+                  viewport={{ once: true, amount: 0.08 }}
+                  transition={{
+                    duration: prefersReducedMotion ? 0 : 0.38,
+                    delay: prefersReducedMotion ? 0 : Math.min(idx * 0.05, 0.15),
+                    ease: AUDIO_EASE,
+                  }}
+                  className="py-10 first:pt-10 last:pb-2 space-y-4"
+                >
                   <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1 font-mono text-[11.5px] text-white/45">
                     <span className="uppercase tracking-[0.16em] text-[#ff2d55]">
                       {entry.categoryLabel}
@@ -205,8 +233,9 @@ export const NewsPage: React.FC<NewsPageProps> = () => {
                       <ExternalLink className="w-3 h-3" />
                     </a>
                   )}
-                </article>
-              ))}
+                </motion.article>
+                ))
+              )}
             </motion.div>
           </AnimatePresence>
         </div>

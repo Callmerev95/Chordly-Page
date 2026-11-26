@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Mic2, Check, ArrowRight, Smartphone, Monitor } from 'lucide-react';
 import { motion, useReducedMotion } from 'motion/react';
 import { PhoneFrame, BrowserFrame } from './DeviceFrames';
-import { AUDIO_EASE, DeviceFloat, PILL_SPRING, ScrollReveal, StaggerGroup, StaggerItem } from './MotionPrimitives';
+import { AUDIO_EASE, DeviceFloat, PILL_SPRING, ScrollParallax, ScrollReveal, StaggerGroup, StaggerItem } from './MotionPrimitives';
 import { FocusLyricStage } from './FocusLyricStage';
 
 export const LyricsDeepDive: React.FC = () => {
@@ -26,7 +26,7 @@ export const LyricsDeepDive: React.FC = () => {
       <div className="max-w-7xl mx-auto px-[4vw] sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center lg:items-start">
           {/* Left Column: Text, FocusLyricStage & Bullets */}
-          <ScrollReveal className="lg:col-span-6 space-y-6">
+          <ScrollReveal x={-16} y={18} amount={0.08} className="lg:col-span-6 space-y-6">
             <div className="inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.2em] text-white/45">
               <Mic2 className="w-3.5 h-3.5 text-[#ff2d55]" />
               <span>Lyrics Engine · 12 Providers</span>
@@ -46,9 +46,9 @@ export const LyricsDeepDive: React.FC = () => {
             </div>
 
             {/* Bullets */}
-            <StaggerGroup stagger={0.035} className="space-y-2.5 pt-1">
+            <StaggerGroup stagger={0.055} amount={0.08} className="space-y-2.5 pt-1">
               {bullets.map((bullet, idx) => (
-                <StaggerItem key={idx} y={8} className="flex items-start gap-3">
+                <StaggerItem key={idx} y={12} className="flex items-start gap-3">
                   <div className="w-5 h-5 rounded-full bg-white/[0.06] border border-white/10 flex items-center justify-center flex-shrink-0 mt-0.5 text-[#ff2d55]">
                     <Check className="w-3 h-3 stroke-[2.5]" />
                   </div>
@@ -67,7 +67,7 @@ export const LyricsDeepDive: React.FC = () => {
           </ScrollReveal>
 
           {/* Right Column: Platform Screen Switcher */}
-          <ScrollReveal delay={0.08} className="lg:col-span-6 relative flex flex-col items-center">
+          <ScrollReveal delay={0.1} x={16} y={18} className="lg:col-span-6 relative flex flex-col items-center">
             <div
               role="tablist"
               aria-label="Lyrics preview device"
@@ -110,7 +110,8 @@ export const LyricsDeepDive: React.FC = () => {
               })}
             </div>
 
-            <DeviceFloat amplitude={4} duration={6.4} phaseDelay={0.3} className="w-full">
+            <ScrollParallax offsetRange={[24, -22]} className="w-full">
+              <DeviceFloat amplitude={4} duration={6.4} phaseDelay={0.3} className="w-full">
               <div className="grid grid-cols-1 grid-rows-1 w-full place-items-center">
                 <motion.div
                   initial={false}
@@ -159,7 +160,8 @@ export const LyricsDeepDive: React.FC = () => {
                   </div>
                 </motion.div>
               </div>
-            </DeviceFloat>
+              </DeviceFloat>
+            </ScrollParallax>
           </ScrollReveal>
         </div>
       </div>

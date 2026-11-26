@@ -1,5 +1,6 @@
 import React from 'react';
 import { Sparkles, Disc3, Mic2, Radio, Watch, Users, Activity, ListMusic, BarChart3, Brain } from 'lucide-react';
+import { ScrollReveal } from './MotionPrimitives';
 
 export const ProofStrip: React.FC = () => {
   const claims = [
@@ -19,7 +20,7 @@ export const ProofStrip: React.FC = () => {
 
   return (
     <div className="relative border-b border-white/[0.08] bg-[#070708] overflow-hidden py-3.5 select-none">
-      <div className="w-full overflow-hidden">
+      <ScrollReveal y={10} duration={0.4} className="w-full overflow-hidden">
         <div
           className="group relative flex overflow-hidden w-full"
           aria-label="Chordly core features ticker"
@@ -59,7 +60,7 @@ export const ProofStrip: React.FC = () => {
             })}
           </div>
         </div>
-      </div>
+      </ScrollReveal>
     </div>
   );
 };

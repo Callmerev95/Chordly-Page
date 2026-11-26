@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Activity, Sliders, ShieldCheck, Cpu, Database, RefreshCw, Disc3 } from 'lucide-react';
 import { motion, useReducedMotion } from 'motion/react';
 import { PhoneFrame, type PhoneFrameSlide } from './DeviceFrames';
-import { DeviceFloat, ScrollReveal, AUDIO_EASE, PILL_SPRING } from './MotionPrimitives';
+import { DeviceFloat, ScrollParallax, ScrollReveal, AUDIO_EASE, PILL_SPRING } from './MotionPrimitives';
 
 type AudioTabId = 'lossless' | 'equalizer' | 'playback' | 'sources';
 
@@ -120,7 +120,7 @@ export const AudioDeepDive: React.FC = () => {
       <div className="max-w-7xl mx-auto px-[4vw] sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center lg:items-start">
           {/* Left Column: Device Preview & 2x2 Tab Switcher */}
-          <ScrollReveal delay={0.08} className="lg:col-span-5 order-2 lg:order-1 flex flex-col items-center">
+          <ScrollReveal delay={0.08} x={-16} y={18} className="lg:col-span-5 order-2 lg:order-1 flex flex-col items-center">
             <div className="grid grid-cols-2 gap-1.5 p-1.5 rounded-2xl bg-white/[0.03] border border-white/[0.12] mb-7 w-full max-w-[390px]">
               {(
                 [
@@ -160,18 +160,20 @@ export const AudioDeepDive: React.FC = () => {
               })}
             </div>
 
-            <DeviceFloat amplitude={5} duration={6.0} phaseDelay={0.2} className="w-full flex justify-center">
-              <PhoneFrame
-                slides={phoneSlides}
-                activeSlideId={activeTab}
-                trackTitle="Twenty Eight"
-                artistName="The Weeknd"
-              />
-            </DeviceFloat>
+            <ScrollParallax offsetRange={[26, -22]} className="w-full flex justify-center">
+              <DeviceFloat amplitude={5} duration={6.0} phaseDelay={0.2} className="w-full flex justify-center">
+                <PhoneFrame
+                  slides={phoneSlides}
+                  activeSlideId={activeTab}
+                  trackTitle="Twenty Eight"
+                  artistName="The Weeknd"
+                />
+              </DeviceFloat>
+            </ScrollParallax>
           </ScrollReveal>
 
           {/* Right Column: Audio Engineering Details & Per-Tab Interactive Panel */}
-          <ScrollReveal className="lg:col-span-7 order-1 lg:order-2 space-y-6">
+          <ScrollReveal x={16} y={18} amount={0.08} className="lg:col-span-7 order-1 lg:order-2 space-y-6">
             <div className="inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.2em] text-white/45">
               <Activity className="w-3.5 h-3.5 text-[#ff2d55]" />
               <span>Audio Architecture · 24-bit / 192 kHz</span>

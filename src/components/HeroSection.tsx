@@ -1,11 +1,21 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Download, ExternalLink, Disc3 } from 'lucide-react';
 import { motion, useReducedMotion } from 'motion/react';
-import { AUDIO_EASE, DeviceFloat } from './MotionPrimitives';
+import { AUDIO_EASE, DeviceFloat, ScrollParallax, StaggerGroup, StaggerItem } from './MotionPrimitives';
+import { DeviceMediaSkeleton } from './ui/skeleton';
 
 export const HeroSection: React.FC = () => {
   const prefersReducedMotion = useReducedMotion();
+  const [heroImageLoaded, setHeroImageLoaded] = useState(false);
   const [heroImageError, setHeroImageError] = useState(false);
+  const heroImgRef = useRef<HTMLImageElement | null>(null);
+
+  useEffect(() => {
+    const img = heroImgRef.current;
+    if (img && img.complete && img.naturalWidth > 0) {
+      setHeroImageLoaded(true);
+    }
+  }, []);
 
   const platformSummary = [
     {
@@ -30,13 +40,13 @@ export const HeroSection: React.FC = () => {
     },
   ];
 
-  const heroEnter = (delay = 0, y = 12) =>
+  const heroEnter = (delay = 0, y = 16) =>
     prefersReducedMotion
       ? undefined
       : {
           initial: { opacity: 0, y },
           animate: { opacity: 1, y: 0 },
-          transition: { duration: 0.34, delay, ease: AUDIO_EASE },
+          transition: { duration: 0.44, delay, ease: AUDIO_EASE },
         };
 
   return (
@@ -90,31 +100,47 @@ export const HeroSection: React.FC = () => {
             </motion.div>
           </div>
 
-          {/* Right Column: Floating Triple-Phone Visual Showcase */}
+          {/* Right Column: Floating Triple-Phone Visual Showcase with Scroll-Linked Depth */}
           <motion.div
-            initial={prefersReducedMotion ? false : { opacity: 0, scale: 0.97, y: 12 }}
+            initial={prefersReducedMotion ? false : { opacity: 0, scale: 0.96, y: 18 }}
             animate={prefersReducedMotion ? undefined : { opacity: 1, scale: 1, y: 0 }}
-            transition={{ duration: 0.42, delay: 0.08, ease: AUDIO_EASE }}
+            transition={{ duration: 0.5, delay: 0.1, ease: AUDIO_EASE }}
             className="lg:col-span-6 flex items-center justify-center"
           >
             {!heroImageError ? (
-              <DeviceFloat amplitude={6} duration={6.4} className="w-full flex justify-center">
-                <div className="relative w-full max-w-[680px] lg:max-w-none lg:w-[106%] lg:shrink-0 aspect-[1.32/1] overflow-hidden mx-auto select-none">
-                  <img
-                    src="/assets/chordly/hero.webp"
-                    alt="Chordly mobile interface showing synced lyrics, now playing controls, and album library"
-                    referrerPolicy="no-referrer"
-                    loading="eager"
-                    decoding="async"
-                    onError={() => setHeroImageError(true)}
-                    className="relative z-10 block w-full h-full object-cover object-center [mask-image:linear-gradient(to_bottom,black_76%,transparent_100%)] [-webkit-mask-image:linear-gradient(to_bottom,black_76%,transparent_100%)]"
-                  />
-                  <div
-                    aria-hidden="true"
-                    className="pointer-events-none absolute inset-x-0 bottom-0 z-20 h-[24%] backdrop-blur-md [mask-image:linear-gradient(to_bottom,transparent_0%,black_55%,transparent_100%)] [-webkit-mask-image:linear-gradient(to_bottom,transparent_0%,black_55%,transparent_100%)]"
-                  />
-                </div>
-              </DeviceFloat>
+              <ScrollParallax
+                offsetRange={[0, 34]}
+                scaleRange={[1, 0.955]}
+                scrollOffset={['start start', 'end start']}
+                className="w-full flex justify-center"
+              >
+                <DeviceFloat amplitude={6} duration={6.4} className="w-full flex justify-center">
+                  <div className="relative w-full max-w-[680px] lg:max-w-none lg:w-[106%] lg:shrink-0 aspect-[1.32/1] overflow-hidden mx-auto select-none">
+                    {!heroImageLoaded && (
+                      <div className="absolute inset-0 z-0 pointer-events-none">
+                        <DeviceMediaSkeleton kind="hero" />
+                      </div>
+                    )}
+                    <img
+                      ref={heroImgRef}
+                      src="/assets/chordly/hero.webp"
+                      alt="Chordly mobile interface showing synced lyrics, now playing controls, and album library"
+                      referrerPolicy="no-referrer"
+                      loading="eager"
+                      decoding="async"
+                      onLoad={() => setHeroImageLoaded(true)}
+                      onError={() => setHeroImageError(true)}
+                      className={`relative z-10 block w-full h-full object-cover object-center transition-opacity duration-200 [mask-image:linear-gradient(to_bottom,black_76%,transparent_100%)] [-webkit-mask-image:linear-gradient(to_bottom,black_76%,transparent_100%)] ${
+                        heroImageLoaded ? 'opacity-100' : 'opacity-0'
+                      }`}
+                    />
+                    <div
+                      aria-hidden="true"
+                      className="pointer-events-none absolute inset-x-0 bottom-0 z-20 h-[24%] backdrop-blur-md [mask-image:linear-gradient(to_bottom,transparent_0%,black_55%,transparent_100%)] [-webkit-mask-image:linear-gradient(to_bottom,transparent_0%,black_55%,transparent_100%)]"
+                    />
+                  </div>
+                </DeviceFloat>
+              </ScrollParallax>
             ) : (
               <div className="relative z-10 aspect-video w-full max-w-[640px] rounded-[24px] border border-white/10 bg-[#070708]/80 flex flex-col items-center justify-center gap-3 p-8 text-center">
                 <div className="grid size-12 place-items-center rounded-full bg-white/[0.06] border border-white/10 text-[#ff2d55]">
@@ -130,7 +156,12 @@ export const HeroSection: React.FC = () => {
         </div>
 
         {/* Variation 29 Bottom 4-Column Hairline Feature Strip */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 border-t border-white/[0.08]">
+        <StaggerGroup
+          immediate
+          stagger={0.07}
+          delay={0.18}
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 border-t border-white/[0.08]"
+        >
           {platformSummary.map((cell, idx) => {
             const borderClasses =
               idx === 0
@@ -142,22 +173,22 @@ export const HeroSection: React.FC = () => {
                     : 'border-t lg:border-t-0 border-white/[0.08] md:pl-8 lg:pl-8';
 
             return (
-              <motion.a
-                key={cell.title}
-                href={cell.href}
-                {...heroEnter(0.16 + idx * 0.04, 10)}
-                className={`group py-7 md:py-9 ${borderClasses} block transition-colors`}
-              >
-                <h3 className="font-serif italic font-normal text-[24px] text-white group-hover:text-[#ff2d55] transition-colors mb-2.5">
-                  {cell.title}
-                </h3>
-                <p className="text-[14px] leading-[1.65] text-white/45 group-hover:text-white/70 transition-colors">
-                  {cell.desc}
-                </p>
-              </motion.a>
+              <StaggerItem key={cell.title} y={16} className={borderClasses}>
+                <a
+                  href={cell.href}
+                  className="group py-7 md:py-9 block transition-colors"
+                >
+                  <h3 className="font-serif italic font-normal text-[24px] text-white group-hover:text-[#ff2d55] transition-colors mb-2.5">
+                    {cell.title}
+                  </h3>
+                  <p className="text-[14px] leading-[1.65] text-white/45 group-hover:text-white/70 transition-colors">
+                    {cell.desc}
+                  </p>
+                </a>
+              </StaggerItem>
             );
           })}
-        </div>
+        </StaggerGroup>
       </div>
     </section>
   );

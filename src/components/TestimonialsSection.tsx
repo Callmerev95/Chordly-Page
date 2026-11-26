@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { ArrowRight, Github, MessageSquareQuote } from 'lucide-react';
-import { ScrollReveal } from './MotionPrimitives';
+import { ScrollParallax, ScrollReveal } from './MotionPrimitives';
 import { TestimonialCoverflow } from './ui/testimonial-coverflow';
+import { TestimonialCoverflowSkeleton } from './ui/skeleton';
 import {
   TESTIMONIALS,
   TESTIMONIAL_FORM_URL,
@@ -12,6 +13,7 @@ import { fetchPublishedTestimonials, mergeTestimonials } from '../utils/testimon
 
 export const TestimonialsSection: React.FC = () => {
   const [items, setItems] = useState<Testimonial[]>(TESTIMONIALS);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -23,6 +25,9 @@ export const TestimonialsSection: React.FC = () => {
       })
       .catch(() => {
         // Keep curated items when GitHub is unreachable or rate-limited.
+      })
+      .finally(() => {
+        if (active) setIsLoading(false);
       });
 
     return () => {
@@ -44,7 +49,7 @@ export const TestimonialsSection: React.FC = () => {
       <div className="max-w-7xl mx-auto px-[4vw] sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
           {/* Left Column: Editorial Heading & Active Setup Context */}
-          <ScrollReveal className="lg:col-span-5 space-y-5">
+          <ScrollReveal x={-16} y={18} className="lg:col-span-5 space-y-5">
             <div className="inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.2em] text-white/45">
               <MessageSquareQuote className="w-3.5 h-3.5 text-[#ff2d55]" />
               <span>Community · Listener Stories</span>
@@ -82,36 +87,40 @@ export const TestimonialsSection: React.FC = () => {
             </div>
           </ScrollReveal>
 
-          {/* Right Column: Published coverflow, or an honest intake empty-state */}
-          <ScrollReveal delay={0.06} className="lg:col-span-7">
-            {hasTestimonials ? (
-              <TestimonialCoverflow
-                items={items}
-                title="Community Feedback"
-                defaultIndex={0}
-              />
-            ) : (
-              <div className="rounded-[28px] v29-glass-frame p-8 sm:p-12 text-center">
-                <div className="mx-auto grid size-12 place-items-center rounded-full bg-white/[0.06] border border-white/10 text-[#ff2d55]">
-                  <MessageSquareQuote className="w-5 h-5" />
+          {/* Right Column: Published coverflow, skeleton only when empty & loading, or honest intake empty-state */}
+          <ScrollReveal delay={0.08} x={16} y={20} className="lg:col-span-7">
+            <ScrollParallax offsetRange={[20, -18]}>
+              {hasTestimonials ? (
+                <TestimonialCoverflow
+                  items={items}
+                  title="Community Feedback"
+                  defaultIndex={0}
+                />
+              ) : isLoading ? (
+                <TestimonialCoverflowSkeleton />
+              ) : (
+                <div className="rounded-[28px] v29-glass-frame p-8 sm:p-12 text-center">
+                  <div className="mx-auto grid size-12 place-items-center rounded-full bg-white/[0.06] border border-white/10 text-[#ff2d55]">
+                    <MessageSquareQuote className="w-5 h-5" />
+                  </div>
+                  <h3 className="mt-5 font-serif italic text-[26px] text-white">
+                    No listener stories yet.
+                  </h3>
+                  <p className="mt-3 mx-auto max-w-[420px] text-[15px] leading-[1.6] text-white/55">
+                    Be the first. Share how you use Chordly and it may be featured here with attribution.
+                  </p>
+                  <a
+                    href={primaryUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="btn-primary mt-7 inline-flex"
+                  >
+                    <span>{primaryLabel}</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </a>
                 </div>
-                <h3 className="mt-5 font-serif italic text-[26px] text-white">
-                  No listener stories yet.
-                </h3>
-                <p className="mt-3 mx-auto max-w-[420px] text-[15px] leading-[1.6] text-white/55">
-                  Be the first. Share how you use Chordly and it may be featured here with attribution.
-                </p>
-                <a
-                  href={primaryUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="btn-primary mt-7 inline-flex"
-                >
-                  <span>{primaryLabel}</span>
-                  <ArrowRight className="w-4 h-4" />
-                </a>
-              </div>
-            )}
+              )}
+            </ScrollParallax>
           </ScrollReveal>
         </div>
       </div>
