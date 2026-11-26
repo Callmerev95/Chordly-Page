@@ -80,7 +80,7 @@ export const HeroSection: React.FC = () => {
         {/* Variation 29 Split Hero (1.2fr / 0.8fr) */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-12 items-center pb-16 sm:pb-20">
           {/* Left Column: Editorial Serif Hero */}
-          <div className="lg:col-span-7 space-y-7 max-w-[680px]">
+          <div className="lg:col-span-7 space-y-7 max-w-[680px] mx-auto lg:mx-0 text-center lg:text-left">
             <span className="block font-mono text-[11px] uppercase tracking-[0.2em] text-[#ff2d55]">
               Bit-Perfect Audio Engine · Open Source
             </span>
@@ -90,12 +90,12 @@ export const HeroSection: React.FC = () => {
               <span className="italic text-white">lyric.</span>
             </h1>
 
-            <p className="text-[17px] sm:text-[18px] leading-[1.6] text-white/55 max-w-[480px]">
+            <p className="text-[17px] sm:text-[18px] leading-[1.6] text-white/55 max-w-[480px] mx-auto lg:mx-0">
               A modern, open-source music engine for Android, Wear OS, Android TV, and the web. Precision synced lyrics with romanization and bit-perfect 24-bit / 192 kHz audio output.
             </p>
 
             {/* Primary Pill CTAs */}
-            <div className="flex flex-wrap items-center gap-3 pt-1">
+            <div className="flex flex-wrap items-center justify-center lg:justify-start gap-3 pt-1">
               <a href="#install" className="btn-primary px-6 py-3">
                 <Download className="w-4 h-4 shrink-0" />
                 <span>Get Chordly</span>
@@ -117,7 +117,7 @@ export const HeroSection: React.FC = () => {
               <div className="font-mono text-[10px] uppercase tracking-[0.16em] text-white/40">
                 Preview Interface · {current.subtext}
               </div>
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap justify-center lg:justify-start gap-2">
                 {screens.map((screen) => {
                   const Icon = screen.icon;
                   const isActive = activeScreen === screen.id;
