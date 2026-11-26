@@ -34,9 +34,10 @@ interface CardProps {
   w: number;
   reduce: boolean;
   active: boolean;
+  figureRef?: (node: HTMLElement | null) => void;
 }
 
-function Card({ item, i, pos, w, reduce, active }: CardProps) {
+function Card({ item, i, pos, w, reduce, active, figureRef }: CardProps) {
   const d = useTransform(pos, (p) => i - p);
   const x = useTransform(d, (v) =>
     reduce
@@ -85,8 +86,9 @@ function Card({ item, i, pos, w, reduce, active }: CardProps) {
       }}
     >
       <figure
+        ref={figureRef}
         className={cn(
-          'relative overflow-hidden rounded-[24px] border bg-[#0d0d10]/95 backdrop-blur-2xl p-5 sm:p-6 transition-colors shadow-[0_30px_70px_-20px_rgba(0,0,0,0.85)]',
+          'relative overflow-hidden rounded-[22px] sm:rounded-[24px] border bg-[#0d0d10]/95 backdrop-blur-2xl p-4 sm:p-6 transition-colors shadow-[0_30px_70px_-20px_rgba(0,0,0,0.85)]',
           active ? 'border-white/20' : 'border-white/[0.08]'
         )}
       >
@@ -103,11 +105,11 @@ function Card({ item, i, pos, w, reduce, active }: CardProps) {
         </motion.div>
         <motion.blockquote
           style={{ x: px1 }}
-          className="relative mt-3 text-[15px] sm:text-[16px] leading-[1.5] text-white/90"
+          className="relative mt-3 text-[15px] sm:text-[16px] leading-[1.55] text-white/90 break-words"
         >
           {item.quote}
         </motion.blockquote>
-        <figcaption className="relative mt-5 pt-4 border-t border-white/[0.08] flex items-center gap-3">
+        <figcaption className="relative mt-4 sm:mt-5 pt-3.5 sm:pt-4 border-t border-white/[0.08] flex items-center gap-3">
           <motion.span
             style={{ x: px3 }}
             className="grid size-10 shrink-0 place-items-center overflow-hidden rounded-full border border-white/15 bg-white/[0.06] text-xs font-mono font-semibold text-white tracking-wide"
@@ -168,7 +170,9 @@ export function TestimonialCoverflow({
 }: TestimonialCoverflowProps) {
   const reduce = !!useReducedMotion();
   const wrap = React.useRef<HTMLDivElement>(null);
+  const cardNodes = React.useRef(new Map<string, HTMLElement>());
   const [w, setW] = React.useState(360);
+  const [stageHeight, setStageHeight] = React.useState(296);
   const safeDefault = Math.max(0, Math.min(items.length - 1, defaultIndex));
   const [index, setIndex] = React.useState(safeDefault);
   const pos = useMotionValue(safeDefault);
@@ -177,11 +181,26 @@ export function TestimonialCoverflow({
     null
   );
 
+  const setCardRef = React.useCallback(
+    (id: string) => (node: HTMLElement | null) => {
+      if (node) {
+        cardNodes.current.set(id, node);
+      } else {
+        cardNodes.current.delete(id);
+      }
+    },
+    []
+  );
+
   React.useEffect(() => {
     const el = wrap.current;
     if (!el) return;
     const measure = () => {
-      const next = Math.min(410, Math.max(250, el.offsetWidth - 32));
+      const available = el.offsetWidth;
+      const next =
+        available < 480
+          ? Math.min(available - 8, Math.max(240, available - 16))
+          : Math.min(420, Math.max(280, available - 32));
       setW(next);
     };
     const ro = new ResizeObserver(measure);
@@ -189,6 +208,29 @@ export function TestimonialCoverflow({
     measure();
     return () => ro.disconnect();
   }, []);
+
+  React.useEffect(() => {
+    const updateHeight = () => {
+      let maxH = 0;
+      cardNodes.current.forEach((node) => {
+        maxH = Math.max(maxH, node.offsetHeight);
+      });
+      if (maxH > 0) {
+        setStageHeight(Math.max(288, Math.ceil(maxH) + 8));
+      }
+    };
+
+    const ro = new ResizeObserver(updateHeight);
+    cardNodes.current.forEach((node) => ro.observe(node));
+
+    const raf = requestAnimationFrame(updateHeight);
+    document.fonts?.ready?.then(updateHeight).catch(() => {});
+
+    return () => {
+      cancelAnimationFrame(raf);
+      ro.disconnect();
+    };
+  }, [items, w]);
 
   const goTo = React.useCallback(
     (n: number, velocity = 0) => {
@@ -273,7 +315,7 @@ export function TestimonialCoverflow({
       aria-roledescription="carousel"
       aria-label={title}
       className={cn(
-        'relative w-full overflow-hidden rounded-[28px] v29-glass-frame p-5 sm:p-7 text-white',
+        'relative w-full overflow-hidden rounded-[24px] sm:rounded-[28px] v29-glass-frame p-4 sm:p-7 text-white',
         className
       )}
     >
@@ -330,10 +372,10 @@ export function TestimonialCoverflow({
         onPointerUp={onUp}
         onPointerCancel={onUp}
         className={cn(
-          'relative z-10 mt-5 h-[19.5rem] sm:h-[18.5rem] touch-pan-y select-none outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#ff2d55]',
+          'relative z-10 mt-5 touch-pan-y select-none outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#ff2d55]',
           grabbing ? 'cursor-grabbing' : 'cursor-grab'
         )}
-        style={{ perspective: 1000 }}
+        style={{ perspective: 1000, height: stageHeight }}
       >
         <ul
           className="relative h-full m-0 p-0"
@@ -349,19 +391,20 @@ export function TestimonialCoverflow({
               w={w}
               reduce={reduce}
               active={i === index}
+              figureRef={setCardRef(it.id)}
             />
           ))}
         </ul>
       </div>
 
-      <div className="relative z-10 mt-4 flex items-center gap-4">
-        <div className="h-1 flex-1 overflow-hidden rounded-full bg-white/10">
+      <div className="relative z-20 mt-5 flex items-center gap-3 sm:gap-4">
+        <div className="h-1 min-w-[72px] flex-1 overflow-hidden rounded-full bg-white/10">
           <motion.div
             className="h-full rounded-full"
             style={{ width: progress, background: PROGRESS_GRADIENT }}
           />
         </div>
-        <div className="flex items-center">
+        <div className="flex flex-wrap items-center justify-end">
           {items.map((it, i) => (
             <button
               key={it.id}

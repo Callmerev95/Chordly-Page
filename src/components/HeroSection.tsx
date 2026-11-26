@@ -63,6 +63,11 @@ export const HeroSection: React.FC = () => {
       href: '#wear-os',
     },
     {
+      title: 'Android TV',
+      desc: 'Living-room experience built for D-pad remotes with full-screen synced lyrics and rich album artwork.',
+      href: '#install-tv',
+    },
+    {
       title: 'Web Player',
       desc: 'Full YouTube Music library access via browser extension bridge with synced lyrics and Discord RPC.',
       href: '#web-player',
@@ -85,8 +90,8 @@ export const HeroSection: React.FC = () => {
               <span className="italic text-white">lyric.</span>
             </h1>
 
-            <p className="text-[17px] sm:text-[18px] leading-[1.6] text-white/55 max-w-[460px]">
-              A modern, open-source music engine for Android, Wear OS, and the web. Precision synced lyrics with romanization and bit-perfect 24-bit / 192 kHz audio output.
+            <p className="text-[17px] sm:text-[18px] leading-[1.6] text-white/55 max-w-[480px]">
+              A modern, open-source music engine for Android, Wear OS, Android TV, and the web. Precision synced lyrics with romanization and bit-perfect 24-bit / 192 kHz audio output.
             </p>
 
             {/* Primary Pill CTAs */}
@@ -171,24 +176,33 @@ export const HeroSection: React.FC = () => {
           </div>
         </div>
 
-        {/* Variation 29 Bottom 3-Column Hairline Feature Strip */}
-        <div className="grid grid-cols-1 md:grid-cols-3 border-t border-white/[0.08]">
-          {platformSummary.map((cell, idx) => (
-            <a
-              key={cell.title}
-              href={cell.href}
-              className={`group py-8 md:py-10 ${
-                idx < 2 ? 'md:border-r md:border-white/[0.08] md:pr-10' : ''
-              } ${idx > 0 ? 'border-t md:border-t-0 border-white/[0.08] md:pl-10' : ''} block transition-colors`}
-            >
-              <h3 className="font-serif italic font-normal text-[24px] text-white group-hover:text-[#ff2d55] transition-colors mb-2.5">
-                {cell.title}
-              </h3>
-              <p className="text-[14px] leading-[1.65] text-white/45 group-hover:text-white/70 transition-colors">
-                {cell.desc}
-              </p>
-            </a>
-          ))}
+        {/* Variation 29 Bottom 4-Column Hairline Feature Strip */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 border-t border-white/[0.08]">
+          {platformSummary.map((cell, idx) => {
+            const borderClasses =
+              idx === 0
+                ? 'md:border-r md:border-white/[0.08] md:pr-8 lg:pr-8'
+                : idx === 1
+                  ? 'border-t md:border-t-0 border-white/[0.08] md:pl-8 lg:border-r lg:border-white/[0.08] lg:px-8'
+                  : idx === 2
+                    ? 'border-t lg:border-t-0 border-white/[0.08] md:border-r md:border-white/[0.08] md:pr-8 lg:px-8'
+                    : 'border-t lg:border-t-0 border-white/[0.08] md:pl-8 lg:pl-8';
+
+            return (
+              <a
+                key={cell.title}
+                href={cell.href}
+                className={`group py-7 md:py-9 ${borderClasses} block transition-colors`}
+              >
+                <h3 className="font-serif italic font-normal text-[24px] text-white group-hover:text-[#ff2d55] transition-colors mb-2.5">
+                  {cell.title}
+                </h3>
+                <p className="text-[14px] leading-[1.65] text-white/45 group-hover:text-white/70 transition-colors">
+                  {cell.desc}
+                </p>
+              </a>
+            );
+          })}
         </div>
       </div>
     </section>
